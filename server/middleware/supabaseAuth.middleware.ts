@@ -19,8 +19,8 @@ export interface AuthRequest extends Request {
   user?: AuthUser;
 }
 
-import { AuditService } from "../services/audit.service";
-import cache from "../lib/cache";
+import { EdgeState } from "../core/edge";
+import { EventLogService } from "../services/eventLog.service";
 
 /**
  * Validates Supabase JWT from Authorization header.
@@ -32,21 +32,15 @@ export async function requireAuth(
   next: NextFunction
 ) {
   const ip = req.ip || req.headers["x-forwarded-for"] || req.connection.remoteAddress || "unknown";
-  const bruteForceKey = `bf:auth:${ip}`;
 
-  // 🛡️ Check if IP is blocked (Redis-backed)
-  // We use a TTL of 1 hour for brute force blocking
-  const attempts = await cache.get(bruteForceKey) || 0;
+  // 🌍 EDGE STATE RECONSTRUCTION
+  // Each request is a fresh compute unit
+  const state = await EdgeState.getSecurityState(ip);
   
-  if (Number(attempts) >= 5) {
-    console.warn("🚨 [SECURITY] Brute-force blocked IP:", ip);
+  if (state.isBlocked) {
+    console.warn("🚨 [EDGE_SECURITY] Brute-force blocked IP:", ip);
     
-    await AuditService.log({
-      action: "BRUTE_FORCE_BLOCK",
-      ip,
-      resource: req.originalUrl,
-      metadata: { attempts, requestId: (req as any).id }
-    });
+    EventLogService.append("SECURITY_BLOCK", { ip, reason: "BRUTE_FORCE", requestId: (req as any).id });
 
     return res.status(403).json({ error: "BLOCKED_IP" });
   }
@@ -57,26 +51,17 @@ export async function requireAuth(
   
   if (apiKey) {
     if (opsKey && apiKey === opsKey) {
-      await cache.delete(bruteForceKey); // Reset on success
       req.user = {
-        id: "00000000-0000-0000-0000-000000000000", // Standard Nil/System UUID
+        id: "00000000-0000-0000-0000-000000000000",
         role: "ADMIN",
         tenantId: "00000000-0000-0000-0000-000000000000"
       };
       return next();
     } else {
-      // ❌ Invalid API Key Attempt
-      const newAttempts = await cache.incr(bruteForceKey, 3600); // 1 hour block
+      // ❌ Invalid API Key Attempt -> Append to Event Log for reconstruction
+      EventLogService.append("AUTH_FAILURE", { ip, route: req.originalUrl, requestId: (req as any).id });
       
-      console.warn("🚨 [SECURITY] UNAUTHORIZED_ACCESS:", { ip, route: req.originalUrl, timestamp: Date.now() });
-      
-      await AuditService.log({
-        action: "UNAUTHORIZED_ACCESS",
-        ip,
-        resource: req.originalUrl,
-        metadata: { attempts: newAttempts, requestId: (req as any).id, providedKey: "REDACTED" }
-      });
-
+      console.warn("🚨 [EDGE_SECURITY] UNAUTHORIZED_ACCESS:", { ip, route: req.originalUrl });
       return res.status(403).json({ error: "FORBIDDEN" });
     }
   }
