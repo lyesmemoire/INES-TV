@@ -67,6 +67,32 @@ if (cluster.isPrimary) {
   const allSources = Object.values(sourcesData).flatMap((c: any) => c.sources || []);
   startHealthCheck(allSources);
 
+  // 🌍 [EDGE] BACKGROUND SNAPSHOT ENGINE (Level 5++)
+  // Master process rebuilds the global state every 30s
+  setInterval(async () => {
+    try {
+      const { EventLogService } = await import("./server/services/eventLog.service.js");
+      const events = await EventLogService.replayCurrentSegment();
+      
+      const securityState: Record<string, any> = {};
+      
+      for (const e of events) {
+        if (e.type === 'AUTH_FAILURE' || e.type === 'REQUEST') {
+          const ip = e.data.ip;
+          if (!securityState[ip]) securityState[ip] = { rateLimitCount: 0, authFailures: 0 };
+          
+          if (e.type === 'AUTH_FAILURE') securityState[ip].authFailures++;
+          if (e.type === 'REQUEST') securityState[ip].rateLimitCount++;
+        }
+      }
+      
+      await EventLogService.saveSnapshot({ security: securityState });
+      console.log("💾 [EDGE] Application state snapshot persisted.");
+    } catch (err) {
+      console.error("🚨 [EDGE] Snapshot background task FAILED:", err);
+    }
+  }, 30000).unref();
+
   // Seeding (in EVERY process for Cluster memory safety)
   if (process.env.LOAD_TEST === "true") {
     console.log(`💎 [${cluster.isPrimary ? "Master" : "Worker"}] Seeding high-perf campaign segment...`);

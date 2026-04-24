@@ -1,48 +1,51 @@
 import { EventLogService } from "../services/eventLog.service";
 
 /**
- * Enterprise Edge State Builder
- * Reconstructs ephemeral state from history on-demand.
- * Inspired by Cloudflare Workers / Vercel Edge.
+ * Enterprise Edge State Builder (Level 5++)
+ * Optimized with Snapshot-First "Fast Path"
  */
 export const EdgeState = {
   /**
-   * Rebuilds the security context (Rate limits, brute-force counters)
+   * Rebuilds security context with Fast Path / Fallback
    */
   async getSecurityState(ip: string) {
-    const events = await EventLogService.replayRecent(10); // 10 min window
+    // ⚡ FAST PATH: Read from Snapshot
+    const snapshot = await EventLogService.getLatestSnapshot();
+    const now = Date.now();
+    
+    // If snapshot is fresh (less than 30s old), use it as base
+    if (snapshot && (now - snapshot.updatedAt < 30000)) {
+      const ipState = snapshot.security?.[ip] || { rateLimitCount: 0, authFailures: 0 };
+      return {
+        ...ipState,
+        isBlocked: ipState.authFailures >= 5,
+        source: 'SNAPSHOT'
+      };
+    }
+
+    // 🔄 FALLBACK: Replay current hourly segment
+    const events = await EventLogService.replayCurrentSegment();
     
     const rateLimitCount = events.filter(e => 
-      e.type === 'REQUEST' && 
-      e.data.ip === ip
+      e.type === 'REQUEST' && e.data.ip === ip
     ).length;
 
     const authFailures = events.filter(e => 
-      e.type === 'AUTH_FAILURE' && 
-      e.data.ip === ip
+      e.type === 'AUTH_FAILURE' && e.data.ip === ip
     ).length;
 
     return {
       rateLimitCount,
       authFailures,
-      isBlocked: authFailures >= 5
+      isBlocked: authFailures >= 5,
+      source: 'REPLAY'
     };
   },
 
   /**
-   * Rebuilds runtime metrics from the event log
+   * Logical Edge Router Simulation
    */
-  async getRuntimeMetrics(minutes = 5) {
-    const events = await EventLogService.replayRecent(minutes);
-    
-    const requests = events.filter(e => e.type === 'REQUEST').length;
-    const errors = events.filter(e => e.type === 'ERROR').length;
-    
-    return {
-      requests,
-      errors,
-      errorRate: requests > 0 ? (errors / requests) : 0,
-      timestamp: Date.now()
-    };
+  getRegion(req: any) {
+    return req.headers["x-region"] || "eu-west-simulated";
   }
 };

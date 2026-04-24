@@ -1,57 +1,82 @@
 import fs from "fs";
 import path from "path";
 
-const LOG_FILE = path.join(process.cwd(), "events.log");
+const LOG_DIR = path.join(process.cwd(), "events");
+if (!fs.existsSync(LOG_DIR)) fs.mkdirSync(LOG_DIR);
+
+const SNAPSHOT_FILE = path.join(LOG_DIR, "edge-state.snapshot.json");
 
 /**
- * Enterprise Stateless Event Log
- * Zero-cost shared state for distributed workers.
+ * Enterprise Stateless Event Log (Segmented & Snapshot-backed)
+ * Level 5++ Edge Architecture
  */
 export const EventLogService = {
+  /**
+   * Appends to an HOURLY segment to avoid file bloat
+   */
   append(type: string, data: any) {
+    const now = new Date();
+    const segmentName = `${now.toISOString().split('T')[0]}-${now.getHours()}.log`;
+    const logFile = path.join(LOG_DIR, segmentName);
+
     const event = {
       type,
       data,
-      timestamp: Date.now(),
+      timestamp: now.getTime(),
       workerId: process.pid
     };
     
     try {
-      // Atomic append (thread-safe on POSIX and mostly on Windows for small writes)
-      fs.appendFileSync(LOG_FILE, JSON.stringify(event) + "\n");
+      fs.appendFileSync(logFile, JSON.stringify(event) + "\n");
     } catch (err) {
-      console.error("🚨 [SRE] EventLog append FAILED:", err);
+      console.error("🚨 [EDGE_LOG] Append FAILED:", err);
     }
   },
 
   /**
-   * Replays events from the last X minutes to rebuild state.
+   * Replays events from the CURRENT segment
    */
-  async replayRecent(minutes = 1): Promise<any[]> {
+  async replayCurrentSegment(): Promise<any[]> {
     try {
-      if (!fs.existsSync(LOG_FILE)) return [];
+      const now = new Date();
+      const segmentName = `${now.toISOString().split('T')[0]}-${now.getHours()}.log`;
+      const logFile = path.join(LOG_DIR, segmentName);
+
+      if (!fs.existsSync(logFile)) return [];
       
-      const cutoff = Date.now() - (minutes * 60 * 1000);
-      const content = fs.readFileSync(LOG_FILE, "utf-8");
-      
-      return content
-        .trim()
-        .split("\n")
-        .map(line => {
-          try { return JSON.parse(line); } catch { return null; }
-        })
-        .filter(e => e && e.timestamp > cutoff);
+      const content = fs.readFileSync(logFile, "utf-8");
+      return content.trim().split("\n").map(line => {
+        try { return JSON.parse(line); } catch { return null; }
+      }).filter(Boolean);
     } catch (err) {
-      console.error("🚨 [SRE] EventLog replay FAILED:", err);
       return [];
     }
   },
 
   /**
-   * Periodically truncates the log to prevent disk bloat.
+   * Fast Path: Get derived state from the last snapshot
    */
-  truncate(keepMinutes = 60) {
-    // Implementation: read recent, write back, delete old.
-    // In production, you'd use a rotating log or a real DB.
+  async getLatestSnapshot(): Promise<any> {
+    try {
+      if (!fs.existsSync(SNAPSHOT_FILE)) return null;
+      const content = fs.readFileSync(SNAPSHOT_FILE, "utf-8");
+      return JSON.parse(content);
+    } catch {
+      return null;
+    }
+  },
+
+  /**
+   * Background Task: Persist a state snapshot every 30s
+   */
+  async saveSnapshot(state: any) {
+    try {
+      fs.writeFileSync(SNAPSHOT_FILE, JSON.stringify({
+        ...state,
+        updatedAt: Date.now()
+      }));
+    } catch (err) {
+      console.error("🚨 [EDGE_LOG] Snapshot save FAILED:", err);
+    }
   }
 };
