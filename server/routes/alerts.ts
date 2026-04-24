@@ -49,7 +49,7 @@ router.post("/test", requireAuth, requireAdmin, async (req: any, res: any) => {
       message: "Test alert dispatched. Check Slack/webhook/logs."
     });
   } catch (err: any) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: "INTERNAL_ERROR" });
   }
 })
 

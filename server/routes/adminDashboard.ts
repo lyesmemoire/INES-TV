@@ -92,7 +92,7 @@ router.post("/ban", requireAuth, requireAdmin, async (req: AuthRequest, res: Res
     logger.info(`[Admin] User ${userId} banned=${banned} by ${req.user!.id}`);
     return res.json({ ok: true, userId, banned });
   } catch (err: any) {
-    return res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: "INTERNAL_ERROR" });
   }
 });
 

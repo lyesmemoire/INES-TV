@@ -14,7 +14,7 @@ router.get("/", requireAuth, requireAdmin, async (req, res) => {
     const metrics = await computeMetrics();
     res.json(metrics);
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: "INTERNAL_ERROR" });
   }
 });
 
