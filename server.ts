@@ -6,6 +6,7 @@ import next from "next";
 import http from "http";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
+import cluster from "cluster";
 
 // 🛡️ SSR / Next.js Production Check
 if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
@@ -304,7 +305,12 @@ export async function startServer() {
   });
 }
 
-if (process.env.NODE_ENV !== "test" && !process.env.CLUSTER_MODE) {
+// ── Standalone / Development entry point ───────────────────────────────
+// This only runs if server.ts is the main module and NOT being used in a cluster master.
+const isPrimary = cluster.isPrimary || cluster.isMaster;
+const isMain = process.argv[1] && (process.argv[1].endsWith("server.ts") || process.argv[1].endsWith("server.js"));
+
+if (isMain && isPrimary && !process.env.CLUSTER_MODE) {
   startServer().catch((err) => {
     console.error("[Fatal] Failed to start server:", err);
     process.exit(1);
