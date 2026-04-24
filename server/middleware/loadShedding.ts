@@ -1,0 +1,35 @@
+import { Request, Response, NextFunction } from "express";
+import os from "os";
+
+/**
+ * Enterprise Load Shedding Middleware
+ * Automatically sheds traffic if system resources (CPU/RAM) are exhausted.
+ */
+export function loadShedding(req: Request, res: Response, next: NextFunction) {
+  // 1. Check Memory (Threshold: 80% of total)
+  const totalMem = os.totalmem();
+  const freeMem = os.freemem();
+  const memUsagePercent = ((totalMem - freeMem) / totalMem) * 100;
+
+  if (memUsagePercent > 80) {
+    console.error(`🚨 [SRE] LOAD_SHEDDING: High Memory Usage (${memUsagePercent.toFixed(2)}%)`);
+    return res.status(503).json({
+      error: "SERVICE_UNAVAILABLE",
+      message: "Server is under extreme memory pressure. Please try again later."
+    });
+  }
+
+  // 2. Check CPU Load (Threshold: loadavg > CPU core count * 0.85)
+  const cpus = os.cpus().length;
+  const loadAvg = os.loadavg()[0]; // 1 min average
+  
+  if (loadAvg > cpus * 0.85) {
+    console.error(`🚨 [SRE] LOAD_SHEDDING: High CPU Load (${loadAvg.toFixed(2)} / ${cpus})`);
+    return res.status(503).json({
+      error: "SERVICE_UNAVAILABLE",
+      message: "Server is under extreme CPU pressure. Please try again later."
+    });
+  }
+
+  next();
+}

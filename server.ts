@@ -60,6 +60,7 @@ import { analyticsStore } from "./server/core/memory/AnalyticsStore";
 import { CampaignCache } from "./server/core/memory/CampaignCache";
 import { FeedOrchestrator } from "./server/core/FeedOrchestrator.js";
 import sourcesData from "./server/data/sources.json" assert { type: "json" };
+import { loadShedding } from "./server/middleware/loadShedding";
 
 
 
@@ -124,6 +125,9 @@ export async function createApp() {
 
     await EditorialService.cleanupFinishedMatches();
   });
+
+  // 🛡️ [SRE] LOAD SHEDDING PROTECTION
+  app.use(loadShedding);
 
   // 🚫 NO LOG MODE (ANONYMOUS IP)
   app.use((req, res, next) => {

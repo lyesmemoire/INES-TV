@@ -114,53 +114,92 @@ if (process.env.REDIS_URL) {
   console.log("ℹ️  REDIS_URL not set — using in-memory store (single-VPS mode)");
 }
 
-// ── Public API (same interface for Redis + in-memory) ────────────────────────
+// ── Public API (Hybrid & Resilient) ────────────────────────
+const handleRedisError = (err: any) => {
+  if (usingRedis) {
+    usingRedis = false;
+    console.error("🚨 [SRE] REDIS_DOWN: Falling back to in-memory store", { error: err.message });
+    // Attempt to reconnect in background
+    setTimeout(async () => {
+      try {
+        const pong = await redisClient.ping().catch(() => null);
+        if (pong === "PONG") {
+          usingRedis = true;
+          console.log("🟢 [SRE] REDIS_RECOVERED: Switching back to Redis");
+        }
+      } catch {}
+    }, 30000).unref?.();
+  }
+};
+
 export const cache = {
   async get(key: string): Promise<string | null> {
-    if (usingRedis) return redisClient.get(key);
+    if (usingRedis) {
+      try { return await redisClient.get(key); }
+      catch (e) { handleRedisError(e); }
+    }
     return memGet(key);
   },
 
   async set(key: string, value: string, ttlSeconds: number): Promise<void> {
-    if (usingRedis) { await redisClient.setex(key, ttlSeconds, value); return; }
+    if (usingRedis) {
+      try { await redisClient.setex(key, ttlSeconds, value); return; }
+      catch (e) { handleRedisError(e); }
+    }
     memSet(key, value, ttlSeconds);
   },
 
   async del(key: string): Promise<void> {
-    if (usingRedis) { await redisClient.del(key); return; }
+    if (usingRedis) {
+      try { await redisClient.del(key); return; }
+      catch (e) { handleRedisError(e); }
+    }
     memDel(key);
   },
 
   async scard(key: string): Promise<number> {
-    if (usingRedis) return redisClient.scard(key);
+    if (usingRedis) {
+      try { return await redisClient.scard(key); }
+      catch (e) { handleRedisError(e); }
+    }
     return memScard(key);
   },
 
   async sadd(key: string, member: string, ttlSeconds = 300): Promise<void> {
     if (usingRedis) {
-      await redisClient.sadd(key, member);
-      await redisClient.expire(key, ttlSeconds);
-      return;
+      try {
+        await redisClient.sadd(key, member);
+        await redisClient.expire(key, ttlSeconds);
+        return;
+      } catch (e) { handleRedisError(e); }
     }
     memSadd(key, member, ttlSeconds);
   },
 
   async srem(key: string, member: string): Promise<void> {
-    if (usingRedis) { await redisClient.srem(key, member); return; }
+    if (usingRedis) {
+      try { await redisClient.srem(key, member); return; }
+      catch (e) { handleRedisError(e); }
+    }
     memSrem(key, member);
   },
 
   async incr(key: string, ttlSeconds = 60): Promise<number> {
     if (usingRedis) {
-      const n = await redisClient.incr(key);
-      if (n === 1) await redisClient.expire(key, ttlSeconds);
-      return n;
+      try {
+        const n = await redisClient.incr(key);
+        if (n === 1) await redisClient.expire(key, ttlSeconds);
+        return n;
+      } catch (e) { handleRedisError(e); }
     }
     return memIncr(key, ttlSeconds);
   },
 
   async keys(pattern: string): Promise<string[]> {
-    if (usingRedis) return redisClient.keys(pattern);
+    if (usingRedis) {
+      try { return await redisClient.keys(pattern); }
+      catch (e) { handleRedisError(e); }
+    }
     return memKeys(pattern);
   },
 
