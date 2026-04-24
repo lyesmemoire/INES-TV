@@ -19,6 +19,9 @@ export interface AuthRequest extends Request {
   user?: AuthUser;
 }
 
+// 🛡️ Security: Brute-Force Protection
+const invalidAttemptsMap = new Map<string, number>();
+
 /**
  * Validates Supabase JWT from Authorization header.
  * Attaches user to req.user.
@@ -28,16 +31,33 @@ export async function requireAuth(
   res: Response,
   next: NextFunction
 ) {
+  const ip = req.ip || req.connection.remoteAddress || "unknown";
+
+  // 🛡️ Check if IP is blocked
+  const attempts = invalidAttemptsMap.get(ip) || 0;
+  if (attempts >= 5) {
+    console.warn("🚨 [SECURITY] Brute-force blocked IP:", ip);
+    return res.status(403).json({ error: "BLOCKED_IP" });
+  }
+
   // 🔑 OPS BYPASS
   const apiKey = req.headers["x-api-key"] || req.query.api_key;
   const opsKey = process.env.OPS_API_KEY;
-  if (opsKey && apiKey && apiKey === opsKey) {
-    req.user = {
-      id: "00000000-0000-0000-0000-000000000000", // Standard Nil/System UUID
-      role: "ADMIN",
-      tenantId: "00000000-0000-0000-0000-000000000000"
-    };
-    return next();
+  if (apiKey) {
+    if (opsKey && apiKey === opsKey) {
+      invalidAttemptsMap.delete(ip); // Reset on success
+      req.user = {
+        id: "00000000-0000-0000-0000-000000000000", // Standard Nil/System UUID
+        role: "ADMIN",
+        tenantId: "00000000-0000-0000-0000-000000000000"
+      };
+      return next();
+    } else {
+      // ❌ Invalid API Key Attempt
+      invalidAttemptsMap.set(ip, attempts + 1);
+      console.warn("🚨 [SECURITY] UNAUTHORIZED_ACCESS:", { ip, route: req.originalUrl, timestamp: Date.now() });
+      return res.status(403).json({ error: "FORBIDDEN" });
+    }
   }
 
   const header = req.headers.authorization;

@@ -14,11 +14,21 @@ export async function sendAlert(type: string, payload: any, severity: string = "
     lastAlertSent = now;
   }
 
-  // 🔐 Anti-Leak Security: Block alert if it contains OPS_API_KEY
+  // 🔐 Anti-Leak Security: Block alert if it contains sensitive patterns
   const payloadString = JSON.stringify(payload);
-  const opsKey = process.env.OPS_API_KEY;
-  if (opsKey && payloadString.includes(opsKey)) {
-    console.error("🚨 [SECURITY] Alert BLOCKED: Attempted to leak OPS_API_KEY");
+  const SENSITIVE_PATTERNS = [
+    process.env.OPS_API_KEY,
+    "postgres://",
+    "Bearer ",
+    "apikey",
+  ];
+
+  const containsSensitiveData = SENSITIVE_PATTERNS.some((pattern) =>
+    pattern && payloadString.includes(pattern)
+  );
+
+  if (containsSensitiveData) {
+    console.error("🚨 [SECURITY] Alert BLOCKED: Attempted to leak sensitive data (API Key / DB URL)");
     return;
   }
 

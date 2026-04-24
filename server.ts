@@ -5,7 +5,12 @@ import express from "express";
 import next from "next";
 import http from "http";
 import cookieParser from "cookie-parser";
+import helmet from "helmet";
 
+// 🛡️ SSR / Next.js Production Check
+if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+  throw new Error("Missing CRITICAL env: NEXT_PUBLIC_SUPABASE_URL");
+}
 import { requestLogger } from "./server/middleware/requestLogger";
 import { errorHandler } from "./server/middleware/errorHandler";
 import { redisRateLimit } from "./server/middleware/redisRateLimit";
@@ -150,7 +155,17 @@ export async function createApp() {
   app.post("/api/billing/webhook", express.raw({ type: "application/json" }));
 
   // ── Core middleware ────────────────────────────────────────────────────────
+  app.use(helmet({ contentSecurityPolicy: false })); // CSP disabled by default to avoid breaking Next.js without config
   app.use(express.json({ limit: "50kb" }));
+
+  // 🛡️ Input Sanitization (Basic XSS Guard)
+  app.use((req, res, next) => {
+    if (req.body && JSON.stringify(req.body).includes("<script>")) {
+      console.warn("🚨 [SECURITY] XSS Attempt detected and blocked.");
+      return res.status(400).json({ error: "INVALID_INPUT" });
+    }
+    next();
+  });
   app.use(cookieParser());
   app.use(requestLogger);
 
