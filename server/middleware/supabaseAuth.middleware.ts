@@ -19,8 +19,8 @@ export interface AuthRequest extends Request {
   user?: AuthUser;
 }
 
-// 🛡️ Security: Brute-Force Protection
-const invalidAttemptsMap = new Map<string, number>();
+import { AuditService } from "../services/audit.service";
+import cache from "../lib/cache";
 
 /**
  * Validates Supabase JWT from Authorization header.
@@ -31,21 +31,33 @@ export async function requireAuth(
   res: Response,
   next: NextFunction
 ) {
-  const ip = req.ip || req.connection.remoteAddress || "unknown";
+  const ip = req.ip || req.headers["x-forwarded-for"] || req.connection.remoteAddress || "unknown";
+  const bruteForceKey = `bf:auth:${ip}`;
 
-  // 🛡️ Check if IP is blocked
-  const attempts = invalidAttemptsMap.get(ip) || 0;
-  if (attempts >= 5) {
+  // 🛡️ Check if IP is blocked (Redis-backed)
+  // We use a TTL of 1 hour for brute force blocking
+  const attempts = await cache.get(bruteForceKey) || 0;
+  
+  if (Number(attempts) >= 5) {
     console.warn("🚨 [SECURITY] Brute-force blocked IP:", ip);
+    
+    await AuditService.log({
+      action: "BRUTE_FORCE_BLOCK",
+      ip,
+      resource: req.originalUrl,
+      metadata: { attempts, requestId: (req as any).id }
+    });
+
     return res.status(403).json({ error: "BLOCKED_IP" });
   }
 
   // 🔑 OPS BYPASS
   const apiKey = req.headers["x-api-key"] || req.query.api_key;
   const opsKey = process.env.OPS_API_KEY;
+  
   if (apiKey) {
     if (opsKey && apiKey === opsKey) {
-      invalidAttemptsMap.delete(ip); // Reset on success
+      await cache.delete(bruteForceKey); // Reset on success
       req.user = {
         id: "00000000-0000-0000-0000-000000000000", // Standard Nil/System UUID
         role: "ADMIN",
@@ -54,8 +66,17 @@ export async function requireAuth(
       return next();
     } else {
       // ❌ Invalid API Key Attempt
-      invalidAttemptsMap.set(ip, attempts + 1);
+      const newAttempts = await cache.incr(bruteForceKey, 3600); // 1 hour block
+      
       console.warn("🚨 [SECURITY] UNAUTHORIZED_ACCESS:", { ip, route: req.originalUrl, timestamp: Date.now() });
+      
+      await AuditService.log({
+        action: "UNAUTHORIZED_ACCESS",
+        ip,
+        resource: req.originalUrl,
+        metadata: { attempts: newAttempts, requestId: (req as any).id, providedKey: "REDACTED" }
+      });
+
       return res.status(403).json({ error: "FORBIDDEN" });
     }
   }

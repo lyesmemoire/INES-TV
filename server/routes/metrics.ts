@@ -6,6 +6,7 @@ import { redisRateLimit } from "../middleware/redisRateLimit.js";
 import { trackUsage } from "../services/usage.service.js";
 import { enforceQuota } from "../middleware/billing.guard.js";
 import logger from "../services/logger.js";
+import { dbBreaker } from "../core/resiliency.js";
 
 const router = Router();
 
@@ -70,8 +71,8 @@ async function getMetricsSafe(tenantId?: string) {
     return metricsLocks.get(cacheKey);
   }
  
-  // 4. Perform fetch with LKG fallback
-  const fetchPromise = (async () => {
+  // 4. Perform fetch with Circuit Breaker and LKG fallback
+  const fetchPromise = dbBreaker.execute(async () => {
     try {
       const m = await getMetrics(tenantId);
       await cache.set(cacheKey, JSON.stringify(m), 5); // 5s TTL per Phase 7
@@ -80,13 +81,14 @@ async function getMetricsSafe(tenantId?: string) {
       lastFetch = now;
       return m;
     } catch (err) {
-      logger.warn("⚠️ DB FAIL → returning Last Known Good", { error: err });
-      if (lastKnownGood) return lastKnownGood;
       throw err;
     } finally {
       metricsLocks.delete(cacheKey);
     }
-  })();
+  }, () => {
+    logger.warn("🚨 [CircuitBreaker] DB FAIL / OPEN → returning Last Known Good");
+    return lastKnownGood;
+  });
  
   metricsLocks.set(cacheKey, fetchPromise);
   return fetchPromise;
@@ -159,10 +161,22 @@ router.get("/", requireAuth, requireAdmin, metricsLimiter, async (req: any, res:
   }
 });
 
+// 🛡️ Phase 11: SSE Backpressure & Connection Safety
+let activeSseClients = 0;
+const MAX_SSE_CLIENTS = 1000;
+
 // ==========================================
 // ⚡ V2 - SERVER SENT EVENTS (SSE REALTIME)
 // ==========================================
 router.get("/stream", (req: any, res: any) => {
+  if (activeSseClients >= MAX_SSE_CLIENTS) {
+    return res.status(503).json({ 
+      error: "SERVICE_UNAVAILABLE", 
+      message: "Server is at maximum SSE capacity. Try again later." 
+    });
+  }
+
+  activeSseClients++;
   const plan = req.user?.plan || "FREE";
   
   // Phase 8: SaaS Gating
@@ -209,7 +223,10 @@ router.get("/stream", (req: any, res: any) => {
     }
   }, refreshRate);
 
-  req.on('close', () => clearInterval(interval));
+  req.on('close', () => {
+    activeSseClients--;
+    clearInterval(interval);
+  });
 });
 
 export default router;

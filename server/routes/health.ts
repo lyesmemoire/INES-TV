@@ -2,6 +2,8 @@ import express, { Router, Request, Response } from 'express';
 
 const router = Router();
 
+import { metrics } from '../core/observability';
+
 /**
  * GET /api/health
  * Simple health-check endpoint for load balancers, monitoring tools, and CI/CD.
@@ -26,6 +28,16 @@ router.get('/health', (_req: Request, res: Response) => {
       heapUsed: Math.floor(cachedMemory.heapUsed / 1024 / 1024) + ' MB',
       rss: Math.floor(cachedMemory.rss / 1024 / 1024) + ' MB',
     },
+    timestamp: new Date().toISOString()
+  });
+});
+
+// 📊 Phase 11: PROMETHEUS-STYLE STRUCTURED METRICS
+router.get('/metrics', (_req: Request, res: Response) => {
+  res.json({
+    ...metrics.getSummary(),
+    memory: process.memoryUsage(),
+    cpu: process.cpuUsage(),
     timestamp: new Date().toISOString()
   });
 });

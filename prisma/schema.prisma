@@ -684,6 +684,22 @@ model Alert {
   @@schema("public")
 }
 
+model AuditLog {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId  String?  @db.Uuid
+  userId    String?  @db.Uuid
+  action    String
+  ip        String?
+  resource  String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@index([tenantId])
+  @@index([userId])
+  @@index([action])
+  @@schema("public")
+}
+
 model TenantUser {
   id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId      String   @db.Uuid

@@ -14,6 +14,9 @@ if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
 import { requestLogger } from "./server/middleware/requestLogger";
 import { errorHandler } from "./server/middleware/errorHandler";
 import { redisRateLimit } from "./server/middleware/redisRateLimit";
+import { traceMiddleware } from "./server/middleware/trace.middleware";
+import { metrics as runtimeMetrics } from "./server/core/observability";
+import { dbBreaker } from "./server/core/resiliency";
 import channelsRouter from "./server/routes/channels";
 import healthRouter from "./server/routes/health";
 import { favoritesRouter } from "./server/routes/favorites";
@@ -155,6 +158,11 @@ export async function createApp() {
   app.post("/api/billing/webhook", express.raw({ type: "application/json" }));
 
   // ── Core middleware ────────────────────────────────────────────────────────
+  app.use(traceMiddleware); // Generate requestId early
+  app.use((req, res, next) => {
+    runtimeMetrics.incrementRequests();
+    next();
+  });
   app.use(helmet({ contentSecurityPolicy: false })); // CSP disabled by default to avoid breaking Next.js without config
   app.use(express.json({ limit: "50kb" }));
 
@@ -264,7 +272,10 @@ export async function createApp() {
   }
 
 
-  app.use(errorHandler);
+  app.use((err: any, req: any, res: any, next: any) => {
+    runtimeMetrics.incrementErrors();
+    errorHandler(err, req, res, next);
+  });
 
   return { app, server };
 }
