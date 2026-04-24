@@ -1,0 +1,70 @@
+﻿node.exe : 
+Au caractère Ligne:1 : 1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo        
+      : NotSpecified: (:  
+  String) [], RemoteExc   
+ eption
+    + FullyQualifiedError 
+   Id : NativeCommandErr  
+  or
+ 
+node:internal/modules/run_
+main:107
+    
+triggerUncaughtException(
+    ^
+Error [TransformError]: 
+Transform failed with 1 
+error:
+C:\Users\elitebook\Downloa
+ds\zip\server\services\m3u
+Service.ts:9:12: ERROR: 
+Expected ";" but found 
+"from"
+    at 
+failureErrorWithLog (C:\Us
+ers\elitebook\Downloads\zi
+p\node_modules\esbuild\lib
+\main.js:1748:15)
+    at C:\Users\elitebook\
+Downloads\zip\node_modules
+\esbuild\lib\main.js:1017:
+50
+    at responseCallbacks.<
+computed> (C:\Users\eliteb
+ook\Downloads\zip\node_mod
+ules\esbuild\lib\main.js:8
+84:9)
+    at 
+handleIncomingPacket (C:\U
+sers\elitebook\Downloads\z
+ip\node_modules\esbuild\li
+b\main.js:939:12)
+    at 
+Socket.readFromStdout (C:\
+Users\elitebook\Downloads\
+zip\node_modules\esbuild\l
+ib\main.js:862:7)
+    at Socket.emit 
+(node:events:508:28)
+    at addChunk (node:inte
+rnal/streams/readable:559:
+12)
+    at readableAddChunkPus
+hByteMode (node:internal/s
+treams/readable:510:3)
+    at Readable.push (node
+:internal/streams/readable
+:390:5)
+    at Pipe.onStreamRead (
+node:internal/stream_base_
+commons:189:23)
+
+Node.js v24.13.0

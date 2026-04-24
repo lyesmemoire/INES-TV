@@ -1,0 +1,105 @@
+# =========================
+# 🧠 NODE / NEXT / BUILD
+# =========================
+node_modules/
+.next/
+out/
+dist/
+build/
+coverage/
+
+# =========================
+# 🔐 ENV & SECRETS (CRITICAL)
+# =========================
+.env
+.env.*
+!.env.example
+!.env.production.example
+
+# =========================
+# 🗄️ DATABASE / PRISMA
+# =========================
+prisma/*.db
+prisma/*.db-journal
+*.sqlite
+*.sqlite3
+
+# Prisma generated files (optional keep schema)
+node_modules/.prisma/
+.prisma/
+
+# =========================
+# 📊 LOGS & MONITORING
+# =========================
+logs/
+*.log
+pm2.log
+pids/
+*.pid
+*.seed
+
+# PM2 logs
+.pm2/
+
+# =========================
+# 🚀 DEPLOYMENT / OS
+# =========================
+.DS_Store
+Thumbs.db
+
+# Linux / server temp
+tmp/
+temp/
+
+# =========================
+# 🧪 TEST / STRESS
+# =========================
+stress-results/
+artillery-report/
+*.report.json
+
+# =========================
+# ⚙️ IDE / EDITOR
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# =========================
+# 🔒 SECURITY
+# =========================
+*.pem
+*.key
+*.crt
+*.cert
+
+# =========================
+# 📦 ARCHIVES & BINARIES
+# =========================
+*.zip
+*.tar
+*.gz
+*.apk
+*.bin
+*.exe
+*.dll
+
+# =========================
+# 🧠 CACHE
+# =========================
+.cache/
+.nyc_output/
+
+# =========================
+# 🧾 BACKUPS
+# =========================
+backups/
+*.sql
+
+# =========================
+# ⚡ OPTIONAL (KEEP IF NEEDED)
+# =========================
+# Uncomment if you want to ignore:
+# public/uploads/
+# uploads/

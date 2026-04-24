@@ -1,0 +1,47 @@
+e: C:\Users\elitebook\Downloads\zip\tv\settings.gradle.kts:8:1: Unresolved reference: dependencyResolutionManagement
+e: C:\Users\elitebook\Downloads\zip\tv\settings.gradle.kts:9:5: Unresolved reference: repositoriesMode
+e: C:\Users\elitebook\Downloads\zip\tv\settings.gradle.kts:9:26: Unresolved reference: RepositoriesMode
+e: C:\Users\elitebook\Downloads\zip\tv\settings.gradle.kts:10:5: Unresolved reference. None of the following candidates is applicable because of receiver type mismatch: 
+public fun Project.repositories(configuration: RepositoryHandler.() -> Unit): Unit defined in org.gradle.kotlin.dsl
+public fun ScriptHandler.repositories(configuration: RepositoryHandler.() -> Unit): Unit defined in org.gradle.kotlin.dsl
+e: C:\Users\elitebook\Downloads\zip\tv\settings.gradle.kts:11:9: Unresolved reference: google
+e: C:\Users\elitebook\Downloads\zip\tv\settings.gradle.kts:12:9: Unresolved reference. None of the following candidates is applicable because of receiver type mismatch: 
+public inline fun RepositoryHandler.mavenCentral(vararg args: Pair<String, Any?>): MavenArtifactRepository defined in org.gradle.kotlin.dsl
+
+FAILURE: Build failed with an exception.
+
+* Where:
+Settings file 'C:\Users\elitebook\Downloads\zip\tv\settings.gradle.kts' line: 8
+
+* What went wrong:
+Script compilation errors:
+
+  Line 08: dependencyResolutionManagement {
+           ^ Unresolved reference: dependencyResolutionManagement
+
+  Line 09:     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+               ^ Unresolved reference: repositoriesMode
+
+  Line 09:     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+                                    ^ Unresolved reference: RepositoriesMode
+
+  Line 10:     repositories {
+               ^ Unresolved reference. None of the following candidates is applicable because of receiver type mismatch: 
+                   public fun Project.repositories(configuration: RepositoryHandler.() -> Unit): Unit defined in org.gradle.kotlin.dsl
+                   public fun ScriptHandler.repositories(configuration: RepositoryHandler.() -> Unit): Unit defined in org.gradle.kotlin.dsl
+
+  Line 11:         google()
+                   ^ Unresolved reference: google
+
+  Line 12:         mavenCentral()
+                   ^ Unresolved reference. None of the following candidates is applicable because of receiver type mismatch: 
+                       public inline fun RepositoryHandler.mavenCentral(vararg args: Pair<String, Any?>): MavenArtifactRepository defined in org.gradle.kotlin.dsl
+
+6 errors
+
+* Try:
+Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights.
+
+* Get more help at https://help.gradle.org
+
+BUILD FAILED in 1s

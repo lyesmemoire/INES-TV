@@ -1,0 +1,158 @@
+﻿Starting Metro Bundler
+Android Bundling failed 5819ms node_modules\expo-router\entry.js (2875 modules)
+node.exe : Error: 
+Unable to resolve 
+module 
+@supabase/supabase-js 
+from C:\Users\elitebook
+\Downloads\zip\mobile\s
+rc\services\supabase.ts
+: 
+@supabase/supabase-js 
+could not be found 
+within the project or 
+in these directories:
+Au caractère Ligne:1 : 
+1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo 
+...
++ ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~
+    + CategoryInfo     
+         : 
+NotSpecified: (E    
+rror: Unable t...se d  
+  irectories::String) 
+[    ], RemoteException
+    + 
+FullyQualifiedError    
+Id : NativeCommandErr  
+  or
+ 
+  node_modules
+  ..\node_modules
+[0m [90m 1 |[39m 
+[36mimport[39m [32m'
+react-native-url-polyfi
+ll/auto'[39m[33m;[39
+m
+[31m[1m>[22m[39m[9
+0m 2 |[39m 
+[36mimport[39m { 
+createClient } 
+[36mfrom[39m [32m'@s
+upabase/supabase-js'[3
+9m[33m;[39m
+ [90m   |[39m        
+                       
+[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m 
+[36mconst[39m 
+supabaseUrl 
+[33m=[39m [32m'https
+://mwlrfygdnrcgzlzyvmqv
+.supabase.co'[39m[33m
+;[39m
+ [90m 5 |[39m 
+[36mconst[39m 
+supabaseAnonKey 
+[33m=[39m [32m'sb_pu
+blishable__LyFCF0pH6EqQ
+6dT4orc9A_mrzUuke4'[39
+m[33m;[39m[0m
+Error: Unable to 
+resolve module 
+@supabase/supabase-js 
+from C:\Users\elitebook
+\Downloads\zip\mobile\s
+rc\services\supabase.ts
+: 
+@supabase/supabase-js 
+could not be found 
+within the project or 
+in these directories:
+  node_modules
+  ..\node_modules
+[0m [90m 1 |[39m 
+[36mimport[39m [32m'
+react-native-url-polyfi
+ll/auto'[39m[33m;[39
+m
+[31m[1m>[22m[39m[9
+0m 2 |[39m 
+[36mimport[39m { 
+createClient } 
+[36mfrom[39m [32m'@s
+upabase/supabase-js'[3
+9m[33m;[39m
+ [90m   |[39m        
+                       
+[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m 
+[36mconst[39m 
+supabaseUrl 
+[33m=[39m [32m'https
+://mwlrfygdnrcgzlzyvmqv
+.supabase.co'[39m[33m
+;[39m
+ [90m 5 |[39m 
+[36mconst[39m 
+supabaseAnonKey 
+[33m=[39m [32m'sb_pu
+blishable__LyFCF0pH6EqQ
+6dT4orc9A_mrzUuke4'[39
+m[33m;[39m[0m
+    at ModuleResolver.r
+esolveDependency (C:\Us
+ers\elitebook\Downloads
+\zip\mobile\node_module
+s\metro\src\node-haste\
+DependencyGraph\ModuleR
+esolution.js:150:15)
+    at DependencyGraph.
+resolveDependency (C:\U
+sers\elitebook\Download
+s\zip\mobile\node_modul
+es\metro\src\node-haste
+\DependencyGraph.js:248
+:43)
+    at C:\Users\elitebo
+ok\Downloads\zip\mobile
+\node_modules\metro\src
+\lib\transformHelpers.j
+s:165:21
+    at 
+resolveDependencies (C:
+\Users\elitebook\Downlo
+ads\zip\mobile\node_mod
+ules\metro\src\DeltaBun
+dler\buildSubgraph.js:4
+2:25)
+    at visit (C:\Users\
+elitebook\Downloads\zip
+\mobile\node_modules\me
+tro\src\DeltaBundler\bu
+ildSubgraph.js:83:30)
+    at async 
+Promise.all (index 4)
+    at visit (C:\Users\
+elitebook\Downloads\zip
+\mobile\node_modules\me
+tro\src\DeltaBundler\bu
+ildSubgraph.js:92:5)
+    at async 
+Promise.all (index 3)
+    at visit (C:\Users\
+elitebook\Downloads\zip
+\mobile\node_modules\me
+tro\src\DeltaBundler\bu
+ildSubgraph.js:92:5)
+    at async 
+Promise.all (index 1)

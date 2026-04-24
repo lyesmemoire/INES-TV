@@ -1,0 +1,14 @@
+# server/scripts/wrangler.toml
+# Version : v2.1 Pro (Option B - Deployment)
+
+name = "stream-proxy-v2"
+main = "worker-proxy-v3.js"
+compatibility_date = "2024-01-01"
+account_id = "5f0a365a25f9f90dff97ae2f3ab1b8ed"
+
+[vars]
+ALLOWED_ORIGIN = "https://yourdomain.com"
+ALLOWED_HOSTS = "cdn1.provider.com,cdn2.provider.com,cdn3.provider.com,cdn1.example.com,cdn2.example.com"
+
+[observability]
+enabled = true

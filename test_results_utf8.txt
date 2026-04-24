@@ -1,0 +1,22 @@
+﻿
+> react-example@0.0.0 test
+> vitest --run
+
+
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mC:/Users/elitebook/Downloads/zip[39m
+
+ [32mÔ£ô[39m tests/frontend/SportsDashboard.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 80[2mms[22m[39m
+[90mstdout[2m | tests/backend/auth.test.ts[2m > [22m[2mBackend: Auth API[2m > [22m[2mshould return 401 for invalid credentials
+[22m[39m[33mPOST[0m /api/auth/login ÔåÆ [33m401[0m (4ms)
+
+ [32mÔ£ô[39m tests/backend/health.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+[90mstdout[2m | tests/backend/auth.test.ts[2m > [22m[2mBackend: Auth API[2m > [22m[2mshould return 200 with token for valid credentials
+[22m[39m[32mPOST[0m /api/auth/login ÔåÆ [32m200[0m (5ms)
+
+ [32mÔ£ô[39m tests/backend/auth.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 51[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[32m6 passed[39m[22m[90m (6)[39m
+[2m   Start at [22m 19:17:04
+[2m   Duration [22m 2.14s[2m (transform 239ms, setup 387ms, collect 2.11s, tests 168ms, environment 2.11s, prepare 509ms)[22m
+

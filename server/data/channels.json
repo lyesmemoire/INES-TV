@@ -1,0 +1,40 @@
+{
+  "channel-1": [
+    {
+      "id": "s1",
+      "url": "https://cdn1.example.com/ch1/stream.m3u8",
+      "priority": 1,
+      "maxUsers": 300,
+      "region": "eu",
+      "weight": 1
+    },
+    {
+      "id": "s2",
+      "url": "https://cdn2.example.com/ch1/stream.m3u8",
+      "priority": 2,
+      "maxUsers": 300,
+      "region": "us",
+      "weight": 1
+    }
+  ],
+  "bein_sport_1": [
+    {
+      "id": "src1_premium",
+      "url": "https://cdn1.example.com/bein_sport_1.m3u8",
+      "priority": 1,
+      "maxUsers": 300,
+      "region": "eu",
+      "weight": 1,
+      "type": "premium"
+    },
+    {
+      "id": "src2_backup",
+      "url": "https://cdn2.example.com/bein_sport_1.m3u8",
+      "priority": 2,
+      "maxUsers": 300,
+      "region": "us",
+      "weight": 1,
+      "type": "backup"
+    }
+  ]
+}

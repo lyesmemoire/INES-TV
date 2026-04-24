@@ -1,0 +1,68 @@
+{
+  "channel-1": {
+    "meta": {
+      "name": "CHANNEL-1",
+      "type": "live",
+      "plans": [
+        "FREE",
+        "BASIC",
+        "PREMIUM"
+      ]
+    },
+    "sources": [
+      {
+        "id": "s1",
+        "url": "https://cdn1.provider.com/live/ch1/index.m3u8",
+        "priority": 1,
+        "healthy": true,
+        "load": 0,
+        "provider": "cdn1"
+      },
+      {
+        "id": "s2",
+        "url": "https://cdn2.provider.com/live/ch1/index.m3u8",
+        "priority": 2,
+        "healthy": true,
+        "load": 0,
+        "provider": "cdn2"
+      },
+      {
+        "id": "s3",
+        "url": "https://cdn3.provider.com/live/ch1/index.m3u8",
+        "priority": 3,
+        "healthy": true,
+        "load": 0,
+        "provider": "cdn3"
+      }
+    ]
+  },
+  "bein_sport_1": {
+    "meta": {
+      "name": "BEIN SPORT 1",
+      "type": "live",
+      "plans": [
+        "FREE",
+        "BASIC",
+        "PREMIUM"
+      ]
+    },
+    "sources": [
+      {
+        "id": "src1_premium",
+        "url": "https://cdn1.example.com/bein_sport_1.m3u8",
+        "priority": 1,
+        "healthy": true,
+        "load": 0,
+        "provider": "cdn1"
+      },
+      {
+        "id": "src2_backup",
+        "url": "https://cdn2.example.com/bein_sport_1.m3u8",
+        "priority": 2,
+        "healthy": true,
+        "load": 0,
+        "provider": "cdn2"
+      }
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "StreamPerf Pro",
+  "short_name": "StreamPerf",
+  "description": "Multi-Platform Streaming Ecosystem",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#10b981",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}

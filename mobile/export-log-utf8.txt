@@ -1,0 +1,126 @@
+﻿Starting Metro Bundler
+Android Bundling failed 5740ms node_modules\expo-router\entry.js (2875 modules)
+node.exe : Error: Unable 
+to resolve module react-na
+tive-url-polyfill/auto 
+from C:\Users\elitebook\Do
+wnloads\zip\mobile\src\ser
+vices\supabase.ts: react-n
+ative-url-polyfill/auto 
+could not be found within 
+the project or in these 
+directories:
+Au caractère Ligne:1 : 1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo        
+      : NotSpecified: (E  
+  rror: Unable t...se d   
+ irectories::String) [    
+], RemoteException
+    + FullyQualifiedError 
+   Id : NativeCommandErr  
+  or
+ 
+  node_modules
+  ..\node_modules
+[0m[31m[1m>[22m[39m[
+90m 1 |[39m 
+[36mimport[39m [32m'rea
+ct-native-url-polyfill/aut
+o'[39m[33m;[39m
+ [90m   |[39m         
+[31m[1m^[22m[39m
+ [90m 2 |[39m 
+[36mimport[39m { 
+createClient } 
+[36mfrom[39m [32m'@supa
+base/supabase-js'[39m[33
+m;[39m
+ [90m 3 |[39m
+ [90m 4 |[39m 
+[36mconst[39m 
+supabaseUrl [33m=[39m [
+32m'https://mwlrfygdnrcgzl
+zyvmqv.supabase.co'[39m[
+33m;[39m[0m
+Error: Unable to resolve 
+module react-native-url-po
+lyfill/auto from C:\Users\
+elitebook\Downloads\zip\mo
+bile\src\services\supabase
+.ts: react-native-url-poly
+fill/auto could not be 
+found within the project 
+or in these directories:
+  node_modules
+  ..\node_modules
+[0m[31m[1m>[22m[39m[
+90m 1 |[39m 
+[36mimport[39m [32m'rea
+ct-native-url-polyfill/aut
+o'[39m[33m;[39m
+ [90m   |[39m         
+[31m[1m^[22m[39m
+ [90m 2 |[39m 
+[36mimport[39m { 
+createClient } 
+[36mfrom[39m [32m'@supa
+base/supabase-js'[39m[33
+m;[39m
+ [90m 3 |[39m
+ [90m 4 |[39m 
+[36mconst[39m 
+supabaseUrl [33m=[39m [
+32m'https://mwlrfygdnrcgzl
+zyvmqv.supabase.co'[39m[
+33m;[39m[0m
+    at ModuleResolver.reso
+lveDependency (C:\Users\el
+itebook\Downloads\zip\mobi
+le\node_modules\metro\src\
+node-haste\DependencyGraph
+\ModuleResolution.js:150:1
+5)
+    at DependencyGraph.res
+olveDependency (C:\Users\e
+litebook\Downloads\zip\mob
+ile\node_modules\metro\src
+\node-haste\DependencyGrap
+h.js:248:43)
+    at C:\Users\elitebook\
+Downloads\zip\mobile\node_
+modules\metro\src\lib\tran
+sformHelpers.js:165:21
+    at 
+resolveDependencies (C:\Us
+ers\elitebook\Downloads\zi
+p\mobile\node_modules\metr
+o\src\DeltaBundler\buildSu
+bgraph.js:42:25)
+    at visit (C:\Users\eli
+tebook\Downloads\zip\mobil
+e\node_modules\metro\src\D
+eltaBundler\buildSubgraph.
+js:83:30)
+    at async Promise.all 
+(index 5)
+    at visit (C:\Users\eli
+tebook\Downloads\zip\mobil
+e\node_modules\metro\src\D
+eltaBundler\buildSubgraph.
+js:92:5)
+    at async Promise.all 
+(index 4)
+    at visit (C:\Users\eli
+tebook\Downloads\zip\mobil
+e\node_modules\metro\src\D
+eltaBundler\buildSubgraph.
+js:92:5)
+    at async Promise.all 
+(index 1)

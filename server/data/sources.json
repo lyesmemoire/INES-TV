@@ -1,0 +1,42 @@
+{
+  "channel-1": {
+    "meta": {
+      "name": "CHANNEL-1",
+      "type": "live",
+      "plans": [
+        "FREE",
+        "BASIC",
+        "PREMIUM"
+      ]
+    },
+    "sources": [
+      {
+        "id": "channel-1-src-1",
+        "priority": 1,
+        "healthy": true,
+        "load": 0,
+        "provider": "unknown"
+      }
+    ]
+  },
+  "bein_sport_1": {
+    "meta": {
+      "name": "BEIN SPORT 1",
+      "type": "live",
+      "plans": [
+        "FREE",
+        "BASIC",
+        "PREMIUM"
+      ]
+    },
+    "sources": [
+      {
+        "id": "bein_sport_1-src-1",
+        "priority": 1,
+        "healthy": true,
+        "load": 0,
+        "provider": "unknown"
+      }
+    ]
+  }
+}

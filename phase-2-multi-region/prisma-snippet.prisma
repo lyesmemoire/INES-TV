@@ -1,0 +1,7 @@
+// 📊 SOS REGIONAL SCHEMA (Snippet)
+model ObservabilityEvent {
+  id        String @id @default(cuid())
+  type      String
+  region    String
+  timestamp DateTime @default(now())
+}

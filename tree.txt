@@ -1,0 +1,554 @@
+📁 .cursor
+📄 .env
+📄 .env.example
+📁 .github
+  📁 workflows
+    📄 deploy.yml
+    📄 docker-publish.yml
+📄 .gitignore
+📄 .tarignore
+📁 .vscode
+  📄 settings.json
+📁 admin-mobile
+  📄 App.tsx
+  📄 package-lock.json
+  📄 package.json
+  📁 src
+    📁 screens
+      📄 AdsScreen.tsx
+      📄 DashboardScreen.tsx
+      📄 LoginScreen.tsx
+      📄 ResellersScreen.tsx
+      📄 UserManagementScreen.tsx
+    📁 services
+      📄 api.ts
+  📄 tsconfig.json
+📁 app
+  📁 access-restricted
+    📄 page.tsx
+  📁 admin
+    📁 ads
+      📄 page.tsx
+    📁 dashboard
+      📁 ads
+      📁 analytics
+      📁 content
+      📄 page.tsx
+      📁 settings
+      📁 sources
+      📁 subscriptions
+      📁 users
+    📁 intelligence
+      📄 page.tsx
+    📄 layout.tsx
+    📁 login
+      📄 page.tsx
+    📄 page.tsx
+    📁 resellers
+      📄 page.tsx
+    📁 security
+      📄 page.tsx
+  📄 globals.css
+  📄 layout.tsx
+  📄 page.tsx
+  📁 reseller
+    📁 login
+      📄 page.tsx
+    📄 page.tsx
+  📄 sitemap.ts
+  📁 watch
+    📁 [slug]
+      📄 page.tsx
+  📁 [lang]
+    📁 watch
+      📁 [slug]
+📄 app.json
+📄 build-reset.ps1
+📄 build_debug.log
+📄 build_log.txt
+📄 build_log2.txt
+📄 build_log3.txt
+📄 build_log4.txt
+📄 build_log5.txt
+📄 build_log6.txt
+📄 build_log7.txt
+📄 build_log8.txt
+📄 build_log9.txt
+📄 build_log_2.txt
+📄 build_log_4.txt
+📄 build_log_final.txt
+📄 check-java.ps1
+📄 check-sources.ts
+📄 debug-4cc7ca.log
+📄 DEPLOIEMENT_OFFSHORE.md
+📄 deploy-vps.sh
+📄 deploy.sh
+📄 docker-compose.yml
+📄 Dockerfile
+📁 docs
+  📄 AUDIT_RESULTS.md
+  📄 PROJECT_STATUS.md
+  📄 WALKTHROUGH.md
+📄 eas.json
+📄 entrypoint.sh
+📄 err.txt
+📄 err_utf8.txt
+📄 final-cleanup.js
+📄 final_sync_log.txt
+📄 fly.toml
+📄 gradle-8.7-bin.zip
+📄 gradle.properties
+📄 metadata.json
+📄 middleware.ts
+📄 minimal-server.ts
+📁 mobile
+  📄 .gitignore
+  📁 app
+    📁 (tabs)
+      📄 favorites.tsx
+      📄 guide.tsx
+      📄 index.tsx
+      📄 live.tsx
+      📄 profile.tsx
+      📄 search.tsx
+      📄 _layout.tsx
+    📄 epg.tsx
+    📁 media
+      📄 [id].tsx
+    📁 player
+      📄 [id].tsx
+    📄 profiles.tsx
+    📄 _layout.tsx
+  📄 App.js
+  📄 app.json
+  📁 assets
+    📄 adaptive-icon.png
+    📄 favicon.png
+    📄 icon.png
+    📄 splash.png
+  📁 components
+    📄 Focusable.js
+    📄 MatchCard.js
+    📄 VideoCard.js
+  📁 context
+    📄 AuthContext.js
+  📄 eas.json
+  📄 expo-env.d.ts
+  📄 export-log-utf8.txt
+  📄 export-log.txt
+  📄 export-log2.txt
+  📄 export-log3.txt
+  📄 expo_log_cmd.txt
+  📄 final_check.txt
+  📄 full_ts_errors.txt
+  📁 hooks
+    📄 useFeed.js
+    📄 useHomeFeed.js
+    📄 useIntelligenceWatcher.js
+    📄 useOrchestratedEvents.js
+    📄 usePredictiveEvents.js
+    📄 useRealtimeWatch.js
+  📁 lib
+    📄 supabase.js
+  📄 lint_output.txt
+  📁 navigation
+    📄 index.js
+  📄 package-lock.json
+  📄 package.json
+  📄 postinstall.js
+  📄 prebuild_error.log
+  📁 screens
+    📄 AdminScreen.js
+    📄 DashboardScreen.js
+    📄 HomeScreen.js
+    📄 LoginScreen.js
+    📄 PlayerScreen.js
+    📄 RemoteScreen.js
+  📁 services
+    📄 auth.js
+    📄 catalog.js
+    📄 feed.js
+    📄 personalizationService.js
+    📄 remoteService.js
+    📄 videoEvents.js
+    📄 videos.js
+  📁 src
+    📁 api
+      📄 stream.ts
+    📁 components
+      📁 Channel
+      📁 EPG
+      📁 Legal
+      📁 Media
+      📁 player
+      📄 SportsDashboard.tsx
+      📁 UI
+    📁 context
+      📄 AuthContext.tsx
+      📄 EPGContext.tsx
+    📁 drm
+      📄 WidevineHandler.ts
+    📁 engine
+      📄 alignment.ts
+      📄 focusEngine.ts
+      📄 layoutCalculator.ts
+      📄 timeWindow.ts
+    📁 hooks
+      📄 useCategories.ts
+      📄 useChannels.ts
+      📄 useEPG.ts
+      📄 useEPGGrid.ts
+      📄 useFilteredChannels.ts
+      📄 useMedia.ts
+      📄 usePlayer.ts
+      📄 usePrioritizedChannels.ts
+      📄 useTimeDriver.ts
+      📄 useTVEventHandler.ts
+      📄 useTVRemote.ts
+      📄 useZoom.ts
+    📁 screens
+      📄 LiveTVGuideScreen.tsx
+      📄 LiveTVScreen.tsx
+      📄 PlayerScreen.tsx
+    📁 services
+      📄 channelApi.ts
+      📄 epg.service.ts
+      📄 iptv.ts
+      📄 logger.ts
+      📄 supabase.ts
+    📁 store
+      📄 epgFocusStore.ts
+      📄 epgStore.ts
+      📄 useAdStore.ts
+      📄 usePlayerStore.ts
+      📄 usePlaylistStore.ts
+      📄 useProfileStore.ts
+      📄 useUserStore.ts
+    📁 types
+      📄 epg.ts
+      📄 index.ts
+    📁 utils
+      📁 offline
+  📄 tsconfig.json
+  📄 ts_error.txt
+  📄 ts_errors.txt
+  📄 ts_error_utf8.txt
+📄 next-env.d.ts
+📄 next.config.mjs
+📁 nginx
+  📁 conf.d
+    📄 anis-tv.conf
+📄 package-lock.json
+📄 package.json
+📁 phase-2-multi-region
+  📄 cdn-worker.js
+  📄 fly.toml
+  📄 prisma-snippet.prisma
+  📄 server-snippet.ts
+📄 postcss.config.mjs
+📁 prisma
+  📄 dev.db
+  📁 migrations
+    📁 20260409084926_adtech_upgrade
+      📄 migration.sql
+    📁 20260409104927_bidding_monetization
+      📄 migration.sql
+    📄 migration_lock.toml
+  📄 schema.prisma
+  📄 seed_ads.ts
+  📄 seed_revenue.ts
+📄 prisma_error.log
+📄 prisma_error.txt
+📄 prisma_error2.log
+📄 prisma_error_utf8.txt
+📁 public
+  📁 apps
+    📄 app-mobile.apk
+    📄 app-tv.apk
+    📄 README.txt
+  📄 manifest.json
+📄 README.md
+📁 scripts
+  📄 createAdmin.ts
+  📄 createReseller.ts
+  📄 deep-clean.ps1
+  📄 NUCLEAR_FIX.ps1
+  📄 ssl-renew.sh
+  📄 sync-supabase.ts
+  📄 test-db.ts
+📁 server
+  📁 cron
+    📄 adsOptimizer.cron.ts
+  📁 data
+    📄 channels.json
+  📁 lib
+    📄 cache.ts
+    📄 prisma.ts
+    📄 redis.ts
+  📁 middleware
+    📄 adminAuth.ts
+    📄 auth.ts
+    📄 checkPremium.ts
+    📄 errorHandler.ts
+    📄 redisRateLimit.ts
+    📄 requestLogger.ts
+    📄 resellerAuth.ts
+  📁 routes
+    📁 admin
+      📄 metrics.ts
+      📄 security.ts
+    📄 admin.ts
+    📄 adminAuth.ts
+    📄 adminDashboard.ts
+    📄 auth.ts
+    📄 billing.ts
+    📄 channels.ts
+    📄 favorites.ts
+    📄 health.ts
+    📄 history.ts
+    📄 keys.ts
+    📄 m3u.ts
+    📄 referral.ts
+    📄 streams.ts
+  📁 scripts
+    📄 burst-test.ts
+    📄 cdn-worker.js
+    📄 env-validator.ts
+  📁 services
+    📄 cache.ts
+    📄 db.ts
+    📄 health.service.ts
+    📄 loadBalancer.service.ts
+    📄 logger.ts
+    📄 metrics.service.ts
+    📄 nonce.service.ts
+    📄 observability.service.ts
+    📄 signedStreamUrl.service.ts
+    📄 sourceEngine.service.ts
+    📄 streamSession.service.ts
+  📁 types
+    📄 sourceDiscovery.types.ts
+  📄 types.ts
+  📁 utils
+    📄 crypto.ts
+    📄 encryption.utils.ts
+    📄 ip.ts
+    📄 redisGuard.ts
+    📄 systemGuard.ts
+  📁 workers
+📄 server.ts
+📄 server_error.log
+📄 server_error_utf8.txt
+📁 src
+  📁 app
+    📁 admin
+      📁 brain
+    📁 tv-os
+      📁 ai
+      📁 analytics
+      📁 channels
+      📁 epg
+      📁 flags
+      📄 layout.tsx
+      📄 page.tsx
+      📁 sports
+      📄 TrendingChart.tsx
+  📄 App.tsx
+  📁 components
+    📁 Admin
+      📄 AdminAdsAI.tsx
+      📄 AdminAdsDashboard.tsx
+      📄 AdminDashboard.tsx
+      📄 AdminModal.tsx
+      📄 AdminRevenueDashboard.tsx
+      📄 AdminSaaSDashboard.tsx
+      📄 AdminSecurityDashboard.tsx
+      📄 AdminSmartDashboard.tsx
+      📄 M3uManager.tsx
+      📄 Sidebar.tsx
+    📄 AdminLogin.tsx
+    📄 AdsBanner.tsx
+    📄 AndroidCodeViewer.tsx
+    📁 Auth
+      📄 AuthModal.tsx
+    📁 Channel
+      📄 ChannelList.tsx
+    📁 Dashboard
+      📄 AdvancedAnalyticsDashboard.tsx
+      📄 AnalyticsDashboard.tsx
+      📄 MetricsPanel.tsx
+      📄 SportsDashboard.tsx
+    📁 Home
+      📄 CategoryFilter.tsx
+      📄 ChannelCard.tsx
+      📄 ChannelGrid.tsx
+      📄 Hero.tsx
+      📄 NetflyChannelList.tsx
+      📄 RecommendationRow.tsx
+    📁 Layout
+      📄 DownloadAppModal.tsx
+      📄 Header.tsx
+      📄 Navbar.tsx
+    📁 Mobile
+      📄 BottomNav.tsx
+      📄 MobileChannelList.tsx
+      📄 MobilePlayerCard.tsx
+    📁 Player
+      📄 AdsManager.tsx
+      📄 BufferManager.ts
+      📄 MiniEPG.tsx
+      📄 Player.tsx
+      📄 PlayerModal.tsx
+      📄 PremiumOverlay.tsx
+      📁 UI
+      📄 UltraPlayer.tsx
+      📄 VideoCore.tsx
+    📄 PremiumLogin.tsx
+    📄 PremiumLoginModal.tsx
+    📁 Pricing
+      📄 PricingModal.tsx
+    📁 Settings
+      📄 M3uSettings.tsx
+    📁 TV
+      📄 TvLayout.tsx
+  📁 context
+    📄 AuthContext.tsx
+    📄 LanguageContext.tsx
+    📄 translations.ts
+  📁 hooks
+    📄 useAdBlockMonitor.ts
+    📄 useChannels.ts
+    📄 useGoogleIMA.ts
+    📄 useHeaderBidding.ts
+    📄 usePlayer.ts
+    📄 useTrending.ts
+    📄 useTVRemote.ts
+  📁 lib
+    📁 supabase
+      📄 client.ts
+      📄 realtime.ts
+      📄 server.ts
+  📄 main.tsx
+  📄 middleware.ts
+  📁 services
+    📄 ad.service.ts
+    📄 channelService.ts
+  📁 types
+    📄 index.ts
+  📁 utils
+    📄 detectStreamType.ts
+    📄 mock.ts
+    📄 supabaseClient.ts
+    📄 validateStream.ts
+📄 STORE_READY.md
+📁 supabase
+  📁 functions
+    📁 tv-os-feed
+      📄 index.ts
+  📁 migrations
+    📄 01_tv_os_core_schema.sql
+    📄 10_event_orchestrator.sql
+    📄 15_observability.sql
+    📄 16_dashboard_v15_2.sql
+    📄 17_obs_v17_industrial_final.sql
+📄 supabase_setup.sql
+📄 sync_log.txt
+📄 tailwind.config.js
+📄 test-loader.ts
+📄 test-streams.ts
+📁 tests
+  📁 backend
+    📄 auth.test.ts
+    📄 health.test.ts
+  📁 frontend
+    📄 SportsDashboard.test.tsx
+  📄 setup.ts
+📄 test_results.txt
+📄 test_results_utf8.txt
+📄 tree.txt
+📄 tsconfig.json
+📄 tsconfig.tsbuildinfo
+📁 tv
+  📁 .gradle
+    📁 8.10.2
+      📁 checksums
+      📁 dependencies-accessors
+      📁 executionHistory
+      📁 expanded
+      📁 fileChanges
+      📁 fileHashes
+      📄 gc.properties
+      📁 vcsMetadata
+    📁 buildOutputCleanup
+      📄 buildOutputCleanup.lock
+      📄 cache.properties
+      📄 outputFiles.bin
+    📄 file-system.probe
+    📁 vcs-1
+      📄 gc.properties
+  📁 .idea
+    📄 .gitignore
+    📄 .name
+    📄 AndroidProjectSystem.xml
+    📁 caches
+      📄 deviceStreaming.xml
+    📄 compiler.xml
+    📄 deploymentTargetSelector.xml
+    📄 deviceManager.xml
+    📄 gradle.xml
+    📁 inspectionProfiles
+      📄 Project_Default.xml
+    📄 migrations.xml
+    📄 misc.xml
+    📄 runConfigurations.xml
+    📄 workspace.xml
+  📁 .kotlin
+    📁 sessions
+  📁 .settings
+    📄 org.eclipse.buildship.core.prefs
+  📁 app
+    📄 build.gradle.kts
+    📄 proguard-rules.pro
+    📁 src
+      📁 main
+  📄 build.gradle.kts
+  📄 build.log
+  📄 build2.log
+  📄 build_assemble.txt
+  📄 build_clean_st.txt
+  📄 build_cmd.log
+  📄 build_err.txt
+  📄 build_final_attempt.txt
+  📄 build_final_err.txt
+  📄 build_final_verify.txt
+  📄 build_help_cmd.txt
+  📄 build_info.txt
+  📄 build_log.txt
+  📄 build_log_2.txt
+  📄 build_no_daemon.txt
+  📄 build_out.txt
+  📄 build_output.txt
+  📄 build_output2.txt
+  📄 build_out_utf8.txt
+  📄 build_props.txt
+  📄 build_utf8.log
+  📄 build_verify_2.txt
+  📄 full_error.txt
+  📁 gradle
+    📁 wrapper
+      📄 gradle-wrapper.jar
+      📄 gradle-wrapper.properties
+  📄 gradle.properties
+  📄 gradlew
+  📄 gradlew.bat
+  📄 java_pid13376.hprof
+  📄 java_pid6140.hprof
+  📄 local.properties
+  📄 settings.gradle.kts
+📄 vercel.json
+📄 verify-refactor.ts
+📄 vitest.config.ts
+📄 walkthrough.md
+📄 web_lint_error.txt
+📄 web_lint_error_utf8.txt
+📄 worker.ts

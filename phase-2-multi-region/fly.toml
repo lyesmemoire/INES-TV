@@ -1,0 +1,20 @@
+# 🛰️ SOS GLOBAL ORCHESTRATION (Validated Production)
+app = "streamperf-sos"
+
+primary_region = "fra"
+
+[env]
+  REGION = "fra"
+
+[experimental]
+  auto_rollback = true
+
+[[services]]
+  http_checks = []
+  internal_port = 3000
+  processes = ["app"]
+
+[[regions]]
+  fra = {}
+  iad = {}
+  sin = {}
