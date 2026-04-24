@@ -67,29 +67,36 @@ if (cluster.isPrimary) {
   const allSources = Object.values(sourcesData).flatMap((c: any) => c.sources || []);
   startHealthCheck(allSources);
 
-  // 🌍 [EDGE] BACKGROUND SNAPSHOT ENGINE (Level 5++)
-  // Master process rebuilds the global state every 30s
+  // 🚀 [MESH] LEVEL 7 DISTRIBUTED SIMULATOR
+  const { MeshSimulator } = await import("./server/core/mesh/MeshSimulator.js");
+  MeshSimulator.initialize(100);
+
+  // 🌍 [EDGE] GLOBAL MESH SNAPSHOT ENGINE (Level 6)
+  // Master process rebuilds regional state snapshots every 30s
   setInterval(async () => {
     try {
       const { EventLogService } = await import("./server/services/eventLog.service.js");
-      const events = await EventLogService.replayCurrentSegment();
+      const { REGIONS } = await import("./server/core/edge-router.js");
       
-      const securityState: Record<string, any> = {};
-      
-      for (const e of events) {
-        if (e.type === 'AUTH_FAILURE' || e.type === 'REQUEST') {
-          const ip = e.data.ip;
-          if (!securityState[ip]) securityState[ip] = { rateLimitCount: 0, authFailures: 0 };
-          
-          if (e.type === 'AUTH_FAILURE') securityState[ip].authFailures++;
-          if (e.type === 'REQUEST') securityState[ip].rateLimitCount++;
+      for (const region of REGIONS) {
+        const events = await EventLogService.replayRegionSegment(region);
+        const securityState: Record<string, any> = {};
+        
+        for (const e of events) {
+          if (e.type === 'AUTH_FAILURE' || e.type === 'REQUEST') {
+            const ip = e.data.ip;
+            if (!securityState[ip]) securityState[ip] = { rateLimitCount: 0, authFailures: 0 };
+            
+            if (e.type === 'AUTH_FAILURE') securityState[ip].authFailures++;
+            if (e.type === 'REQUEST') securityState[ip].rateLimitCount++;
+          }
         }
+        
+        await EventLogService.saveRegionSnapshot(region, { security: securityState });
       }
-      
-      await EventLogService.saveSnapshot({ security: securityState });
-      console.log("💾 [EDGE] Application state snapshot persisted.");
+      console.log("💾 [EDGE_MESH] Regional snapshots persisted (Global Consistency Sync).");
     } catch (err) {
-      console.error("🚨 [EDGE] Snapshot background task FAILED:", err);
+      console.error("🚨 [EDGE_MESH] Mesh snapshot task FAILED:", err);
     }
   }, 30000).unref();
 

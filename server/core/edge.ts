@@ -1,30 +1,31 @@
 import { EventLogService } from "../services/eventLog.service";
+import { Region } from "./edge-router";
 
 /**
- * Enterprise Edge State Builder (Level 5++)
- * Optimized with Snapshot-First "Fast Path"
+ * Enterprise Edge State Builder (Level 6 Mesh)
+ * Region-Aware Stateless Compute
  */
 export const EdgeState = {
   /**
-   * Rebuilds security context with Fast Path / Fallback
+   * Rebuilds security context for a SPECIFIC regional node
    */
-  async getSecurityState(ip: string) {
-    // ⚡ FAST PATH: Read from Snapshot
-    const snapshot = await EventLogService.getLatestSnapshot();
+  async getSecurityState(ip: string, region: Region) {
+    // ⚡ FAST PATH: Read from Regional Snapshot
+    const snapshot = await EventLogService.getRegionSnapshot(region);
     const now = Date.now();
     
-    // If snapshot is fresh (less than 30s old), use it as base
     if (snapshot && (now - snapshot.updatedAt < 30000)) {
       const ipState = snapshot.security?.[ip] || { rateLimitCount: 0, authFailures: 0 };
       return {
         ...ipState,
         isBlocked: ipState.authFailures >= 5,
-        source: 'SNAPSHOT'
+        region,
+        source: 'REGIONAL_SNAPSHOT'
       };
     }
 
-    // 🔄 FALLBACK: Replay current hourly segment
-    const events = await EventLogService.replayCurrentSegment();
+    // 🔄 FALLBACK: Replay current regional segment
+    const events = await EventLogService.replayRegionSegment(region);
     
     const rateLimitCount = events.filter(e => 
       e.type === 'REQUEST' && e.data.ip === ip
@@ -38,14 +39,8 @@ export const EdgeState = {
       rateLimitCount,
       authFailures,
       isBlocked: authFailures >= 5,
-      source: 'REPLAY'
+      region,
+      source: 'REGIONAL_REPLAY'
     };
-  },
-
-  /**
-   * Logical Edge Router Simulation
-   */
-  getRegion(req: any) {
-    return req.headers["x-region"] || "eu-west-simulated";
   }
 };

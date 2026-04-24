@@ -248,6 +248,7 @@ export async function createApp() {
   app.use("/api/admin/saas", adminSaaSRouter);
   app.use("/api/admin/saas/editorial", adminEditorialRouter);
   app.use("/api/admin/ops", adminOpsRouter);
+  app.use("/api/admin/chaos", chaosRouter);
   app.use("/api/admin/live-sources", adminLiveSourcesRouter);
 
   app.use("/api/streams", streamLimiter, ipLimiter, streamsRouter);

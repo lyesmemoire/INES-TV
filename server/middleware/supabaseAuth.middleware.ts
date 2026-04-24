@@ -21,6 +21,7 @@ export interface AuthRequest extends Request {
 
 import { EdgeState } from "../core/edge";
 import { EventLogService } from "../services/eventLog.service";
+import { EdgeRouter } from "../core/edge-router";
 
 /**
  * Validates Supabase JWT from Authorization header.
@@ -32,15 +33,17 @@ export async function requireAuth(
   next: NextFunction
 ) {
   const ip = req.ip || req.headers["x-forwarded-for"] || req.connection.remoteAddress || "unknown";
+  
+  // 📍 EDGE ROUTING
+  const region = EdgeRouter.resolveRegion(req);
 
-  // 🌍 EDGE STATE RECONSTRUCTION
-  // Each request is a fresh compute unit
-  const state = await EdgeState.getSecurityState(ip);
+  // 🌍 REGIONAL EDGE STATE RECONSTRUCTION
+  const state = await EdgeState.getSecurityState(ip, region);
   
   if (state.isBlocked) {
-    console.warn("🚨 [EDGE_SECURITY] Brute-force blocked IP:", ip);
+    console.warn(`🚨 [EDGE_${region}] Brute-force blocked IP:`, ip);
     
-    EventLogService.append("SECURITY_BLOCK", { ip, reason: "BRUTE_FORCE", requestId: (req as any).id });
+    EventLogService.append(region, "SECURITY_BLOCK", { ip, reason: "BRUTE_FORCE", requestId: (req as any).id });
 
     return res.status(403).json({ error: "BLOCKED_IP" });
   }
@@ -58,10 +61,10 @@ export async function requireAuth(
       };
       return next();
     } else {
-      // ❌ Invalid API Key Attempt -> Append to Event Log for reconstruction
-      EventLogService.append("AUTH_FAILURE", { ip, route: req.originalUrl, requestId: (req as any).id });
+      // ❌ Invalid API Key Attempt -> Append to Regional Event Log
+      EventLogService.append(region, "AUTH_FAILURE", { ip, route: req.originalUrl, requestId: (req as any).id });
       
-      console.warn("🚨 [EDGE_SECURITY] UNAUTHORIZED_ACCESS:", { ip, route: req.originalUrl });
+      console.warn(`🚨 [EDGE_${region}] UNAUTHORIZED_ACCESS:`, { ip, route: req.originalUrl });
       return res.status(403).json({ error: "FORBIDDEN" });
     }
   }
