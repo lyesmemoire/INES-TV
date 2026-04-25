@@ -87,8 +87,15 @@ const AdsManager: React.FC<AdsManagerProps> = ({ onFinish }) => {
                 return;
             }
         }
-      } catch (err) {}
+      } catch (err) {
+        console.warn("[AdsManager] Ad fetch failed:", err);
+      }
     }
+    
+    // ✅ FALLBACK: If we went through all endpoints and still have no ad to show,
+    // we must call onFinish() immediately to unblock the player.
+    console.warn("[AdsManager] No ads available, skipping ad phase.");
+    if (onFinish) onFinish();
   };
 
   const trackAdEvent = async (adId: string, type: string) => {

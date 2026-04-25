@@ -800,6 +800,7 @@ model Channel {
   awayName      String?
   league        String?
   matchTime     String?
+  scheduledAt   DateTime?
   status        String?           @default("UPCOMING")
   isPremium     Boolean           @default(false)
   isActive      Boolean           @default(true)
@@ -1221,6 +1222,10 @@ enum LiveSourceType {
   M3U
   IFRAME
   STREAM
+  FACEBOOK
+  YOUTUBE
+  MP4
+  RTMP
 
   @@schema("public")
 }

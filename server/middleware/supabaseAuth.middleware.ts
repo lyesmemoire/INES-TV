@@ -38,14 +38,18 @@ export async function requireAuth(
   const region = EdgeRouter.resolveRegion(req);
 
   // 🌍 REGIONAL EDGE STATE RECONSTRUCTION
-  const state = await EdgeState.getSecurityState(ip, region);
-  
-  if (state.isBlocked) {
-    console.warn(`🚨 [EDGE_${region}] Brute-force blocked IP:`, ip);
+  try {
+    const state = await EdgeState.getSecurityState(ip, region);
     
-    EventLogService.append(region, "SECURITY_BLOCK", { ip, reason: "BRUTE_FORCE", requestId: (req as any).id });
+    if (state.isBlocked) {
+      console.warn(`🚨 [EDGE_${region}] Brute-force blocked IP:`, ip);
+      
+      EventLogService.append(region, "SECURITY_BLOCK", { ip, reason: "BRUTE_FORCE", requestId: (req as any).id });
 
-    return res.status(403).json({ error: "BLOCKED_IP" });
+      return res.status(403).json({ error: "BLOCKED_IP" });
+    }
+  } catch (err) {
+    console.error(`🚨 [EDGE_${region}] Security middleware bypass due to crash:`, err);
   }
 
   // 🔑 OPS BYPASS

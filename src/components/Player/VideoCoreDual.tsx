@@ -74,7 +74,7 @@ const VideoCoreDual = forwardRef<HTMLVideoElement, VideoCoreDualProps>(({
     video.addEventListener("waiting", onWaiting);
     video.addEventListener("playing", onPlaying);
 
-    if (Hls.isSupported() && type === 'hls') {
+    if (Hls.isSupported() && (type === 'hls' || type === 'application/x-mpegURL' || type === 'm3u')) {
       if (hlsARef.current) hlsARef.current.destroy();
 
       const hls = new Hls({
@@ -162,7 +162,7 @@ const VideoCoreDual = forwardRef<HTMLVideoElement, VideoCoreDualProps>(({
     const video = videoBRef.current;
     if (!video || !secondarySrc) return;
 
-    if (Hls.isSupported() && type === 'hls') {
+    if (Hls.isSupported() && (type === 'hls' || type === 'application/x-mpegURL' || type === 'm3u')) {
       if (hlsBRef.current) hlsBRef.current.destroy();
 
       const hls = new Hls({

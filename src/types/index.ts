@@ -3,9 +3,13 @@ export type NetworkQuality = 'POOR' | 'MODERATE' | 'EXCELLENT';
 export type NetworkType = 'WIFI' | 'CELLULAR' | 'UNKNOWN';
 
 export interface StreamSource {
+  id: string;
+  type: "facebook" | "m3u8" | "youtube" | "mp4" | "rtmp" | "hls" | "dash";
   url: string;
-  type: 'hls' | 'dash';
-  priority?: number;
+  priority: number; // 1 = highest
+  isActive: boolean;
+  lastChecked?: Date;
+  status: "valid" | "invalid" | "unknown";
   label?: string;
   cdn?: string;
 }
@@ -14,36 +18,37 @@ export interface Channel {
   id: string;
   name: string;
   category: string;
-  viewers: string;
+  viewers: string | number;
   logo: string;
-
-  // ✅ NEW
+  thumbnail?: string;
   streamSources?: StreamSource[];
-
-  // ⚠️ LEGACY (TO REMOVE LATER)
+  
+  // Legacy support
   streamUrl?: string;
 
-  // --- rest unchanged ---
-  thumbnail?: string;
-  epgId?: string; // Optionnel, pour l’EPG
+  // Match specific
   score?: string;
-  homeLogo?: string;
-  awayLogo?: string;
+  homeLogo?: string | null;
+  awayLogo?: string | null;
   homeName?: string;
   awayName?: string;
   league?: string;
   matchTime?: string;
-  status?: 'LIVE' | 'UPCOMING' | 'FINISHED';
+  scheduledAt?: Date | string;
+  status?: 'LIVE' | 'UPCOMING' | 'FINISHED' | 'ENDED';
+  
   isActive?: boolean;
-  timeline?: { time: string; action: string; team: 'home' | 'away' }[];
-  schedule?: { time: string; title: string; isLive?: boolean; description?: string; duration?: string }[];
-  highlights?: { title: string; duration: string; thumbnail: string }[];
+  isPremium?: boolean;
+
   currentProgram?: { title: string; description?: string } | null;
   liveStats?: {
     elapsedTime: string;
-    keyPlayers: string[];
-    upcomingEvents: { time: string; description: string }[];
+    keyPlayers?: string[];
+    upcomingEvents?: { time: string; description: string }[];
   };
-  isPremium?: boolean;
+
+  timeline?: { time: string; action: string; team: 'home' | 'away' }[];
+  schedule?: { time: string; title: string; isLive?: boolean; description?: string; duration?: string }[];
+  highlights?: { title: string; duration: string; thumbnail: string }[];
 }
 

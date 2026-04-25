@@ -35,6 +35,10 @@ export class MeshSimulator {
     console.log(`📡 [MESH_SIM] Initialized ${nodeCount} virtual nodes across 3 regions.`);
   }
 
+  static getAllNodes() {
+    return Array.from(this.nodes.values());
+  }
+
   static getNodesInRegion(region: Region) {
     return Array.from(this.nodes.values()).filter(n => n.region === region && n.status !== "down");
   }

@@ -20,13 +20,40 @@ router.post("/partition", (req, res) => {
 });
 
 router.get("/status", (req, res) => {
-  // Return simulated mesh health
   res.json({
     status: "Simulation Active",
+    engine: "Distributed Systems Emulator v1.0",
     nodes: 100,
     regions: ["eu-west-1", "us-east-1", "ap-south-1"],
-    resilienceLevel: 7
+    resilienceLevel: 7,
+    consistencyModel: "Dynamo-style Quorum (W=2, R=2, N=3)"
   });
 });
+
+router.get("/nodes", (req, res) => {
+  const nodes = MeshSimulator.getAllNodes();
+  res.json(nodes.map(n => ({
+    id: n.id,
+    region: n.region,
+    status: n.status,
+    clock: n.clock,
+    stateSize: n.state.size
+  })));
+});
+
+router.get("/latency-map", (req, res) => {
+  const regions: Region[] = ["eu-west-1", "us-east-1", "ap-south-1"];
+  const map: any = {};
+  
+  for (const r1 of regions) {
+    map[r1] = {};
+    for (const r2 of regions) {
+      map[r1][r2] = MeshSimulator.getLatency(r1, r2);
+    }
+  }
+  
+  res.json(map);
+});
+
 
 export default router;

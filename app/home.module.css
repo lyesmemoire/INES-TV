@@ -1,0 +1,117 @@
+.homepage {
+  padding: 40px;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #0f0f0f;
+  color: white;
+  min-height: 100vh;
+}
+
+.header {
+  font-size: 28px;
+  font-weight: 900;
+  margin-bottom: 40px;
+  letter-spacing: -1px;
+  text-transform: uppercase;
+  color: #fff;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 20px;
+}
+
+.section {
+  margin-bottom: 40px;
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #e5e5e5;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  background: #222;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.cardTeams {
+  font-weight: 800;
+  font-size: 18px;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.cardTime {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.cardButton {
+  background: #4f46e5;
+  color: white;
+  border: none;
+  padding: 10px 0;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 1px;
+  transition: background 0.2s;
+}
+
+.cardButton:hover {
+  background: #6366f1;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #151515;
+  padding: 16px 20px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  transition: background 0.2s;
+}
+
+.row:hover {
+  background: #1c1c1c;
+}
+
+.rowTeams {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.rowTime {
+  color: #888;
+  font-size: 14px;
+  font-weight: 500;
+}

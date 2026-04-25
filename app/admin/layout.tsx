@@ -1,42 +1,103 @@
-import { ReactNode } from "react";
-import AdminSidebar from "@/src/components/Admin/Sidebar";
-import { AdminGlow } from "@/src/components/Admin/StatCard";
-import "@/app/globals.css";
+"use client";
 
-/**
- * 🏰 UNIFIED SAAS ADMIN LAYOUT
- * Professional Noir OS wrapper for all admin-level orchestration.
- */
-export const metadata = {
-  title: "Admin Control Plane - StreamPerf OS",
-  description: "B2B SaaS Orchestration Engine",
-};
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import {
+  Home,
+  LayoutDashboard,
+  Video,
+  Signal,
+  Tv,
+  BarChart3,
+  Settings,
+  Menu,
+  X,
+  LogOut,
+} from "lucide-react";
 
-interface AdminLayoutProps {
-  children: ReactNode;
-}
+const MENU_ITEMS = [
+  { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
+  { icon: Video, label: "Matchs", href: "/admin/matches" },
+  { icon: Signal, label: "Sources streaming", href: "/admin/streams" },
+  { icon: Tv, label: "Chaînes IPTV", href: "/admin/channels" },
+  { icon: BarChart3, label: "Analytics", href: "/admin/analytics" },
+  { icon: Settings, label: "Paramètres", href: "/admin/settings" },
+];
 
-export default function AdminLayout({ children }: AdminLayoutProps) {
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const pathname = usePathname();
+
   return (
-    <div className="flex h-screen bg-[#020202] text-zinc-100 overflow-hidden font-sans">
-      {/* SIDEBAR NAVIGATION */}
-      <AdminSidebar />
-
-      {/* MAIN CONTENT AREA */}
-      <main className="flex-1 overflow-y-auto relative bg-[#060606]">
-        {/* Aesthetic Accents */}
-        <AdminGlow color="indigo" />
-        
-        <div className="relative z-10 p-6 md:p-10 max-w-7xl mx-auto">
-          {children}
+    <div className="min-h-screen bg-[#09090b] text-white flex">
+      {/* SIDEBAR */}
+      <aside
+        className={`${
+          sidebarOpen ? "w-64" : "w-20"
+        } bg-zinc-950 border-r border-zinc-800 transition-all duration-300 flex flex-col`}
+      >
+        {/* Header */}
+        <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
+          {sidebarOpen && (
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center font-black">
+                S
+              </div>
+              <span className="font-black text-lg">StreamPro</span>
+            </div>
+          )}
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
+          >
+            {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </div>
-      </main>
 
-      {/* GLOBAL PULSE (System Health) */}
-      <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-2 bg-black/40 backdrop-blur-xl border border-white/5 rounded-full">
-         <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_#10B981]" />
-         <span className="text-[8px] font-black text-zinc-400 uppercase tracking-widest leading-none">Kernel Sync Active</span>
-      </div>
+        {/* Navigation */}
+        <nav className="flex-1 p-4 space-y-2">
+          {MENU_ITEMS.map((item) => {
+            const Icon = item.icon;
+            const isActive = pathname === item.href;
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+                  isActive
+                    ? "bg-emerald-500 text-black font-bold shadow-lg shadow-emerald-500/20"
+                    : "hover:bg-zinc-800 text-zinc-400 hover:text-white"
+                }`}
+              >
+                <Icon size={20} />
+                {sidebarOpen && <span>{item.label}</span>}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Footer */}
+        <div className="p-4 border-t border-zinc-800 space-y-2">
+          <Link
+            href="/"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-zinc-800 text-zinc-400 hover:text-white transition-all"
+          >
+            <Home size={20} />
+            {sidebarOpen && <span>Retour au site</span>}
+          </Link>
+          <button className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-red-400 hover:text-red-300 transition-all w-full">
+            <LogOut size={20} />
+            {sidebarOpen && <span>Déconnexion</span>}
+          </button>
+        </div>
+      </aside>
+
+      {/* MAIN CONTENT */}
+      <main className="flex-1 overflow-auto">
+        {children}
+      </main>
     </div>
   );
 }

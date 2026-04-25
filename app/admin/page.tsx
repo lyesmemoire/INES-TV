@@ -1,113 +1,127 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import StatCard from "@/src/components/Admin/StatCard";
-import { 
-  Users, 
-  Tv2, 
-  Zap, 
-  ShieldAlert,
-  ArrowUpRight,
-  MonitorPlay,
-  Activity
-} from "lucide-react";
+import { Video, Users, TrendingUp, Radio } from "lucide-react";
+import Link from "next/link";
 
-/**
- * 📊 ADMIN OPERATIONS DECK (Control Plane Home)
- * Main entry point for the StreamPerf OS management.
- */
-export default function AdminDashboardPage() {
-  const [stats, setStats] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+export default function AdminDashboard() {
+  const [stats, setStats] = useState({
+    liveMatches: 0,
+    totalMatches: 0,
+    activeUsers: 0,
+    activeStreams: 0,
+  });
 
   useEffect(() => {
-    async function fetchStats() {
-      try {
-        const res = await fetch("/api/admin/saas/stats", {
-          headers: { "x-admin-secret": "staff_emerge_key" } // Only for local demo, replace with real auth
-        });
-        const data = await res.json();
-        setStats(data);
-      } catch (e) {
-        console.error("Failed to sync stats");
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchStats();
+    // Mock data - remplacer par vraie API
+    setStats({
+      liveMatches: 5,
+      totalMatches: 28,
+      activeUsers: 1247,
+      activeStreams: 12,
+    });
   }, []);
 
   return (
-    <div className="space-y-10">
-      {/* HEADER: CONSOLE INFOS */}
-      <div className="flex justify-between items-end">
-        <div>
-           <h2 className="text-3xl font-black tracking-tighter leading-none mb-2 text-white">Operations <span className="text-zinc-700">Deck</span></h2>
-           <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">SaaS OS Kernel v1.0.4 • High Precision Mode</p>
-        </div>
-        <div className="flex items-center gap-4">
-           <button className="px-5 py-3 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition">Export Audit</button>
-           <button className="px-5 py-3 bg-indigo-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-indigo-600/20 active:scale-95 transition">Global Rerank</button>
-        </div>
+    <div className="p-8">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-black mb-2">Dashboard Admin</h1>
+        <p className="text-zinc-500">
+          Vue d'ensemble de votre plateforme de streaming
+        </p>
       </div>
 
-      {/* METRICS GRID: THE PULSE */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard 
-          label="Total Reach" 
-          value={stats?.users?.total || "---"} 
-          trend="+12%" 
-          trendType="up"
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <StatCard
+          icon={Radio}
+          label="Matchs en direct"
+          value={stats.liveMatches}
+          color="emerald"
+        />
+        <StatCard
+          icon={Video}
+          label="Total matchs"
+          value={stats.totalMatches}
+          color="blue"
+        />
+        <StatCard
           icon={Users}
+          label="Utilisateurs actifs"
+          value={stats.activeUsers}
+          color="purple"
         />
-        <StatCard 
-          label="Premium Yield" 
-          value={stats?.users?.premium || "---"} 
-          subValue="Active Subscriptions"
-          trend="+4.2%" 
-          trendType="up"
-          icon={Zap}
-        />
-        <StatCard 
-          label="Active Streams" 
-          value={stats?.streams?.active || "---"} 
-          subValue="M3U Multi-CDN Hub"
-          icon={MonitorPlay}
-        />
-        <StatCard 
-          label="Panic Status" 
-          value={stats?.system?.blackoutMode || "NORMAL"} 
-          alert={stats?.system?.blackoutMode !== "NORMAL"}
-          subValue="Global Blackout Override"
-          icon={ShieldAlert}
+        <StatCard
+          icon={TrendingUp}
+          label="Streams actifs"
+          value={stats.activeStreams}
+          color="orange"
         />
       </div>
 
-      {/* ATTENTION ANALYTICS (WIP PREVIEW) */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-         <div className="lg:col-span-2 bg-[#0F111A] border border-white/5 rounded-[40px] p-8 min-h-[400px] flex flex-col justify-center items-center text-center">
-            <Activity className="text-indigo-500/20 w-16 h-16 mb-4 animate-pulse" />
-            <p className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em]">Momentum Real-time Heatmap Loading...</p>
-         </div>
-
-         <div className="bg-[#0F111A] border border-white/5 rounded-[40px] p-8">
-            <h4 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-8">Recent Peak Events</h4>
-            <div className="space-y-6">
-               {[1,2,3].map(i => (
-                 <div key={i} className="flex items-center gap-4 group">
-                    <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-indigo-500 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                       <ArrowUpRight size={14} />
-                    </div>
-                    <div className="flex-1">
-                       <p className="text-[10px] font-black text-white uppercase tracking-tighter">UCL: Real Madrid vs City</p>
-                       <p className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest">Pressure Peak: 0.94 • 12m ago</p>
-                    </div>
-                 </div>
-               ))}
-            </div>
-         </div>
+      {/* Quick Actions */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <QuickAction
+          title="Ajouter un match"
+          description="Créer un nouveau match avec sources de streaming"
+          href="/admin/matches/new"
+          color="emerald"
+        />
+        <QuickAction
+          title="Gérer les streams"
+          description="Ajouter/tester des sources M3U8, Facebook, etc."
+          href="/admin/streams"
+          color="blue"
+        />
+        <QuickAction
+          title="Importer M3U"
+          description="Import en masse de chaînes IPTV"
+          href="/admin/channels/import"
+          color="purple"
+        />
       </div>
-
     </div>
+  );
+}
+
+function StatCard({ icon: Icon, label, value, color }: any) {
+  const colors = {
+    emerald: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
+    blue: "bg-blue-500/10 text-blue-500 border-blue-500/20",
+    purple: "bg-purple-500/10 text-purple-500 border-purple-500/20",
+    orange: "bg-orange-500/10 text-orange-500 border-orange-500/20",
+  };
+
+  return (
+    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+      <div className="flex items-center justify-between mb-4">
+        <div
+          className={`w-12 h-12 rounded-xl flex items-center justify-center border ${colors[color]}`}
+        >
+          <Icon size={24} />
+        </div>
+      </div>
+      <p className="text-3xl font-black mb-1">{value}</p>
+      <p className="text-sm text-zinc-500 font-medium">{label}</p>
+    </div>
+  );
+}
+
+function QuickAction({ title, description, href, color }: any) {
+  const colors = {
+    emerald: "hover:border-emerald-500/50 hover:bg-emerald-500/5",
+    blue: "hover:border-blue-500/50 hover:bg-blue-500/5",
+    purple: "hover:border-purple-500/50 hover:bg-purple-500/5",
+  };
+
+  return (
+    <Link
+      href={href}
+      className={`bg-zinc-900 border border-zinc-800 rounded-2xl p-6 transition-all ${colors[color]}`}
+    >
+      <h3 className="text-lg font-black mb-2">{title}</h3>
+      <p className="text-sm text-zinc-500">{description}</p>
+    </Link>
   );
 }

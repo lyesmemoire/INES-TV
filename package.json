@@ -14,7 +14,8 @@
     "lint": "tsc --noEmit",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "fix:encoding": "tsx scripts/fix-encoding.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -49,8 +50,10 @@
     "framer-motion": "^12.38.0",
     "geoip-country": "^5.0.202603312350",
     "geoip-lite": "^2.0.1",
+    "glob": "^13.0.6",
     "helmet": "^8.1.0",
     "hls.js": "^1.6.15",
+    "iconv-lite": "^0.7.2",
     "ioredis": "^5.10.1",
     "jose": "^6.2.2",
     "jsonwebtoken": "^9.0.3",

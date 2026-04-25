@@ -10,37 +10,49 @@ export const EdgeState = {
    * Rebuilds security context for a SPECIFIC regional node
    */
   async getSecurityState(ip: string, region: Region) {
-    // ⚡ FAST PATH: Read from Regional Snapshot
-    const snapshot = await EventLogService.getRegionSnapshot(region);
-    const now = Date.now();
-    
-    if (snapshot && (now - snapshot.updatedAt < 30000)) {
-      const ipState = snapshot.security?.[ip] || { rateLimitCount: 0, authFailures: 0 };
+    try {
+      // ⚡ FAST PATH: Read from Regional Snapshot
+      const snapshot = await EventLogService.getRegionSnapshot(region);
+      const now = Date.now();
+      
+      if (snapshot && (now - (snapshot.updatedAt || 0) < 30000)) {
+        const ipState = snapshot.security?.[ip] || { rateLimitCount: 0, authFailures: 0 };
+        return {
+          rateLimitCount: ipState.rateLimitCount || 0,
+          authFailures: ipState.authFailures || 0,
+          isBlocked: (ipState.authFailures || 0) >= 5,
+          region,
+          source: 'REGIONAL_SNAPSHOT'
+        };
+      }
+
+      // 🔄 FALLBACK: Replay current regional segment
+      const events = await EventLogService.replayRegionSegment(region);
+      
+      const rateLimitCount = events.filter(e => 
+        e?.type === 'REQUEST' && e?.data?.ip === ip
+      ).length;
+
+      const authFailures = events.filter(e => 
+        e?.type === 'AUTH_FAILURE' && e?.data?.ip === ip
+      ).length;
+
       return {
-        ...ipState,
-        isBlocked: ipState.authFailures >= 5,
+        rateLimitCount,
+        authFailures,
+        isBlocked: authFailures >= 5,
         region,
-        source: 'REGIONAL_SNAPSHOT'
+        source: 'REGIONAL_REPLAY'
+      };
+    } catch (err) {
+      console.error("🚨 [EDGE_STATE] Critical failure in reconstruction:", err);
+      return {
+        rateLimitCount: 0,
+        authFailures: 0,
+        isBlocked: false,
+        region,
+        source: 'ERROR_FALLBACK'
       };
     }
-
-    // 🔄 FALLBACK: Replay current regional segment
-    const events = await EventLogService.replayRegionSegment(region);
-    
-    const rateLimitCount = events.filter(e => 
-      e.type === 'REQUEST' && e.data.ip === ip
-    ).length;
-
-    const authFailures = events.filter(e => 
-      e.type === 'AUTH_FAILURE' && e.data.ip === ip
-    ).length;
-
-    return {
-      rateLimitCount,
-      authFailures,
-      isBlocked: authFailures >= 5,
-      region,
-      source: 'REGIONAL_REPLAY'
-    };
   }
 };

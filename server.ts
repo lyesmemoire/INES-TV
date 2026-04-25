@@ -45,6 +45,7 @@ import feedRouter from "./server/routes/feed.js";
 import metricsRoute from "./server/routes/metrics.js";
 import metricsHealthRoute from "./server/routes/metrics.health.js";
 import alertsRoute from "./server/routes/alerts.js";
+import homeMatchesRouter from "./server/routes/home.matches.js";
 import { startMetricsCron } from "./server/cron/metrics.cron.js";
 import cron from "node-cron";
 import { EditorialService } from "./server/admin/editorial/editorial.service.js";
@@ -62,6 +63,7 @@ import { CampaignCache } from "./server/core/memory/CampaignCache";
 import { FeedOrchestrator } from "./server/core/FeedOrchestrator.js";
 import sourcesData from "./server/data/sources.json" assert { type: "json" };
 import { loadShedding } from "./server/middleware/loadShedding";
+import chaosRouter from "./server/routes/admin/chaos";
 
 
 
@@ -237,6 +239,7 @@ export async function createApp() {
   app.use("/api/alerts", alertsRoute);
   app.use("/api/metrics/health", metricsHealthRoute);
   app.use("/api/metrics", metricsRoute);
+  // Removed /api/home/matches to allow Next.js App Router to handle it
 
   // Supabase Auth Integration (Option A)
   // authRouter removed as we use Supabase Client + requireAuth middleware directly

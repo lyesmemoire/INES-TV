@@ -1,175 +1,135 @@
-import React, { useEffect, useState, forwardRef, useRef, useImperativeHandle } from "react";
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import Hls from "hls.js";
-import axios from "axios";
-import AdsManager, { shouldTriggerAd } from "./AdsManager";
-import { useAuth } from "../../context/AuthContext";
 
-// Disable WebRTC leak
-// @ts-ignore
-if (typeof window !== "undefined") { window.RTCPeerConnection = undefined; }
-
-import { saveQoEScore } from "@/utils/streams/qoeEngine";
-import { trackStreamEvent } from "@/services/analytics";
-
-interface VideoCoreProps {
-  src: string;
-  type?: 'hls' | 'dash';
-  cdn?: string;
-  channelId?: string; // Added for tracking
-  onError?: () => void;
+interface Props {
+  src: string | null | undefined;
+  type?: string;
+  poster?: string;
 }
 
-/**
- * 🎬 VIDEO CORE: DUMB RENDERER WITH QoE TRACKING
- * Simple, high-performance renderer for HLS/DASH streams.
- * Tracks startup time, buffering events, and errors for CDN scoring.
- */
-const VideoCore = forwardRef<HTMLVideoElement, VideoCoreProps>(({ src, type = 'hls', cdn, channelId, onError }, ref) => {
-  const internalVideoRef = useRef<HTMLVideoElement>(null);
-  const hlsRef = useRef<Hls | null>(null);
+type PlayerState = "idle" | "loading" | "playing" | "error" | "no-stream";
 
-  // Sync external ref if provided
-  useImperativeHandle(ref, () => internalVideoRef.current!);
+export default function VideoCore({ src, type = "application/x-mpegURL", poster }: Props) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const hlsRef = useRef<Hls | null>(null);
+  const [state, setState] = useState<PlayerState>("idle");
 
   useEffect(() => {
-    const video = internalVideoRef.current;
-    if (!video || !src) return;
-
-    let startTime = performance.now();
-    let rebufferCount = 0;
-    let rebufferDuration = 0;
-    let lastBufferStart = 0;
-    let errorCount = 0;
-
-    const onWaiting = () => {
-      rebufferCount++;
-      lastBufferStart = performance.now();
-      
-      trackStreamEvent({
-        channel_id: channelId || cdn || "unknown",
-        event_type: "rebuffer",
-        cdn,
-        stream_url: src,
-      });
-    };
-
-    const onPlaying = () => {
-      if (lastBufferStart) {
-        rebufferDuration += performance.now() - lastBufferStart;
-        lastBufferStart = 0;
-      }
-    };
-
-    video.addEventListener("waiting", onWaiting);
-    video.addEventListener("playing", onPlaying);
-
-    if (Hls.isSupported() && type === 'hls') {
-      if (hlsRef.current) {
-        hlsRef.current.destroy();
-      }
-
-      const hls = new Hls({
-        enableWorker: true,
-        lowLatencyMode: true,
-        backBufferLength: 60,
-        capLevelToPlayerSize: true
-      });
-      
-      hls.loadSource(src);
-      hls.attachMedia(video);
-      hlsRef.current = hls;
-      
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        video.play().catch(() => {});
-        const startupTime = performance.now() - startTime;
-        const score = startupTime * 0.3 + rebufferDuration * 0.5 + rebufferCount * 20;
-
-        console.info("[VideoCore-QoE]", {
-          cdn,
-          startupTime: Math.round(startupTime),
-          rebufferCount,
-          rebufferDuration: Math.round(rebufferDuration)
-        });
-
-        if (cdn) {
-          saveQoEScore(cdn, score);
-        }
-
-        if (cdn || channelId) {
-            trackStreamEvent({
-                channel_id: channelId || cdn || "unknown",
-                event_type: "start",
-                cdn,
-                stream_url: src,
-                startup_time: Math.round(startupTime),
-                qoe_score: Math.round(score)
-            });
-        }
-      });
-
-      hls.on(Hls.Events.ERROR, (_, data) => {
-        errorCount++;
-
-        trackStreamEvent({
-          channel_id: channelId || cdn || "unknown",
-          event_type: "error",
-          cdn,
-          stream_url: src,
-          error_count: errorCount,
-        });
-
-        if (data.fatal) {
-          console.error("[VideoCore] Fatal HLS error:", data.type);
-          if (cdn) saveQoEScore(cdn, 9999);
-          if (onError) onError();
-        }
-      });
-    } else {
-      // Native fallback or DASH (simple)
-      video.src = src;
-      video.play().catch(() => {});
-      
-      const handleNativeError = () => {
-        if (cdn) saveQoEScore(cdn, 9999);
-        if (channelId) {
-            trackStreamEvent({
-                channel_id: channelId,
-                event_type: "error",
-                cdn,
-                stream_url: src,
-                error_count: 1
-            });
-        }
-        if (onError) onError();
-      };
-      
-      video.addEventListener('error', handleNativeError);
-      return () => {
-        video.removeEventListener('error', handleNativeError);
-      };
+    // ✅ Pas de source = message clair
+    if (!src) {
+      setState("no-stream");
+      return;
     }
 
-    return () => {
-      video.removeEventListener("waiting", onWaiting);
-      video.removeEventListener("playing", onPlaying);
-      if (hlsRef.current) {
-        hlsRef.current.destroy();
-        hlsRef.current = null;
-      }
-    };
-  }, [src, type, cdn, channelId, onError]);
+    const video = videoRef.current;
+    if (!video) return;
 
+    setState("loading");
+
+    // HLS STREAM
+    if ((type === "application/x-mpegURL" || type === "hls" || type === "m3u") && Hls.isSupported()) {
+      const hls = new Hls({
+        maxLoadingDelay: 4,
+        maxBufferLength: 30,
+        enableWorker: true,
+      });
+
+      hlsRef.current = hls;
+      hls.loadSource(src);
+      hls.attachMedia(video);
+
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        setState("playing");
+        video.play().catch(() => {});
+      });
+
+      hls.on(Hls.Events.ERROR, (event, data) => {
+        if (data.fatal) {
+          console.warn("[VideoCore] HLS error:", data.type);
+          setState("error");
+          
+          switch (data.type) {
+            case Hls.ErrorTypes.NETWORK_ERROR:
+              hls.startLoad();
+              break;
+            case Hls.ErrorTypes.MEDIA_ERROR:
+              hls.recoverMediaError();
+              break;
+            default:
+              hls.destroy();
+              break;
+          }
+        }
+      });
+
+      return () => {
+        hls.destroy();
+      };
+    }
+    // NATIVE VIDEO
+    else if (video.canPlayType(type)) {
+      video.src = src;
+      video.load();
+
+      video.onloadeddata = () => {
+        setState("playing");
+        video.play().catch(() => {});
+      };
+
+      video.onerror = () => {
+        setState("error");
+      };
+    }
+    else {
+      setState("error");
+    }
+  }, [src, type]);
+
+  // ✅ PAS DE STREAM CONFIGURÉ
+  if (state === "no-stream" || !src) {
+    return (
+      <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-zinc-900 to-zinc-950 p-8 text-center">
+        <div className="text-6xl mb-4 animate-pulse">📡</div>
+        <p className="text-white font-black text-lg mb-2 uppercase tracking-tighter italic">Stream non configuré</p>
+        <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest max-w-xs">
+          Le lien de diffusion pour ce match n'a pas encore été ajouté. 
+          Revenez plus tard ou contactez l'administrateur.
+        </p>
+      </div>
+    );
+  }
+
+  // ✅ ERROR STATE
+  if (state === "error") {
+    return (
+      <div className="w-full h-full flex flex-col items-center justify-center bg-zinc-950 p-8 text-center">
+        <div className="text-5xl mb-4">⚠️</div>
+        <p className="text-white font-black text-sm uppercase tracking-widest">Stream indisponible</p>
+        <p className="text-zinc-500 text-[9px] font-bold uppercase tracking-widest mt-2">Le flux ne peut pas être chargé ou le lien est expiré</p>
+      </div>
+    );
+  }
+
+  // ✅ LOADING STATE
+  if (state === "loading") {
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-zinc-950">
+        <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  // ✅ VIDEO PLAYER
   return (
-    <div className="relative w-full h-full bg-black group overflow-hidden">
-      <video
-        ref={internalVideoRef}
-        controls
-        playsInline
-        className="w-full h-full object-contain shadow-2xl"
-      />
-    </div>
+    <video
+      ref={videoRef}
+      className="w-full h-full object-cover"
+      poster={poster}
+      playsInline
+      muted
+      controls={false}
+    />
   );
-});
-
-VideoCore.displayName = "VideoCore";
-export default VideoCore;
+}

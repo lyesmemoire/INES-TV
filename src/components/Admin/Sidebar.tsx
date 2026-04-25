@@ -34,13 +34,21 @@ export default function AdminSidebar() {
     <div className="w-64 h-full bg-[#0B0F19] border-r border-white/5 flex flex-col relative z-20">
       {/* BRANDING HEADER */}
       <div className="p-8">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center font-black text-xs shadow-lg shadow-indigo-600/20">CTRL</div>
           <div className="flex flex-col">
             <span className="text-sm font-black tracking-tighter uppercase italic">Control<span className="text-indigo-500">Plane</span></span>
             <span className="text-[7px] font-bold text-zinc-600 uppercase tracking-[0.3em]">StreamPerf Industrial</span>
           </div>
         </div>
+
+        {/* 🏠 RETOUR AU SITE */}
+        <Link href="/">
+          <button className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-black text-[10px] uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-emerald-500/10 active:scale-95">
+            <LayoutDashboard size={16} />
+            Retour au site
+          </button>
+        </Link>
       </div>
 
       {/* NAVIGATION SECTIONS */}

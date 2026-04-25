@@ -93,22 +93,22 @@ export default function ControlRoom() {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <Card title="Concurrent Streams" value={data.activeStreams} />
-        <Card title="Avg Latency" value={`${Math.round(data.avgLatency)}ms`} highlight={data.avgLatency > 1500} />
-        <Card title="Error Rate" value={data.errorRateFormatted || `${(data.errorRate * 100).toFixed(2)}%`} highlight={data.errorRate > 0.05} />
+        <Card title="Concurrent Streams" value={data?.activeStreams ?? 0} />
+        <Card title="Avg Latency" value={`${Math.round(data?.avgLatency ?? 0)}ms`} highlight={(data?.avgLatency ?? 0) > 1500} />
+        <Card title="Error Rate" value={data?.errorRateFormatted || `${((data?.errorRate ?? 0) * 100).toFixed(2)}%`} highlight={(data?.errorRate ?? 0) > 0.05} />
         
         {/* Phase 9: Smart Insights */}
-        <Card title="Global Health" value={`${Math.round(data.healthScore || 100)}/100`} highlight={(data.healthScore || 100) < 80} />
+        <Card title="Global Health" value={`${Math.round(data?.healthScore ?? 100)}/100`} highlight={(data?.healthScore ?? 100) < 80} />
         <div className="bg-blue-900/20 border border-blue-900 p-6 rounded flex flex-col justify-center">
              <div className="text-xs uppercase tracking-wider text-blue-500 mb-2">Trend</div>
-             <div className="text-2xl font-bold text-blue-400">{data.trend || "STABLE"}</div>
+             <div className="text-2xl font-bold text-blue-400">{data?.trend || "STABLE"}</div>
         </div>
       </div>
 
       <div className="bg-gray-900 border border-gray-800 p-4 rounded mt-8">
         <h2 className="mb-4 text-xl font-bold text-gray-300 border-b border-gray-800 pb-2 flex justify-between">
             🔥 Global Channel Flow
-            {data.anomaly && data.anomaly !== "OK" && <span className="text-red-500 animate-pulse text-sm">DETECTED ROW: {data.anomaly}</span>}
+            {data?.anomaly && data?.anomaly !== "OK" && <span className="text-red-500 animate-pulse text-sm">DETECTED ROW: {data.anomaly}</span>}
         </h2>
         {data.topChannels?.length === 0 ? (
            <p className="text-gray-500 italic py-4">No payload metrics intersecting.</p>
