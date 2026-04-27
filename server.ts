@@ -275,9 +275,9 @@ export async function createApp() {
 
   // ── Next.js frontend handler ───────────────────────────────────────────────
   if (process.env.LOAD_TEST !== "true") {
-    app.all("*", (req: any, res: any) => handle(req, res));
+    app.all(/.*/, (req: any, res: any) => handle(req, res));
   } else {
-    app.all("*", (req: any, res: any) => res.status(503).json({ error: "Headless AdX Mode" }));
+    app.all(/.*/, (req: any, res: any) => res.status(503).json({ error: "Headless AdX Mode" }));
   }
 
 

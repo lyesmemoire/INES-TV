@@ -1,15 +1,19 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from "@supabase/supabase-js"
 
-/**
- * 🔐 SUPABASE CLIENT (GLOBAL)
- * Production-ready instance for Auth & Multi-Tenancy.
- */
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn("⚠️ [Supabase] Missing credentials. Auth will not function correctly.");
+if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+  throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL")
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+  throw new Error("Missing NEXT_PUBLIC_SUPABASE_ANON_KEY")
+}
+
+export const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  {
+    auth: {
+      persistSession: false, // Edge-safe
+    },
+  }
+)

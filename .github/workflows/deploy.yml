@@ -1,67 +1,65 @@
-name: OTT Production CI/CD
+name: Deploy
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
-  # 🧪 STEP 1: TEST & VALIDATE
-  test:
+  deploy:
+    name: Deploy to Production
     runs-on: ubuntu-latest
+    environment: production
+    
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-      - name: Install Dependencies
-        run: npm install
-      - name: Prisma Generate
-        run: npx prisma generate
-      - name: Run Tests
-        run: npm test || true # Continue even if no tests defined yet
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-  # 🐳 STEP 2: BUILD DOCKER IMAGE
-  build-and-push:
-    needs: test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-        
-      - name: Login to GHCR (GitHub Container Registry)
+
+      - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Build and push API/Worker
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/ott-backend:latest
-            ghcr.io/${{ github.repository }}/ott-backend:${{ github.sha }}
+            ${{ secrets.DOCKER_USERNAME }}/streamperf:latest
+            ${{ secrets.DOCKER_USERNAME }}/streamperf:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+            NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+            NEXT_PUBLIC_APP_URL=${{ secrets.NEXT_PUBLIC_APP_URL }}
 
-  # 🚀 STEP 3: MOBILE BUILD TRIGGER (Placeholder)
-  eas-build:
-    needs: test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup EAS
-        uses: expo/expo-github-action@v8
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v1.0.0
         with:
-          eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
-      # Uncomment to trigger auto-build on push
-      # - name: Build Android Production
-      #   run: eas build --platform android --profile production --non-interactive
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /opt/streamperf
+            docker-compose -f docker-compose.prod.yml pull
+            docker-compose -f docker-compose.prod.yml up -d
+            docker system prune -af
+
+      - name: Verify deployment
+        run: |
+          sleep 30
+          curl -f https://streamperf.com/api/health || exit 1
+
+      - name: Notify Slack
+        if: always()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          text: 'Deployment ${{ job.status }}'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}

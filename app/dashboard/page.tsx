@@ -42,7 +42,7 @@ export default function DashboardPage() {
   useEffect(() => {
     if (pid) {
       fetchInsights();
-      const i = setInterval(fetchInsights, 5000);
+      const i = setInterval(fetchInsights, 15000); // Réduit de 5s à 15s pour économiser les ressources
       return () => clearInterval(i);
     }
   }, [pid]);

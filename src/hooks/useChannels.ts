@@ -5,7 +5,7 @@ export function useChannels() {
   const [channels, setChannels] = useState<any[]>([]);
 
   useEffect(() => {
-    supabase.from("channels").select("*").then(({ data }) => {
+    supabase.from("Channel").select("*").then(({ data }) => {
       setChannels(data || []);
     });
   }, []);

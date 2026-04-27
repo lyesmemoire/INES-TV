@@ -1,27 +1,76 @@
-version: "3.8"
+version: '3.9'
 
 services:
-  api:
-    build: .
+  # =====================
+  # Next.js Application
+  # =====================
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    container_name: streamperf-app
     ports:
       - "3000:3000"
-    env_file:
-      - .env
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - REDIS_URL=redis://redis:6379
+      - NEXT_PUBLIC_APP_URL=http://localhost:3000
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
     depends_on:
-      - redis
-    restart: always
+      redis:
+        condition: service_healthy
+    networks:
+      - streamperf-network
+    restart: unless-stopped
+    command: npm run dev
 
+  # =====================
+  # Redis Cache
+  # =====================
   redis:
     image: redis:7-alpine
-    container_name: ott-redis
-    command: >
-      redis-server
-      --requirepass $${REDIS_PASSWORD}
-      --appendonly yes
-      --rename-command FLUSHALL ""
-      --rename-command CONFIG ""
-      --maxmemory 512mb
-      --maxmemory-policy allkeys-lru
+    container_name: streamperf-redis
     ports:
       - "6379:6379"
-    restart: always
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - streamperf-network
+    restart: unless-stopped
+
+  # =====================
+  # Redis Commander (GUI)
+  # =====================
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: streamperf-redis-commander
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+    networks:
+      - streamperf-network
+    restart: unless-stopped
+
+volumes:
+  redis-data:
+    driver: local
+
+networks:
+  streamperf-network:
+    driver: bridge

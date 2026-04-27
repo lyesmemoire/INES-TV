@@ -19,7 +19,7 @@ export default function AnalyticsPage() {
     };
 
     load();
-    const i = setInterval(load, 2000);
+    const i = setInterval(load, 10000); // Réduit de 2s à 10s pour économiser les ressources
     return () => clearInterval(i);
   }, []);
 

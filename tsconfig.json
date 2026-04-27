@@ -19,6 +19,13 @@
       "@/*": [
         "./src/*"
       ],
+      "@/lib/*": [
+        "./lib/*"
+      ],
+      "@/components/*": [
+        "./components/*",
+        "./src/components/*"
+      ],
       "@/server/*": [
         "./server/*"
       ],
