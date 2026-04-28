@@ -8,27 +8,28 @@ import PWAUpdateNotification from '@/components/PWAUpdateNotification'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'StreamPerf - Premium Sports Streaming',
-  description: 'Watch live sports in HD quality with zero lag',
+  metadataBase: new URL('https://inestv.com'),
+  title: 'INES TV - Live Sports Streaming',
+  description: 'Watch live football, basketball and more in HD quality — stream highlights and matches',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'StreamPerf',
+    title: 'INES TV',
   },
   formatDetection: {
     telephone: false,
   },
   openGraph: {
     type: 'website',
-    siteName: 'StreamPerf',
-    title: 'StreamPerf - Premium Sports Streaming',
-    description: 'Watch live sports in HD quality',
+    siteName: 'INES TV',
+    title: 'INES TV - Live Sports Streaming',
+    description: 'Watch live football and sports highlights in HD',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'StreamPerf',
-    description: 'Premium sports streaming',
+    title: 'INES TV',
+    description: 'Live sports streaming platform',
   },
 }
 
