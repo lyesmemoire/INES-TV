@@ -1,0 +1,33 @@
+{
+  "common": {
+    "live": "Live Now",
+    "upcoming": "Upcoming",
+    "finished": "Finished",
+    "watch_now": "Watch Live Now",
+    "last_updated": "Updated at",
+    "more_from": "More from",
+    "all_matches": "All matches for",
+    "hd_quality": "HD 1080p Quality",
+    "no_subscription": "No subscription",
+    "platform_tag": "Powered by GOALA Engine"
+  },
+  "home": {
+    "title": "GOALA TV - Live Football Streaming HD",
+    "description": "Watch live football matches, exclusives, and replays in HD on GOALA TV.",
+    "hero_title": "Experience Football",
+    "hero_subtitle": "In High Definition"
+  },
+  "match": {
+    "live_stream": "Live Streaming",
+    "preview": "Match Preview & Analysis",
+    "how_to_watch": "How to watch?",
+    "details": "Match Details"
+  },
+  "seo": {
+    "today_title": "Live Football Matches Today",
+    "live_title": "Football matches live streaming",
+    "no_matches": "No matches available at the moment",
+    "back_home": "Back to home",
+    "explore_more": "Explore competitions"
+  }
+}

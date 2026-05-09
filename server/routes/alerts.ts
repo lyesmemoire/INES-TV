@@ -1,4 +1,4 @@
-import { Router } from "express"
+﻿import { Router } from "express"
 import { PrismaClient } from "@prisma/client"
 import { requireAuth, requireAdmin } from "../middleware/supabaseAuth.middleware.js"
 
@@ -41,7 +41,7 @@ router.post("/test", requireAuth, requireAdmin, async (req: any, res: any) => {
       source: "manual",
       triggeredBy: req.user?.id || "ops",
       timestamp: new Date().toISOString(),
-      message: "🧪 This is a test alert from StreamPerf OPS"
+      message: "🧪 This is a test alert from INES TV OPS"
     }, "WARNING");
 
     res.json({ 

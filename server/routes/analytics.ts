@@ -17,7 +17,7 @@ router.get("/live", (_req: Request, res: Response) => {
 // 💰 REVENUE INSIGHTS (Publisher-Level, per PID)
 // Uses real observed RPM + differentiated block reasons
 router.get("/insights/:pid", (req: Request, res: Response) => {
-  const { pid } = req.params;
+  const pid = req.params.pid as string;
   const globalStats = analyticsStore.getStats();
   const pubStats = PlanStore.getAnalytics(pid);
   const { plan } = PlanStore.getQuota(pid);

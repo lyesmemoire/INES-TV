@@ -1,5 +1,5 @@
 import { supabaseAdmin } from "./supabase-server"
-import type { Channel } from "./channels"
+import type { Channel } from "@/types/channel"
 import { retry } from "./utils"
 
 type SupabaseChannel = {
@@ -20,6 +20,7 @@ async function fetchChannels(): Promise<SupabaseChannel[]> {
     .select("*")
     .eq("isActive", true)
     .order("name")
+    .limit(1000)
 
   if (error) {
     throw new Error(`Supabase error: ${error.message}`)
@@ -43,12 +44,38 @@ function mapChannels(data: SupabaseChannel[]): Channel[] {
 
 import { channels as fallbackChannels } from "./channels"
 
+import { prisma } from "./prisma"
+
 export async function getChannelsFromDB(): Promise<Channel[]> {
   try {
     const data = await retry(fetchChannels, 3, 500)
-    return mapChannels(data)
+    const dbChannels = mapChannels(data);
+    
+    // Fetch FTA Channels from FreeChannel table
+    const ftaChannelsData = await prisma.freeChannel.findMany({
+      where: { isActive: true },
+      include: { streams: true }
+    });
+
+    const ftaChannels: Channel[] = ftaChannelsData.map(ch => ({
+      id: ch.id,
+      name: ch.name,
+      logo: ch.logo || "https://via.placeholder.com/200x100/1f2937/ffffff?text=No+Logo",
+      category: ch.category,
+      live: true,
+      slug: ch.slug,
+      streamUrl: ch.streams[0]?.url || ""
+    }));
+
+    // Fusionner les chaînes M3U locales, Supabase et FTA
+    const mergedMap = new Map();
+    [...fallbackChannels, ...dbChannels, ...ftaChannels].forEach(ch => {
+      if (ch && ch.id) mergedMap.set(ch.id, ch);
+    });
+    
+    return Array.from(mergedMap.values());
   } catch (error) {
-    console.warn("Supabase unavailable, using fallback:", error)
+    console.warn("Database unavailable, using fallback:", error)
     return fallbackChannels
   }
 }

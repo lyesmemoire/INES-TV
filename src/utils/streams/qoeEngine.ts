@@ -1,5 +1,5 @@
-import { StreamSource } from "@/types";
-import { trackStreamEvent } from "@/services/analytics";
+import { StreamSource } from "@/src/types";
+import { trackStreamEvent } from "@/src/services/analytics";
 
 export const sendQoEScoreToAnalytics = (
   channel_id: string,
@@ -8,7 +8,7 @@ export const sendQoEScoreToAnalytics = (
 ) => {
   trackStreamEvent({
     channel_id,
-    event_type: "switch", // Generic performance report
+    event_type: "switch",
     cdn,
     qoe_score: score,
   });
@@ -24,9 +24,7 @@ export type QoEMetrics = {
 const STORAGE_KEY = "qoe_scores";
 
 /**
- * 🧮 Compute QoE Score
- * Lower is better.
- * Weighted by startup speed, rebuffer duration, and fatal errors.
+ * Compute QoE Score — Lower is better.
  */
 export const computeQoEScore = (metrics: QoEMetrics): number => {
   return (
@@ -38,7 +36,7 @@ export const computeQoEScore = (metrics: QoEMetrics): number => {
 };
 
 /**
- * 🔄 Store CDN Performance Score
+ * Store CDN Performance Score
  */
 export const saveQoEScore = (cdn: string, score: number) => {
   if (typeof window === "undefined" || !cdn) return;
@@ -59,8 +57,7 @@ export const saveQoEScore = (cdn: string, score: number) => {
 };
 
 /**
- * 📊 Get best CDN from historical cache
- * Returns the source with the lowest historical error/buffering score.
+ * Get best CDN from historical cache
  */
 export const getBestCDNFromCache = (
   sources: StreamSource[]
@@ -77,7 +74,6 @@ export const getBestCDNFromCache = (
       }))
       .sort((a, b) => a.score - b.score);
 
-    // If we have history for the winner, return it
     if (ranked[0] && ranked[0].score !== Infinity) {
       console.info("[QoE] Historical winner selected:", ranked[0].source.cdn || ranked[0].source.label);
       return ranked[0].source;

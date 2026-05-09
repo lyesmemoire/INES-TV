@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -38,7 +38,7 @@ export default function AdminSidebar() {
           <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center font-black text-xs shadow-lg shadow-indigo-600/20">CTRL</div>
           <div className="flex flex-col">
             <span className="text-sm font-black tracking-tighter uppercase italic">Control<span className="text-indigo-500">Plane</span></span>
-            <span className="text-[7px] font-bold text-zinc-600 uppercase tracking-[0.3em]">StreamPerf Industrial</span>
+            <span className="text-[7px] font-bold text-zinc-600 uppercase tracking-[0.3em]">INES TV Industrial</span>
           </div>
         </div>
 

@@ -1,4 +1,4 @@
-import "dotenv/config";
+﻿import "dotenv/config";
 import { validateEnv } from "./server/scripts/env-validator";
 validateEnv();
 import express from "express";
@@ -304,7 +304,7 @@ export async function startServer() {
 
   server.listen(PORT, "0.0.0.0", () => {
     if (process.env.NODE_ENV !== "production" && !isLoadTest) {
-      console.log(`\n✓ StreamPerf Unified MVP running at http://localhost:${PORT}`);
+      console.log(`\n✓ INES TV Unified MVP running at http://localhost:${PORT}`);
     }
   });
 }

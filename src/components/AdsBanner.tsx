@@ -1,8 +1,7 @@
-"use client";
-
 import { Play, Flame, Star, Volume2, Maximize, AlertTriangle, SkipForward } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import Image from 'next/image';
 
 export default function AdsBanner() {
   const [isPlaying, setIsPlaying] = useState(true);
@@ -34,7 +33,7 @@ export default function AdsBanner() {
         // Fallback Ad (Server-Side Bypassed)
         setAdData({
            platform: "native",
-           title: "StreamPerf Pro VPN",
+           title: "INES TV VPN",
            description: "Contournez les restrictions géographiques et protégez votre réseau avec notre VPN intégré.",
            image: "https://images.unsplash.com/photo-1542204165-65bf26472b9b?q=80&w=2000&auto=format&fit=crop"
         });
@@ -95,10 +94,11 @@ export default function AdsBanner() {
       <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-zinc-900 border border-white/5 shadow-2xl group cursor-pointer">
         {/* Placeholder image (representing video ad) */}
         <div className="absolute inset-0 bg-gradient-to-tr from-indigo-900/40 to-blue-900/40" />
-        <img 
+        <Image 
           src={adData.image || "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2000&auto=format&fit=crop"} 
           alt="Ad Content" 
-          className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-50 group-hover:scale-105 transition-transform duration-700"
+          fill
+          className="object-cover mix-blend-overlay opacity-50 group-hover:scale-105 transition-transform duration-700"
         />
 
         {/* Play UI overlay */}

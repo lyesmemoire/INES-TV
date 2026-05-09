@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Mail, Lock, User as UserIcon, LogIn, UserPlus, AlertCircle } from 'lucide-react';
@@ -110,7 +112,7 @@ export default function AuthModal() {
             </h2>
             <p className="text-sm font-semibold text-zinc-400">
               {isLoginView 
-                ? 'Welcome back to StreamPerf Pro.' 
+                ? 'Welcome back to INES TV.' 
                 : 'Join us for the ultimate streaming experience.'}
             </p>
           </div>

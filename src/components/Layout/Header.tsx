@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import React from 'react';
 import { MonitorPlay, Smartphone, Wifi, Activity, Code2, User as UserIcon, LogOut } from 'lucide-react';
 import { DeviceTier, NetworkQuality, NetworkType } from '../../types';
@@ -27,7 +27,7 @@ export default function Header({
           <MonitorPlay size={24} />
         </div>
         <h1 className="text-xl font-bold tracking-tight text-white bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">
-          StreamPerf Pro
+          INES TV
         </h1>
       </div>
       

@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client"
+﻿import { PrismaClient } from "@prisma/client"
 import fetch from "node-fetch"
 
 const prisma = new PrismaClient()
@@ -121,7 +121,7 @@ async function checkAlerting() {
  */
 function summary() {
   console.log("\n==============================")
-  console.log("🚦 STREAMPERF HEALTHCHECK REPORT")
+  console.log("🚦 INES TV HEALTHCHECK REPORT")
   console.log("==============================")
 
   const failed = results.filter(r => r.status === "FAIL")
@@ -139,7 +139,7 @@ function summary() {
 }
 
 async function run() {
-  console.log("🚀 Starting StreamPerf HealthCheck...\n")
+  console.log("🚀 Starting INES TV HealthCheck...\n")
 
   await checkDatabase()
   await checkAuth()

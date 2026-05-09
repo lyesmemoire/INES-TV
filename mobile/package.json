@@ -1,7 +1,7 @@
-{
-  "name": "streamperf-mobile",
+﻿{
+  "name": "INES TV-mobile",
   "version": "1.0.0",
-  "description": "StreamPerf Pro — Application mobile React Native (Expo)",
+  "description": "INES TV — Application mobile React Native (Expo)",
   "main": "expo/AppEntry.js",
   "scripts": {
     "start": "expo start",

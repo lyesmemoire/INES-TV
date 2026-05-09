@@ -1,0 +1,33 @@
+{
+  "common": {
+    "live": "En Direct",
+    "upcoming": "À Venir",
+    "finished": "Terminé",
+    "watch_now": "Regarder en Direct",
+    "last_updated": "Mis à jour à",
+    "more_from": "Plus de",
+    "all_matches": "Tous les matchs de",
+    "hd_quality": "Qualité HD 1080p",
+    "no_subscription": "Sans abonnement",
+    "platform_tag": "Propulsé par GOALA Engine"
+  },
+  "home": {
+    "title": "GOALA TV - Streaming Football en Direct HD",
+    "description": "Regardez les matchs de foot en direct, les exclusivités et les replays en HD sur GOALA TV.",
+    "hero_title": "Vivez le Football",
+    "hero_subtitle": "En Haute Définition"
+  },
+  "match": {
+    "live_stream": "Streaming en Direct",
+    "preview": "Aperçu et Analyse du Match",
+    "how_to_watch": "Comment regarder ?",
+    "details": "Détails du Match"
+  },
+  "seo": {
+    "today_title": "Matchs de football aujourd’hui en direct",
+    "live_title": "Matchs de foot en direct streaming",
+    "no_matches": "Aucun match disponible pour le moment",
+    "back_home": "Retour à l'accueil",
+    "explore_more": "Explorer les compétitions"
+  }
+}

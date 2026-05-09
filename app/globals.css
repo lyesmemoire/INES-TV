@@ -1,18 +1,30 @@
+@import "../styles/index.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-html, body {
-  background: #0a0a0a;
-  color: white;
-  font-family: Inter, system-ui, sans-serif;
-  overflow-x: hidden;
+@font-face {
+  font-family: 'Oscine';
+  src: url('/fonts/Oscine-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
 }
 
-.card {
-  background: #111;
-  border-radius: 12px;
-  padding: 16px;
+@font-face {
+  font-family: 'Oscine';
+  src: url('/fonts/Oscine-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+
+html, body {
+  background: var(--color-surface-base);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-stack);
+  overflow-x: hidden;
 }
 
 
@@ -41,7 +53,7 @@ html, body {
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: #ef4444;
+    background: var(--color-action-danger);
     cursor: pointer;
     border: none;
   }

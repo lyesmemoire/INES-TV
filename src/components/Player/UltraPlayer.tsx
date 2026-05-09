@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useEffect, useRef, useState, forwardRef, useImperativeHandle } from "react";
-import { StreamSource, Channel } from "@/types";
+import { StreamSource, Channel } from "@/src/types";
 import VideoCoreDual from "./VideoCoreDual";
 import { getNextSource } from "./BufferManager";
-import { selectBestSource } from "@/utils/streams/latencySelector";
-import { getBestCDNFromCache } from "@/utils/streams/qoeEngine";
-import { trackStreamEvent } from "@/services/analytics";
+import { selectBestSource } from "@/src/utils/streams/latencySelector";
+import { getBestCDNFromCache } from "@/src/utils/streams/qoeEngine";
+import { trackStreamEvent } from "@/src/services/analytics";
 
 export interface PlayerStats {
   bitrate: number;
@@ -155,7 +155,7 @@ const UltraPlayer = forwardRef<UltraPlayerRef, Props>(({ streamSources, channelI
       primaryCdn={current.cdn || current.label}
       secondaryCdn={next?.cdn || next?.label}
       channelId={channelId}
-      type={current.type}
+      type={current.type as any}
       onError={handleError}
     />
   );

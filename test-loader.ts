@@ -1,4 +1,4 @@
-import 'dotenv/config';
+﻿import 'dotenv/config';
 
 async function testModule(path: string) {
   console.log(`[Diagnostic] Testing: ${path}...`);
@@ -12,7 +12,7 @@ async function testModule(path: string) {
 }
 
 async function run() {
-  console.log('\n=== StreamPerf Backend Diagnostics ===\n');
+  console.log('\n=== INES TV Backend Diagnostics ===\n');
 
   // Test critical core files
   await testModule('./server/services/db.js');

@@ -8,8 +8,11 @@ const requiredEnv = [
   "JWT_SECRET",
   "REDIS_URL",
   "STREAM_SECRET",
+  "STREAM_ENCRYPT_KEY",
   "CDN_PRIMARY",
   "DATABASE_URL",
+  "CRON_SECRET",
+  "SUPABASE_SERVICE_ROLE_KEY",
 ];
 
 export function validateEnv() {

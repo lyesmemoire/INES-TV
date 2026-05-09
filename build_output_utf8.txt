@@ -1,0 +1,36 @@
+﻿
+> ines-tv-storefront@1.0.0 build
+> next build
+
+   Ôû▓ Next.js 14.1.0
+   - Environments: .env.production, .env
+
+   Creating an optimized production build ...
+node.exe : SyntaxError: Unexpected token '´╗┐', "´╗┐{
+Au caractère Ligne:1 : 1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (SyntaxError: Un...en '´╗┐', "´╗┐{:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  "name"... is not valid JSON
+    at JSON.parse (<anonymous>)
+    at patchIncorrectLockfile 
+(C:\Users\elitebook\Downloads\zip\node_modules\next\dist\lib\patch-incorrect-lockfile.js:92:33)
+
+> Build error occurred
+SyntaxError: Unexpected token '´╗┐', "´╗┐{
+  "name"... is not valid JSON
+while determining default 'output.uniqueName' from 'name' in C:\Users\elitebook\Downloads\zip\package.json
+    at JSON.parse (<anonymous>)
+    at C:\Users\elitebook\Downloads\zip\node_modules\next\dist\compiled\webpack\bundle5.js:28:585200
+    at F (C:\Users\elitebook\Downloads\zip\node_modules\next\dist\compiled\webpack\bundle5.js:28:576184)
+    at applyOutputDefaults 
+(C:\Users\elitebook\Downloads\zip\node_modules\next\dist\compiled\webpack\bundle5.js:28:584871)
+    at applyWebpackOptionsDefaults 
+(C:\Users\elitebook\Downloads\zip\node_modules\next\dist\compiled\webpack\bundle5.js:28:577740)
+    at createCompiler (C:\Users\elitebook\Downloads\zip\node_modules\next\dist\compiled\webpack\bundle5.js:28:1458066)
+    at create (C:\Users\elitebook\Downloads\zip\node_modules\next\dist\compiled\webpack\bundle5.js:28:1458636)
+    at webpack (C:\Users\elitebook\Downloads\zip\node_modules\next\dist\compiled\webpack\bundle5.js:28:1458947)
+    at f (C:\Users\elitebook\Downloads\zip\node_modules\next\dist\compiled\webpack\bundle5.js:28:888429)
+    at C:\Users\elitebook\Downloads\zip\node_modules\next\dist\build\compiler.js:35:47

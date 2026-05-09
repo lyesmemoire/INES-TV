@@ -14,7 +14,8 @@ const verifyAdminJWT = (req: Request, res: Response, next: NextFunction) => {
   }
   const token = header.slice(7);
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET || 'super-secret-default-key-change-it-in-prod');
+    if (!process.env.JWT_SECRET) throw new Error('FATAL: JWT_SECRET missing');
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
     (req as any).user = { role: "ADMIN", id: (payload as any).adminId };
     next();
   } catch (err) {
@@ -103,7 +104,7 @@ router.post("/ban", verifyAdminJWT, async (req: Request, res: Response) => {
       where: { id: userId },
       data: { isBanned: banned },
     });
-    logger.info(`[Admin] User ${userId} banned=${banned} by ${req.user!.id}`);
+    logger.info(`[Admin] User ${userId} banned=${banned} by ${(req as any).user!.id}`);
     return res.json({ ok: true, userId, banned });
   } catch (err: any) {
     return res.status(500).json({ error: "INTERNAL_ERROR" });

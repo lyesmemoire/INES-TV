@@ -4,9 +4,13 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import speakeasy from "speakeasy";
 import QRCode from "qrcode";
+import { adminAuth } from "../middleware/adminAuth";
 
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-default-key-change-it-in-prod';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error('FATAL: JWT_SECRET environment variable is required.');
+}
 
 /**
  * 🔐 LOGIN STEP 1
@@ -66,11 +70,12 @@ router.post("/2fa/verify", async (req, res) => {
 /**
  * 🔐 SETUP 2FA
  * Generate secret and QR code for the admin
+ * ⚠️ PROTECTED: Requires active admin session
  */
-router.post("/2fa/setup", async (req, res) => {
+router.post("/2fa/setup", adminAuth, async (req: any, res) => {
   try {
     const secret = speakeasy.generateSecret({
-      name: `StreamPerf Admin (${new Date().toLocaleDateString()})`,
+      name: `INES TV Admin (${new Date().toLocaleDateString()})`,
     });
 
     const qr = await QRCode.toDataURL(secret.otpauth_url!);
@@ -88,9 +93,20 @@ router.post("/2fa/setup", async (req, res) => {
 /**
  * 🔐 ENABLE 2FA
  * Activate 2FA on the admin account with the verified secret
+ * ⚠️ PROTECTED: Requires active admin session. adminId from JWT, NOT from body.
  */
-router.post("/2fa/enable", async (req, res) => {
-  const { adminId, secret } = req.body;
+router.post("/2fa/enable", adminAuth, async (req: any, res) => {
+  // 🔒 adminId comes from verified JWT, NOT from request body
+  const adminId = req.admin?.adminId;
+  const { secret } = req.body;
+
+  if (!adminId) {
+    return res.status(401).json({ error: "Admin session required" });
+  }
+
+  if (!secret) {
+    return res.status(400).json({ error: "Missing 2FA secret" });
+  }
 
   try {
     await prisma.admin.update({

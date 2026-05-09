@@ -2,7 +2,7 @@ import { useState } from "react"
 import type { Level } from "hls.js"
 
 type Props = {
-  qualities: Level[]
+  qualities: { id: number; height: number; bitrate?: number }[]
   currentQuality: number
   onSelect: (q: number) => void
 }

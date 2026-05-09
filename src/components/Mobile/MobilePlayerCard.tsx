@@ -1,5 +1,5 @@
-import React from 'react';
 import { motion } from 'motion/react';
+import Image from 'next/image';
 import { Play, Clock, Activity, ChevronRight, Star } from 'lucide-react';
 import { Channel } from '../../types';
 
@@ -23,7 +23,9 @@ export default function MobilePlayerCard({ channel, isPlaying, onPlay, onFavorit
       <div className="relative aspect-video">
         {channel.homeLogo && channel.awayLogo ? (
           <div className="absolute inset-0 flex items-center justify-center gap-6 bg-gradient-to-br from-zinc-900 to-zinc-950 px-6">
-            <img src={channel.homeLogo} alt="Home" className="w-16 h-16 object-contain drop-shadow-xl" />
+            <div className="relative w-16 h-16">
+              <Image src={channel.homeLogo || "/placeholder.png"} alt="Home" fill className="object-contain drop-shadow-xl" />
+            </div>
             <div className="flex flex-col items-center">
               {channel.score ? (
                 <span className="text-4xl font-black text-white tabular-nums tracking-widest">{channel.score}</span>
@@ -37,10 +39,12 @@ export default function MobilePlayerCard({ channel, isPlaying, onPlay, onFavorit
                 </span>
               )}
             </div>
-            <img src={channel.awayLogo} alt="Away" className="w-16 h-16 object-contain drop-shadow-xl" />
+            <div className="relative w-16 h-16">
+              <Image src={channel.awayLogo || "/placeholder.png"} alt="Away" fill className="object-contain drop-shadow-xl" />
+            </div>
           </div>
         ) : (
-          <img src={channel.thumbnail} alt={channel.name} className="w-full h-full object-cover" />
+          <Image src={channel.thumbnail || "/placeholder.png"} alt={channel.name} fill className="object-cover" />
         )}
 
         {/* Overlay top */}

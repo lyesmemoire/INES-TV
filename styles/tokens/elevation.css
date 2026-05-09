@@ -1,0 +1,8 @@
+/* styles/tokens/elevation.css — z-index tokens */
+
+:root {
+  --z-index-base:    1;
+  --z-index-raised:  20;
+  --z-index-overlay: 100;
+  --z-index-modal:   200;
+}

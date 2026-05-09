@@ -130,7 +130,7 @@ export default function MatchPlayer({ matchId }: Props) {
              onError={() => goToDegraded("Playback error")}
           />
         ) : (
-          <VideoCore src={state.stream.url} type="application/x-mpegURL" poster="/player_poster.jpg" controls={true} muted={false} />
+          <VideoCore src={state.stream.url} type="application/x-mpegURL" poster="/player_poster.jpg" />
         )}
       </div>
     );

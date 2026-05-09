@@ -1,0 +1,234 @@
+/* styles/components/card.css
+   INES TV Design System — Version 2.0 (Red & Deep Black Identity)
+   Nomenclature BEM stricte — zéro valeur en dur
+   ─────────────────────────────────────────── */
+
+/* ╔══════════════════════════════╗
+   ║  CONTENEUR DE BASE           ║
+   ╚══════════════════════════════╝ */
+
+.card {
+  background-color: var(--color-surface-raised);
+  border-radius:    var(--radius-sm);
+  padding:          var(--space-8);
+  display:          flex;
+  flex-direction:   column;
+  gap:              var(--space-5);
+  position:         relative;
+  overflow:         visible; /* Changed from hidden to allow glow */
+  transition:
+    transform         var(--motion-duration-instant) ease,
+    background-color  var(--motion-duration-instant) ease,
+    box-shadow        var(--motion-duration-instant) ease;
+}
+
+/* Éléments interactifs natifs uniquement */
+a.card,
+button.card,
+div.card[role="button"] {
+  text-align:      left;
+  cursor:          pointer;
+  border:          none;
+  text-decoration: none;
+  width:           100%;
+  min-height:      44px; /* cible tactile obligatoire */
+  will-change:     transform;
+}
+
+/* ╔══════════════════════════════╗
+   ║  ÉTATS INTERACTIFS           ║
+   ╚══════════════════════════════╝ */
+
+a.card:hover,
+button.card:hover,
+div.card[role="button"]:hover {
+  background-color: var(--color-surface-elevated);
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 1px var(--color-accent-primary), 0 0 8px rgba(225, 6, 0, 0.5);
+  z-index: 10;
+}
+
+a.card:focus-visible,
+button.card:focus-visible,
+div.card[role="button"]:focus-visible {
+  outline:        2px solid var(--color-state-focus);
+  outline-offset: 4px;
+}
+
+a.card:active,
+button.card:active,
+div.card[role="button"]:active {
+  transform: translateY(0) scale(0.99);
+  box-shadow: none;
+}
+
+/* ╔══════════════════════════════╗
+   ║  MÉDIA — RATIO 16:9          ║
+   ╚══════════════════════════════╝ */
+
+.card__media {
+  position:         relative;
+  width:            100%;
+  aspect-ratio:     16 / 9;
+  background-color: var(--color-surface-base);
+  border-radius:    var(--radius-sm) var(--radius-sm) 0 0;
+  overflow:         hidden;
+}
+
+.card__media img,
+.card__image {
+  object-fit: contain;
+  padding:    var(--space-4);
+}
+
+/* ╔══════════════════════════════╗
+   ║  CONTENU TEXTUEL             ║
+   ╚══════════════════════════════╝ */
+
+.card__content {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-2);
+}
+
+.card__title {
+  font-family:           var(--font-family-primary);
+  font-size:             var(--font-size-lg);
+  font-weight:           var(--font-weight-base);
+  color:                 var(--color-text-primary);
+  margin:                0;
+  display:               -webkit-box;
+  -webkit-line-clamp:    2;
+  -webkit-box-orient:    vertical;
+  overflow:              hidden;
+}
+
+.card__body {
+  font-family: var(--font-family-primary);
+  font-size:   var(--font-size-sm);
+  color:       var(--color-text-secondary);
+  margin:      0;
+}
+
+/* ╔══════════════════════════════╗
+   ║  BADGE                       ║
+   ╚══════════════════════════════╝ */
+
+.card__badge {
+  position:      absolute;
+  top:           var(--space-4);
+  right:         var(--space-4);
+  padding:       var(--space-1) var(--space-3);
+  border-radius: var(--radius-xs);
+  font-family:   var(--font-family-primary);
+  font-size:     var(--font-size-xs);
+  font-weight:   var(--font-weight-base);
+  color:         var(--color-text-primary);
+  text-transform: uppercase;
+  line-height:   1;
+  z-index:       2;
+}
+
+.card__badge--live {
+  background-color: var(--color-state-live);
+  animation: livePulse 1.5s infinite;
+}
+
+@keyframes livePulse {
+  0% { box-shadow: 0 0 0 0 rgba(225, 6, 0, 0.7); }
+  70% { box-shadow: 0 0 0 6px rgba(225, 6, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(225, 6, 0, 0); }
+}
+
+.card__badge--tag {
+  background-color:  var(--color-surface-elevated);
+  position:          static; /* badge inline dans le contenu */
+  align-self:        flex-start;
+}
+
+/* ╔══════════════════════════════╗
+   ║  VARIANTES                   ║
+   ╚══════════════════════════════╝ */
+
+/* Focused — état sélectionné (remote / clavier TV) */
+.card--focused {
+  transform: translateY(-2px);
+  z-index:   10;
+  box-shadow: 0 0 0 1px var(--color-accent-primary), 0 0 8px rgba(225, 6, 0, 0.5);
+}
+
+/* ╔══════════════════════════════╗
+   ║  SQUELETTE DE CHARGEMENT     ║
+   ╚══════════════════════════════╝ */
+
+.card--skeleton {
+  pointer-events: none;
+}
+
+.card--skeleton .card__media {
+  background: linear-gradient(
+    90deg,
+    #111111 25%,
+    #1a0d0d 50%,
+    #111111 75%
+  );
+  background-size: 200% 100%;
+  animation:       shimmer var(--motion-duration-fast) linear infinite;
+}
+
+.card__title--skeleton {
+  width:            70%;
+  height:           1em;
+  border-radius:    var(--radius-xs);
+  background:       linear-gradient(90deg, #111111 25%, #1a0d0d 50%, #111111 75%);
+  background-size:  200% 100%;
+  animation:        shimmer var(--motion-duration-fast) linear infinite;
+  margin-bottom:    var(--space-3);
+}
+
+.card__body--skeleton {
+  width:            45%;
+  height:           0.8em;
+  border-radius:    var(--radius-xs);
+  background:       linear-gradient(90deg, #111111 25%, #1a0d0d 50%, #111111 75%);
+  background-size:  200% 100%;
+  animation:        shimmer var(--motion-duration-fast) linear infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position:  200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ╔══════════════════════════════╗
+   ║  REDUCED MOTION              ║
+   ╚══════════════════════════════╝ */
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  a.card,
+  button.card,
+  div.card[role="button"] {
+    transition: none;
+    will-change: auto;
+  }
+
+  a.card:hover,
+  button.card:hover,
+  div.card[role="button"]:hover,
+  .card--focused {
+    transform: none;
+    box-shadow: 0 0 0 2px var(--color-accent-primary);
+  }
+
+  .card__badge--live {
+    animation: none;
+  }
+
+  .card--skeleton .card__media,
+  .card__title--skeleton,
+  .card__body--skeleton {
+    animation:        none;
+    background-image: none;
+  }
+}

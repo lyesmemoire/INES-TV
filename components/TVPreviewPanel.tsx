@@ -28,7 +28,7 @@ export default function TVPreviewPanel({ channel, onClose, onPlay }: TVPreviewPa
 
         case "Enter":
           if (focusedButton === "play") {
-            onPlay()
+            if (typeof onPlay === 'function') onPlay()
           } else {
             onClose()
           }
@@ -91,7 +91,7 @@ export default function TVPreviewPanel({ channel, onClose, onPlay }: TVPreviewPa
           {/* Actions */}
           <div className="flex items-center gap-4 pt-4">
             <button
-              onClick={onPlay}
+              onClick={() => typeof onPlay === 'function' && onPlay()}
               className={`
                 px-8 py-4 rounded-xl font-bold text-lg
                 flex items-center gap-3

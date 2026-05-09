@@ -13,7 +13,11 @@ export const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
   {
     auth: {
-      persistSession: false, // Edge-safe
+      persistSession: true, // Required for login to stick
+      autoRefreshToken: true,
+      detectSessionInUrl: true
     },
   }
 )
+
+

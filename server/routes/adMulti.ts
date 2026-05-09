@@ -36,7 +36,7 @@ router.get("/native-feed", adContext, async (req, res) => {
 });
 
 router.get("/:pid", adContext, (req, res) => {
-  const pid = req.params.pid;
+  const pid = req.params.pid as string;
   const now = Date.now();
 
   // 1. Check Micro-cache (50ms) to prevent thunderous herd in a cluster

@@ -100,7 +100,7 @@ function MainApp() {
   const [platform, setPlatform] = useState<Platform>('web');
   const [view, setView] = useState<'home' | 'analytics'>('home');
   const { favorites, token, isPremium } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const [openLogin, setOpenLogin] = useState(false);
 
@@ -287,7 +287,7 @@ function MainApp() {
             <div className="w-7 h-7 bg-emerald-500 rounded-lg flex items-center justify-center">
               <span className="text-black font-black text-xs">SP</span>
             </div>
-            <span className="text-base font-black text-white tracking-tight">StreamPerf</span>
+            <span className="text-base font-black text-white tracking-tight">INES TV</span>
           </div>
           <div className="flex items-center gap-1.5 bg-red-500/10 border border-red-500/20 text-red-400 text-[10px] font-black px-2.5 py-1 rounded-full">
             <span className="w-1.5 h-1.5 rounded-full bg-red-500 live-dot" />
@@ -452,7 +452,7 @@ function MainApp() {
                 </div>
               </div>
 
-              <RecommendationRow onSelect={handleChannelSelect} activeChannel={selectedMatch} />
+              <RecommendationRow onSelect={handleChannelSelect} activeChannel={selectedMatch} lang={language} />
               
               {!isPremium && <AdsBanner />}
               
@@ -467,7 +467,7 @@ function MainApp() {
                     onSelect={handleChannelSelect} 
                   />
                 ) : (
-                  <ChannelGrid channels={webFiltered} activeChannel={activeChannel} onSelect={handleChannelSelect} isLoading={isLoading} />
+                  <ChannelGrid channels={webFiltered} onSelect={handleChannelSelect} isLoading={isLoading} lang={language} />
                 )}
               </div>
             </div>
@@ -476,7 +476,7 @@ function MainApp() {
       </main>
 
       <footer className="border-t border-white/5 mt-16 py-8 px-6 text-center text-xs text-zinc-600">
-        <p>StreamPerf Pro © {new Date().getFullYear()} — Multi-Platform Streaming Ecosystem</p>
+        <p>INES TV Pro © {new Date().getFullYear()} — Multi-Platform Streaming Ecosystem</p>
         <p className="mt-1 opacity-50 italic">Professional Grade · Scalable · Secure</p>
       </footer>
 
@@ -501,9 +501,11 @@ function MainApp() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <MainApp />
-      <AuthModal />
-    </AuthProvider>
+    <LanguageProvider>
+      <AuthProvider>
+        <MainApp />
+        <AuthModal />
+      </AuthProvider>
+    </LanguageProvider>
   );
 }

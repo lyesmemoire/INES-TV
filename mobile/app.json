@@ -1,12 +1,12 @@
-{
+﻿{
   "expo": {
-    "name": "StreamPerf Pro",
+    "name": "INES TV",
     "slug": "anis-tv",
     "version": "1.0.0",
     "orientation": "landscape",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
-    "scheme": "streamperf",
+    "scheme": "INES TV",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -14,7 +14,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.streamperf.mobile",
+      "bundleIdentifier": "com.INES TV.mobile",
       "buildNumber": "1",
       "infoPlist": {
         "NSCameraUsageDescription": "Used for PiP mode",
@@ -25,7 +25,7 @@
       }
     },
     "android": {
-      "package": "com.streamperf.mobile",
+      "package": "com.INES TV.mobile",
       "versionCode": 1,
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {

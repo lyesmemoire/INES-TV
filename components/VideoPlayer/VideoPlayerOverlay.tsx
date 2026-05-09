@@ -1,3 +1,5 @@
+"use client"
+
 export default function VideoPlayerOverlay({ state, onRetry }: any) {
   if (state.error) {
     return (

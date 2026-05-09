@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useEffect, useState } from "react"
 
@@ -52,7 +52,7 @@ export default function PWAUpdateNotification() {
     <div className="fixed top-4 right-4 z-50 bg-blue-600 text-white rounded-xl p-4 shadow-2xl w-[320px] animate-slide-down">
       <h3 className="font-semibold mb-2">Update Available</h3>
       <p className="text-sm mb-3 opacity-90">
-        A new version of StreamPerf is ready. Update now for the latest features.
+        A new version of INES TV is ready. Update now for the latest features.
       </p>
 
       <div className="flex gap-2">

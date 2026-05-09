@@ -4,49 +4,49 @@ import { motion } from "framer-motion";
 
 export default function Hero() {
   return (
-    <section className="relative h-[90vh] flex items-end">
-      {/* background video */}
+    <section className="hero">
+      {/* Background Media */}
       <video
         autoPlay
         muted
         loop
-        className="absolute w-full h-full object-cover opacity-60"
+        playsInline
+        className="hero__video"
         src="/stadium.mp4"
       />
 
-      {/* overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+      {/* Visual Overlay */}
+      <div className="hero__overlay" />
 
-      {/* content */}
+      {/* Hero Content */}
       <motion.div
-        initial={{ opacity: 0, y: 60 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="relative z-10 p-10 max-w-3xl"
+        className="hero__content"
       >
-        <motion.p
-          animate={{ opacity: [0.6, 1, 0.6] }}
-          transition={{ repeat: Infinity, duration: 2 }}
-          className="text-red-500 font-semibold"
-        >
-          ● LIVE NOW
-        </motion.p>
+        <div className="hero__status">
+          <span className="hero__status-dot" />
+          <span>LIVE NOW</span>
+        </div>
 
-        <h1 className="text-5xl md:text-7xl font-bold mt-3 leading-tight">
+        <h1 className="hero__title">
           Real Madrid vs Barcelona
         </h1>
 
-        <p className="text-white/70 mt-3 text-lg">
-          La Liga • 67’ • 2 - 1 intense match
+        <p className="hero__description">
+          Accédez au streaming haute qualité de La Liga. Match intense à la 67ème minute.
         </p>
 
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.98 }}
-          className="mt-6 bg-white text-black px-8 py-3 rounded-full font-medium"
-        >
-          Watch Live
-        </motion.button>
+        <div className="hero__actions">
+          <button className="btn btn--primary">
+            Regarder en Direct
+          </button>
+
+          <button className="btn btn--secondary">
+            Voir les Offres
+          </button>
+        </div>
       </motion.div>
     </section>
   );

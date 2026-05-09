@@ -1,0 +1,132 @@
+/* Base Button */
+.btn {
+  /* Typography */
+  font-family: var(--font-family-primary);
+  font-size:   var(--font-size-md);
+  font-weight: var(--font-weight-base);
+  line-height: var(--font-line-height-base);
+
+  /* Spacing */
+  padding:     var(--space-3) var(--space-7);
+  min-height:  44px;
+  min-width:   120px;
+
+  /* Shape */
+  border-radius: var(--radius-sm);
+  border:        2px solid transparent; /* default border for consistent sizing */
+  
+  /* Flexbox for icon alignment */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+
+  /* Motion */
+  transition: background-color var(--motion-duration-instant) ease,
+              transform        var(--motion-duration-instant) ease,
+              outline-color    var(--motion-duration-instant) ease,
+              color            var(--motion-duration-instant) ease,
+              border-color     var(--motion-duration-instant) ease,
+              box-shadow       var(--motion-duration-instant) ease;
+
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--color-state-focus);
+  outline-offset: 2px;
+}
+
+/* Primary Variant (GOALA Red) */
+.btn--primary {
+  background-color: var(--color-accent-primary);
+  color:            var(--color-text-primary);
+}
+
+.btn--primary:hover {
+  background-color: var(--color-accent-hover);
+  box-shadow: 0 0 8px rgba(225, 6, 0, 0.5);
+  will-change: transform, box-shadow;
+}
+
+.btn--primary:active {
+  background-color: var(--color-accent-active);
+  transform: scale(0.98);
+}
+
+/* Secondary Variant */
+.btn--secondary {
+  background-color: transparent;
+  color:            var(--color-text-primary);
+  border-color:     var(--color-accent-primary);
+}
+
+.btn--secondary:hover {
+  background-color: rgba(225, 6, 0, 0.1);
+}
+
+.btn--secondary:active {
+  transform: scale(0.98);
+}
+
+/* Ghost Variant */
+.btn--ghost {
+  background-color: transparent;
+  color:            var(--color-text-secondary);
+  border-color:     var(--color-surface-raised);
+}
+
+.btn--ghost:hover {
+  background-color: var(--color-surface-raised);
+  color:            var(--color-text-primary);
+}
+
+.btn--ghost:active {
+  transform: scale(0.98);
+  background-color: var(--color-surface-elevated);
+}
+
+/* Destructive Variant */
+.btn--destructive {
+  background-color: var(--color-state-error);
+  color:            var(--color-text-primary);
+}
+
+.btn--destructive:hover {
+  filter: brightness(1.12);
+  box-shadow: 0 0 8px rgba(255, 59, 48, 0.5);
+}
+
+.btn--destructive:active {
+  transform: scale(0.98);
+  filter:    brightness(0.9);
+}
+
+/* Global Disabled / Loading States */
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  opacity:        0.4;
+  cursor:         not-allowed;
+  pointer-events: none;
+  box-shadow:     none !important;
+}
+
+.btn[aria-busy="true"] {
+  cursor: wait;
+}
+
+/* Truncation for long text */
+.btn-text {
+  max-width: 32ch;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Responsive */
+@media (max-width: 479px) {
+  .btn {
+    width: 100%;
+  }
+}

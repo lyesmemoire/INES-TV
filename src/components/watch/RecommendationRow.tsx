@@ -1,17 +1,22 @@
-"use client";
+// src/components/watch/RecommendationRow.tsx
+// INES TV Design System — Migration finale (Version corrigée)
+// ─────────────────────────────────────────────────────
+
+'use client';
 
 import React, { useState } from "react";
 import { Sparkles } from "lucide-react";
 import { Channel } from "@/src/types";
-import ChannelCard from "./ChannelCard";
+import { TVCard } from "@/components/TVCard";
 import { motion } from "framer-motion";
 
 interface Props {
-  onSelect: (channel: Channel) => void;
+  onSelect?: (channel: Channel) => void;
   activeChannel: Channel | null;
+  lang: string;
 }
 
-// ✅ MOCK RECOMMENDATIONS (plus d'API)
+// ✅ MOCK RECOMMENDATIONS (À remplacer par un appel API réel en production)
 const MOCK_RECOMMENDATIONS: Channel[] = [
   {
     id: "rec-1",
@@ -27,11 +32,12 @@ const MOCK_RECOMMENDATIONS: Channel[] = [
     isPremium: true,
     currentProgram: null,
     liveStats: { elapsedTime: "LIVE" } as any,
+    live: true
   },
   {
     id: "rec-2",
     name: "NBA All-Star Game",
-    logo: "",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/e/e0/NBA_logo.svg",
     thumbnail: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800",
     streamUrl: undefined,
     category: "basketball",
@@ -42,47 +48,53 @@ const MOCK_RECOMMENDATIONS: Channel[] = [
     isPremium: false,
     currentProgram: null,
     liveStats: { elapsedTime: "LIVE" } as any,
+    live: true
   },
 ];
 
-export default function RecommendationRow({ onSelect, activeChannel }: Props) {
+export default function RecommendationRow({ onSelect, activeChannel, lang }: Props) {
   const [recommendations] = useState<Channel[]>(MOCK_RECOMMENDATIONS);
+  const [focusedId, setFocusedId] = useState<string | null>(null);
 
-  if (recommendations.length === 0) return null;
+  // Correction : Ne jamais retourner null pour l'accessibilité
+  if (recommendations.length === 0) {
+    return (
+      <section 
+        className="recommendation-row"
+        aria-label="Chaînes recommandées"
+      >
+        <p className="recommendation-row__empty">
+          Aucune recommandation disponible pour le moment.
+        </p>
+      </section>
+    );
+  }
 
   return (
-    <div className="mb-12">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 bg-emerald-500/20 rounded-lg flex items-center justify-center border border-emerald-500/20">
-            <Sparkles size={18} className="text-emerald-400" />
-          </div>
-          <div>
-            <h2 className="text-lg font-black text-white tracking-tight leading-none uppercase">
-              Recommandé pour vous
-            </h2>
-            <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-1">
-              Sélection personnalisée
-            </p>
-          </div>
-        </div>
+    <section 
+      className="recommendation-row"
+      aria-label="Chaînes recommandées pour vous"
+    >
+      <div className="recommendation-row__header">
+        <Sparkles size={18} className="recommendation-row__icon" aria-hidden="true" />
+        <h2 className="recommendation-row__title">Recommandé pour vous</h2>
       </div>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"
+        className="recommendation-row__grid"
       >
-        {recommendations.map((channel, i) => (
-          <ChannelCard
+        {recommendations.map((channel) => (
+          <TVCard
             key={channel.id}
             channel={channel}
-            isActive={activeChannel?.id === channel.id}
-            index={i}
-            onClick={() => onSelect(channel)}
+            focused={focusedId === channel.id}
+            onFocus={() => setFocusedId(channel.id)}
+            lang={lang}
           />
         ))}
       </motion.div>
-    </div>
+    </section>
   );
 }

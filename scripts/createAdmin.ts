@@ -1,9 +1,9 @@
-import { prisma } from "../server/services/db.js";
+﻿import { prisma } from "../server/services/db.js";
 import bcrypt from "bcryptjs";
 import "dotenv/config";
 
 async function main() {
-  const email = "admin@streamperf.com";
+  const email = "admin@INES TV.com";
   const password = "Admin123!";
 
   console.log("🚀 Creating admin account...");

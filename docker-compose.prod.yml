@@ -1,4 +1,4 @@
-version: '3.9'
+﻿version: '3.9'
 
 services:
   # =====================
@@ -13,7 +13,7 @@ services:
         - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
         - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
         - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
-    container_name: streamperf-app-prod
+    container_name: INES TV-app-prod
     environment:
       - NODE_ENV=production
       - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
@@ -22,7 +22,7 @@ services:
       redis:
         condition: service_healthy
     networks:
-      - streamperf-network
+      - INES TV-network
     restart: always
     deploy:
       resources:
@@ -38,7 +38,7 @@ services:
   # =====================
   nginx:
     image: nginx:alpine
-    container_name: streamperf-nginx
+    container_name: INES TV-nginx
     ports:
       - "80:80"
       - "443:443"
@@ -49,7 +49,7 @@ services:
     depends_on:
       - app
     networks:
-      - streamperf-network
+      - INES TV-network
     restart: always
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/api/health"]
@@ -62,7 +62,7 @@ services:
   # =====================
   redis:
     image: redis:7-alpine
-    container_name: streamperf-redis-prod
+    container_name: INES TV-redis-prod
     volumes:
       - redis-data:/data
     command: >
@@ -79,7 +79,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - streamperf-network
+      - INES TV-network
     restart: always
     deploy:
       resources:
@@ -92,7 +92,7 @@ services:
   # =====================
   watchtower:
     image: containrrr/watchtower
-    container_name: streamperf-watchtower
+    container_name: INES TV-watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     command: --interval 300 --cleanup
@@ -105,5 +105,5 @@ volumes:
     driver: local
 
 networks:
-  streamperf-network:
+  INES TV-network:
     driver: bridge

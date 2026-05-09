@@ -40,7 +40,7 @@ async function authMiddleware(req: Request, res: Response, next: Function) {
 
 // Route principale pour récupérer une clé AES pour un segment
 router.get('/:segmentId', authMiddleware, (req: Request, res: Response) => {
-  const segmentId = req.params.segmentId;
+  const segmentId = req.params.segmentId as string;
   const now = Date.now();
 
   // Vérifier cache

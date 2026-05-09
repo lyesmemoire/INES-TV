@@ -1,5 +1,5 @@
 import React from "react";
-import AnalyticsDashboard from "@/components/analytics/AnalyticsDashboard";
+import AnalyticsDashboard from "@/src/components/analytics/AnalyticsDashboard";
 
 /**
  * 🧭 ANALYTICS PAGE (Route Container)

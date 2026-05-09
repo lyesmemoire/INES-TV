@@ -1,0 +1,137 @@
+/* styles/components/stream-card.css
+   INES TV Design System — StreamCard industrialisé
+   ──────────────────────────────────────────────── */
+
+.stream-card {
+  background-color: var(--color-surface-strong);
+  border:           1px solid rgba(255, 255, 255, 0.05);
+  border-radius:    var(--radius-md);
+  overflow:         hidden;
+  transition:
+    border-color      var(--motion-duration-instant) ease,
+    box-shadow        var(--motion-duration-instant) ease,
+    transform         var(--motion-duration-instant) ease;
+  box-shadow:       0 10px 30px rgba(0, 0, 0, 0.5);
+  position:         relative;
+  display:          block;
+  text-decoration:  none;
+}
+
+.stream-card:hover {
+  border-color: var(--color-action-primary);
+  box-shadow:   0 0 20px color-mix(in srgb, var(--color-action-primary) 20%, transparent);
+  transform:    translateY(-4px);
+}
+
+.stream-card__badge {
+  padding:       var(--space-1) var(--space-2);
+  border-radius: var(--radius-xs);
+  font-size:     var(--font-size-xs);
+  font-weight:   var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.stream-card__badge--live {
+  background-color: var(--color-action-danger);
+  color:            var(--color-text-primary);
+  animation:        pulse-opacity 2s infinite;
+}
+
+.stream-card__badge--status {
+  background-color: var(--color-surface-raised);
+  color:            var(--color-text-inverse);
+}
+
+.stream-card__visual {
+  position:     relative;
+  aspect-ratio: 16 / 9;
+  display:      flex;
+  overflow:     hidden;
+}
+
+.stream-card__team {
+  flex:            1;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+}
+
+.stream-card__logo-wrapper {
+  width:            var(--space-12);
+  height:           var(--space-12);
+  border-radius:    50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter:  blur(10px);
+  border:           1px solid rgba(255, 255, 255, 0.2);
+  display:          flex;
+  align-items:      center;
+  justify-content:  center;
+  font-size:        var(--font-size-2xl);
+  font-weight:      var(--font-weight-bold);
+  color:            var(--color-text-primary);
+  box-shadow:       var(--shadow-lg);
+}
+
+.stream-card__overlay {
+  position:         absolute;
+  inset:            0;
+  background-color: rgba(0, 0, 0, 0.4);
+  opacity:          0;
+  transition:       opacity var(--motion-duration-instant) ease;
+  display:          flex;
+  align-items:      center;
+  justify-content:  center;
+  backdrop-filter:  blur(4px);
+  z-index:          10;
+}
+
+.stream-card:hover .stream-card__overlay {
+  opacity: 1;
+}
+
+.stream-card__play-btn {
+  width:            var(--space-10);
+  height:           var(--space-10);
+  background-color: var(--color-action-primary);
+  border-radius:    50%;
+  display:          flex;
+  align-items:      center;
+  justify-content:  center;
+  transform:        scale(0.8);
+  transition:       transform var(--motion-duration-instant) ease;
+}
+
+.stream-card:hover .stream-card__play-btn {
+  transform: scale(1);
+}
+
+.stream-card__content {
+  padding: var(--space-5);
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+}
+
+.stream-card__title {
+  font-size:   var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color:       var(--color-text-primary);
+  margin:      0;
+  transition:  color var(--motion-duration-instant) ease;
+}
+
+.stream-card:hover .stream-card__title {
+  color: var(--color-action-primary);
+}
+
+.stream-card__meta {
+  font-size:      var(--font-size-xs);
+  color:          var(--color-text-inverse);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top:     var(--space-1);
+}
+
+@keyframes pulse-opacity {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}

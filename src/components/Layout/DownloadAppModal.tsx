@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Smartphone, Tv, X, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -30,7 +30,7 @@ export default function DownloadAppModal({ isOpen, onClose }: DownloadAppModalPr
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h2 className="text-2xl font-black text-white tracking-tight">Télécharger nos applications</h2>
-                <p className="text-zinc-400 text-sm mt-1">L'expérience StreamPerf partout avec vous.</p>
+                <p className="text-zinc-400 text-sm mt-1">L'expérience INES TV partout avec vous.</p>
               </div>
               <button
                 onClick={onClose}

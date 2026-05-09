@@ -1,9 +1,9 @@
-# 🚀 StreamPerf Pro - Store Ready Kit (ASO)
+﻿# 🚀 INES TV - Store Ready Kit (ASO)
 
 Ce document contient les éléments nécessaires pour publier votre application sur le **Google Play Store** et l'**App Store**, optimisés pour le SEO et la conversion.
 
 ## 📱 Informations Générales
-- **Nom de l'App** : PlayFlow OTT (ou StreamPerf TV)
+- **Nom de l'App** : PlayFlow OTT (ou INES TV TV)
 - **Catégorie** : Divertissement / Lecteurs Vidéo
 - **Modèle** : Gratuit (avec publicités) + Premium
 

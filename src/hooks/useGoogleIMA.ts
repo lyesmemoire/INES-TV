@@ -125,7 +125,7 @@ export const useGoogleIMA = (
         );
 
         // ── Build VAST request ──
-        const adUnitCode = "streamperf_video_instream";
+        const adUnitCode = "INES TV_video_instream";
         let biddingKeywords: string[] = [];
         try {
           const { initHeaderBidding } = await import("./useHeaderBidding.js");
@@ -201,7 +201,7 @@ export const useGoogleIMA = (
       initializedRef.current = false;
       destroyIMA();
     };
-  }, [videoRef, isPremium]);
+  }, [videoRef, isPremium, onAdBlockDetected]);
 };
 
 /** Safely destroys an existing IMA instance without throwing. */

@@ -1,3 +1,6 @@
+"use client"
+
+import { useState, useEffect } from "react"
 import { HLSPlayerState } from "@/hooks/useHLSPlayer"
 import QualitySelector from "./QualitySelector"
 import type { Channel } from "@/types/channel"
@@ -17,6 +20,12 @@ export default function VideoPlayerControls({
   visible,
   onShowGuide,
 }: VideoPlayerControlsProps) {
+  const [pipSupported, setPipSupported] = useState(false)
+
+  useEffect(() => {
+    setPipSupported(typeof document !== 'undefined' && !!document.pictureInPictureEnabled)
+  }, [])
+
   const formatTime = (seconds: number) => {
     if (!isFinite(seconds)) return "LIVE"
     const mins = Math.floor(seconds / 60)
@@ -24,8 +33,8 @@ export default function VideoPlayerControls({
     return `${mins}:${secs.toString().padStart(2, "0")}`
   }
 
-  const bufferedPercent = state.duration
-    ? (state.buffered / state.duration) * 100
+  const bufferedPercent = state.duration && state.videoRef.current && state.videoRef.current.buffered.length > 0
+    ? (state.videoRef.current.buffered.end(0) / state.duration) * 100
     : 0
 
   const progressPercent = state.duration
@@ -137,16 +146,16 @@ export default function VideoPlayerControls({
           </button>
 
           {/* Quality */}
-          {state.availableQualities && state.availableQualities.length > 1 && (
+          {state.qualityLevels && state.qualityLevels.length > 1 && (
             <QualitySelector
-              qualities={state.availableQualities}
+              qualities={state.qualityLevels}
               currentQuality={state.currentQuality}
               onSelect={controls.setQuality}
             />
           )}
 
           {/* PiP */}
-          {typeof document !== 'undefined' && document.pictureInPictureEnabled && (
+          {pipSupported && (
             <button
               onClick={controls.togglePiP}
               className="w-8 h-8 flex items-center justify-center hover:bg-white/10 rounded transition"

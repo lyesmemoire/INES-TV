@@ -1,4 +1,4 @@
-import { Router, Request, Response } from "express";
+﻿import { Router, Request, Response } from "express";
 
 const router = Router();
 
@@ -7,7 +7,7 @@ router.get("/tag.js", (_req: Request, res: Response) => {
 
   res.send(`
 (function () {
-  const pid = window.__STREAMPERF_PID__;
+  const pid = window.__INES TV_PID__;
   if (!pid) return;
 
   const run = async () => {
@@ -103,7 +103,7 @@ router.get("/tag.js", (_req: Request, res: Response) => {
       <div style="width:100%; height:\${f.h}px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-center; text-align:center; font-family:sans-serif; overflow:hidden;">
         <div style="margin:auto;">
           <div style="font-weight:900; color:#cbd5e1; font-size:10px; letter-spacing:1px; margin-bottom:4px;">ADVERTISEMENT</div>
-          <div style="font-weight:900; color:#3b82f6; font-size:12px;">StreamPerf <span style="color:#94a3b8">AdX</span></div>
+          <div style="font-weight:900; color:#3b82f6; font-size:12px;">INES TV <span style="color:#94a3b8">AdX</span></div>
         </div>
       </div>
     \`;
@@ -126,7 +126,7 @@ router.get("/tag.js", (_req: Request, res: Response) => {
   }
 
   function buildCreative(slot, ad) {
-    const clickUrl = "/click?url=" + encodeURIComponent(ad.url || "https://streamperf.com");
+    const clickUrl = "/click?url=" + encodeURIComponent(ad.url || "https://inestv.dz");
     
     let style = "width:100%; height:auto; display:block; border-radius:8px;";
     if (slot.format === "728x90") style = "width:728px; height:90px; border:none;";
@@ -142,7 +142,7 @@ router.get("/tag.js", (_req: Request, res: Response) => {
   }
 
   window.addEventListener('error', (e) => {
-    if (e.message && e.message.includes('STREAMPERF')) console.warn('💎 [AdX] Suppressed error:', e.message);
+    if (e.message && e.message.includes('INES TV')) console.warn('💎 [AdX] Suppressed error:', e.message);
   });
 
   (window.requestIdleCallback || setTimeout)(run, 1);

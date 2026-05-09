@@ -1,7 +1,7 @@
-{
+﻿{
   "expo": {
-    "name": "StreamPerf OTT",
-    "slug": "streamperf-ott",
+    "name": "INES TV OTT",
+    "slug": "INES TV-ott",
     "version": "1.0.0",
     "orientation": "default",
     "icon": "./assets/icon.png",
@@ -14,11 +14,11 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.streamperf.ott"
+      "bundleIdentifier": "com.INES TV.ott"
     },
     "android": {
       "tv": true,
-      "package": "com.streamperf.ott",
+      "package": "com.INES TV.ott",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#09090b"

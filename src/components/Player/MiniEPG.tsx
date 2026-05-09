@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Channel } from '../../types';
 import { motion } from 'motion/react';
+import Image from 'next/image';
 
 interface MiniEPGProps {
   channels: Channel[];
@@ -44,7 +45,9 @@ export default function MiniEPG({ channels, currentChannelId, onSelect }: MiniEP
             >
               <div className={`w-16 h-16 md:w-28 md:h-28 rounded-2xl bg-zinc-950 border overflow-hidden flex flex-col relative items-center justify-center p-2 shadow-2xl ${isCurrent ? 'border-emerald-500 shadow-emerald-500/20' : 'border-white/10 hover:border-white/30'}`}>
                 {ch.thumbnail || ch.homeLogo ? (
-                  <img src={ch.thumbnail || ch.homeLogo} alt={ch.name} className="w-full h-full object-contain drop-shadow-md z-10" />
+                  <div className="relative w-full h-full">
+                    <Image src={(ch.thumbnail || ch.homeLogo) ?? ""} alt={ch.name} fill className="object-contain drop-shadow-md z-10" />
+                  </div>
                 ) : (
                   <span className="text-white/60 font-black text-xs uppercase z-10 text-center">{ch.name.substring(0, 10)}</span>
                 )}

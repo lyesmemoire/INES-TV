@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect } from "react";
 
@@ -35,7 +35,7 @@ export default function Error({
             </button>
         </div>
       </div>
-      <p className="mt-10 text-[8px] text-zinc-800 uppercase tracking-[0.5em]">StreamPerf Industrial Media Layer • Error Handler Active</p>
+      <p className="mt-10 text-[8px] text-zinc-800 uppercase tracking-[0.5em]">INES TV Industrial Media Layer • Error Handler Active</p>
     </div>
   );
 }

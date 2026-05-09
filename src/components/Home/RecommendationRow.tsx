@@ -1,22 +1,42 @@
+// src/components/Home/RecommendationRow.tsx
+// INES TV Design System — Migration finale
+// Framer Motion conservé — classes Tailwind éliminées
+// ─────────────────────────────────────────────────────
+
+'use client';
+
 import React, { useEffect, useState } from 'react';
-import { Sparkles, Loader2 } from 'lucide-react';
-import { Channel } from '../../types';
-import ChannelCard from './ChannelCard';
-import { motion, AnimatePresence } from 'motion/react';
+import { Sparkles, Loader2 }          from 'lucide-react';
+import { motion, AnimatePresence }     from 'framer-motion';
+import { TVCard, TVCardSkeleton }      from '@/components/TVCard';
+import type { Channel }                from '../../types';
 
 interface RecommendationRowProps {
-  onSelect: (channel: Channel) => void;
+  onSelect?:      (channel: Channel) => void;
   activeChannel: Channel | null;
+  lang:          string;
 }
 
-export default function RecommendationRow({ onSelect, activeChannel }: RecommendationRowProps) {
+const SKELETON_COUNT  = 5;
+const ANIMATION_VARIANTS = {
+  hidden:  { opacity: 0, y: 8  },
+  visible: { opacity: 1, y: 0  },
+  exit:    { opacity: 0, y: -8 },
+} as const;
+
+export default function RecommendationRow({
+  onSelect,
+  activeChannel,
+  lang,
+}: RecommendationRowProps) {
   const [recommendations, setRecommendations] = useState<Channel[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading]                 = useState(true);
+  const [focusedId, setFocusedId]             = useState<string | null>(null);
 
   const fetchRecs = async () => {
     try {
       const res = await fetch('/api/recommendations');
-      if (!res.ok) return; // Fix: Prevent parsing HTML as JSON
+      if (!res.ok) return;
       const data = await res.json();
       if (data.status === 'ok') {
         setRecommendations(data.recommendations);
@@ -30,61 +50,111 @@ export default function RecommendationRow({ onSelect, activeChannel }: Recommend
 
   useEffect(() => {
     fetchRecs();
-  }, []);
-
-  if (!loading && recommendations.length === 0) return null;
+  }, [activeChannel]);
 
   return (
-    <div className="mb-12">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 bg-emerald-500/20 rounded-lg flex items-center justify-center border border-emerald-500/20">
-            <Sparkles size={18} className="text-emerald-400" />
-          </div>
-          <div>
-            <h2 className="text-lg font-black text-white tracking-tight leading-none uppercase">
-              Recommandé pour vous
-            </h2>
-            <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-1">
-              Optimisé par Gemini AI · Basé sur votre historique
-            </p>
-          </div>
-        </div>
+    <section
+      className="recommendation-row"
+      aria-label="Chaînes recommandées pour vous"
+      aria-busy={loading}
+    >
+      {/* En-tête */}
+      <div className="recommendation-row__header">
+        <Sparkles
+          size={18}
+          aria-hidden="true"
+          className="recommendation-row__icon"
+        />
+        <h2 className="recommendation-row__title">
+          Recommandé pour vous
+        </h2>
       </div>
-      
-      <div className="relative">
+
+      {/* Compteur — visible uniquement quand les données sont chargées */}
+      {!loading && recommendations.length > 0 && (
+        <p className="recommendation-row__count">
+          {recommendations.length} chaîne
+          {recommendations.length > 1 ? 's' : ''} sélectionnée
+          {recommendations.length > 1 ? 's' : ''}
+        </p>
+      )}
+
+      {/* Grille animée */}
+      <div className="recommendation-row__track">
         <AnimatePresence mode="wait">
-          {loading ? (
-            <motion.div 
+
+          {/* État chargement */}
+          {loading && (
+            <motion.div
               key="loading"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex items-center justify-center py-12 bg-white/5 rounded-2xl border border-white/5 backdrop-blur-sm"
+              className="recommendation-row__grid"
+              variants={ANIMATION_VARIANTS}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
             >
-              <Loader2 className="animate-spin text-emerald-500 mr-2" size={20} />
-              <span className="text-sm font-bold text-zinc-400">L'IA analyse vos préférences...</span>
+              {/* 
+                Loader accessible :
+                role="status" annonce l'activité au lecteur d'écran
+                Les squelettes sont aria-hidden pour éviter la répétition
+              */}
+              <span className="sr-only" role="status">
+                Chargement des recommandations…
+              </span>
+              <Loader2
+                className="recommendation-row__loader"
+                aria-hidden="true"
+              />
+              {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
+                <TVCardSkeleton key={i} />
+              ))}
             </motion.div>
-          ) : (
-            <motion.div 
-              key="grid"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"
+          )}
+
+          {/* État vide */}
+          {!loading && recommendations.length === 0 && (
+            <motion.p
+              key="empty"
+              className="recommendation-row__empty"
+              variants={ANIMATION_VARIANTS}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
             >
-              {recommendations.map((channel, i) => (
-                <ChannelCard
+              Aucune recommandation disponible pour le moment.
+            </motion.p>
+          )}
+
+          {/* État données */}
+          {!loading && recommendations.length > 0 && (
+            <motion.div
+              key="grid"
+              className="recommendation-row__grid"
+              variants={ANIMATION_VARIANTS}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
+              {recommendations.map((channel) => (
+                <TVCard
                   key={channel.id}
                   channel={channel}
-                  isActive={activeChannel?.id === channel.id}
-                  index={i}
-                  onClick={() => onSelect(channel)}
+                  focused={focusedId === channel.id}
+                  onFocus={() => setFocusedId(channel.id)}
+                  lang={lang}
+                  onClick={(e) => {
+                    if (onSelect) {
+                      e.preventDefault();
+                      onSelect(channel);
+                    }
+                  }}
                 />
               ))}
             </motion.div>
           )}
+
         </AnimatePresence>
       </div>
-    </div>
+    </section>
   );
 }

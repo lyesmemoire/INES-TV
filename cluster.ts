@@ -1,4 +1,4 @@
-import cluster from "cluster";
+﻿import cluster from "cluster";
 import os from "os";
 import { startServer } from "./server.js";
 import { revenueOptimizer } from "./server/core/optimizer/RevenueOptimizer.js";
@@ -30,7 +30,7 @@ const sharedBuffers = {
 
 if (cluster.isPrimary) {
   console.log("==========================================");
-  console.log(`🚀 STREAMPERF AdX - ULTRA KERNEL v3`);
+  console.log(`🚀 INES TV AdX - ULTRA KERNEL v3`);
   console.log(`🚀 Master ${process.pid} - Forking ${WORKERS} Workers`);
   console.log("==========================================");
 

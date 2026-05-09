@@ -2,8 +2,8 @@
 
 import React, { useEffect, useRef, useState, forwardRef, useImperativeHandle } from "react";
 import Hls from "hls.js";
-import { saveQoEScore } from "@/utils/streams/qoeEngine";
-import { trackStreamEvent } from "@/services/analytics";
+import { saveQoEScore } from "@/src/utils/streams/qoeEngine";
+import { trackStreamEvent } from "@/src/services/analytics";
 
 interface VideoCoreDualProps {
   primarySrc: string;
@@ -11,7 +11,7 @@ interface VideoCoreDualProps {
   primaryCdn?: string;
   secondaryCdn?: string;
   channelId?: string; // Added for analytics
-  type?: 'hls' | 'dash';
+  type?: 'hls' | 'dash' | 'application/x-mpegURL' | 'm3u' | string;
   onError?: () => void;
 }
 

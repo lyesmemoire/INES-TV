@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { motion } from 'motion/react';
 import { Activity, Shield, Zap, AlertTriangle, RefreshCw, BarChart3, Globe, Tv } from 'lucide-react';
-import { getQoEStats } from '@/services/analyticsQueries';
+import { getQoEStats } from '@/src/services/analyticsQueries';
 import QoEChart from './QoEChart';
 import CDNComparisonChart from './CDNComparisonChart';
 import CDNChart from './CDNChart';

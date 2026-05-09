@@ -1,0 +1,11 @@
+:root {
+  --motion-duration-instant: 200ms;
+  --motion-duration-fast: 750ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-duration-instant: 0ms !important;
+    --motion-duration-fast: 0ms !important;
+  }
+}

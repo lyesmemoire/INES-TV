@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { MonitorPlay, Search, Bell, User, X, Globe, Shield, Smartphone } from 'lucide-react';
 import DownloadAppModal from './DownloadAppModal';
-import PricingModal from '../Pricing/PricingModal';
 import { useLanguage } from '../../context/LanguageContext';
 import { useAuth } from '../../context/AuthContext';
 import { Crown } from 'lucide-react';
@@ -19,9 +18,8 @@ export default function Navbar({ onSearch, liveCount = 0, onOpenPremium }: Navba
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [downloadsOpen, setDownloadsOpen] = useState(false);
-  const [pricingOpen, setPricingOpen] = useState(false);
   const { language, setLanguage, t } = useLanguage();
-  const { user, refreshSession, isPremium } = useAuth();
+  const { user, isPremium } = useAuth();
 
   useEffect(() => {
     const handle = () => setScrolled(window.scrollY > 20);
@@ -163,13 +161,7 @@ export default function Navbar({ onSearch, liveCount = 0, onOpenPremium }: Navba
             <User size={18} className="text-zinc-400" />
           </button>
 
-
           <DownloadAppModal isOpen={downloadsOpen} onClose={() => setDownloadsOpen(false)} />
-          <PricingModal 
-            isOpen={pricingOpen} 
-            onClose={() => setPricingOpen(false)} 
-            onSuccess={refreshSession} 
-          />
         </div>
       </div>
     </nav>

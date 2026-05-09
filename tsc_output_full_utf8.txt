@@ -1,0 +1,26 @@
+﻿scratch_test_resolution.ts(36,7): error TS2353: Object literal may only specify known properties, and 'name' does not exist in type 'Without<LiveSourceCreateInput, LiveSourceUncheckedCreateInput> & LiveSourceUncheckedCreateInput'.
+scratch_test_resolution.ts(46,7): error TS2353: Object literal may only specify known properties, and 'name' does not exist in type 'Without<LiveSourceCreateInput, LiveSourceUncheckedCreateInput> & LiveSourceUncheckedCreateInput'.
+scripts/create-test-user.ts(10,5): error TS2322: Type '{ email: string; passwordHash: string; plan: string; role: string; }' is not assignable to type '(Without<UserCreateInput, UserUncheckedCreateInput> & UserUncheckedCreateInput) | (Without<...> & UserCreateInput)'.
+  Type '{ email: string; passwordHash: string; plan: string; role: string; }' is not assignable to type 'Without<UserUncheckedCreateInput, UserCreateInput> & UserCreateInput'.
+    Property 'id' is missing in type '{ email: string; passwordHash: string; plan: string; role: string; }' but required in type 'UserCreateInput'.
+scripts/final_healthcheck.ts(2,19): error TS2307: Cannot find module 'node-fetch' or its corresponding type declarations.
+scripts/fix-encoding.ts(3,22): error TS2307: Cannot find module 'glob' or its corresponding type declarations.
+scripts/stress-test.ts(1,19): error TS2307: Cannot find module 'node-fetch' or its corresponding type declarations.
+server/routes/history.ts(38,24): error TS2322: Type 'string | string[]' is not assignable to type 'string | StringNullableFilter<"WatchHistory"> | null | undefined'.
+  Type 'string[]' is not assignable to type 'string | StringNullableFilter<"WatchHistory"> | null | undefined'.
+server/routes/keys.ts(47,31): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.
+server/routes/keys.ts(54,16): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.
+server/routes/m3u.ts(48,16): error TS2322: Type 'string | string[]' is not assignable to type 'string | undefined'.
+  Type 'string[]' is not assignable to type 'string'.
+server/routes/m3u.ts(62,45): error TS2322: Type 'string | string[]' is not assignable to type 'string | undefined'.
+  Type 'string[]' is not assignable to type 'string'.
+src/app/admin/brain/BrainDashboardClient.tsx(6,10): error TS2305: Module '"@/src/lib/realtime/engine"' has no exported member 'subscribeRealtime'.
+tests/backend/auth.test.ts(2,21): error TS2307: Cannot find module 'supertest' or its corresponding type declarations.
+tests/backend/health.test.ts(2,21): error TS2307: Cannot find module 'supertest' or its corresponding type declarations.
+tests/frontend/SportsDashboard.test.tsx(1,41): error TS2307: Cannot find module '@testing-library/react' or its corresponding type declarations.
+tests/frontend/SportsDashboard.test.tsx(41,45): error TS2339: Property 'toBeInTheDocument' does not exist on type 'Assertion<any>'.
+tests/frontend/SportsDashboard.test.tsx(42,43): error TS2339: Property 'toBeInTheDocument' does not exist on type 'Assertion<any>'.
+tests/frontend/SportsDashboard.test.tsx(43,37): error TS2339: Property 'toBeInTheDocument' does not exist on type 'Assertion<any>'.
+vitest.config.ts(2,19): error TS2307: Cannot find module '@vitejs/plugin-react' or its corresponding type declarations.

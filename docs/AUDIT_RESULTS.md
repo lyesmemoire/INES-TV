@@ -1,4 +1,4 @@
-# 🕵️ Audit de Pré-Lancement : StreamPerf Pro
+# 🕵️ Audit de Pré-Lancement : INES TV Pro
 
 Cet audit récapitule l'état de préparation du système pour une mise en production réelle (Docker/Cloud).
 
@@ -33,7 +33,7 @@ Cet audit récapitule l'état de préparation du système pour une mise en produ
 ### 1. Préparation des variables
 Assurez-vous d'avoir un fichier `.env` à la racine (ou injecté via Docker) :
 ```env
-DATABASE_URL="postgresql://postgres:postgres@postgres:5432/streamperf?schema=public"
+DATABASE_URL="postgresql://postgres:postgres@postgres:5432/INES TV?schema=public"
 REDIS_URL="redis://redis:6379"
 JWT_SECRET="votre_secret_ultra_securise"
 NODE_ENV="production"
@@ -48,7 +48,7 @@ docker-compose up --build -d
 ### 3. Migration Finale
 // turbo
 ```bash
-docker-compose exec streamperf-app npx prisma migrate deploy
+docker-compose exec INES TV-app npx prisma migrate deploy
 ```
 
 ---

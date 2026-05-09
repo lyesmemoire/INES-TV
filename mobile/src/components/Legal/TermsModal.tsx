@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Modal, View, Text, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ShieldCheck, AlertTriangle } from 'lucide-react-native';
@@ -41,7 +41,7 @@ export default function TermsModal() {
           </View>
 
           <Text style={styles.bodyText}>
-            StreamPerf PRO est un <Text style={styles.bold}>lecteur multimédia universel</Text> et un outil technique d'agrégation.{"\n"}{"\n"}
+            INES TV est un <Text style={styles.bold}>lecteur multimédia universel</Text> et un outil technique d'agrégation.{"\n"}{"\n"}
             Il est impératif de comprendre les points suivants avant d'utiliser l'application :{"\n"}
           </Text>
 

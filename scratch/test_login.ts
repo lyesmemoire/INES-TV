@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+﻿import fetch from 'node-fetch';
 
 async function test() {
   try {
@@ -6,7 +6,7 @@ async function test() {
     const res = await fetch('http://localhost:3000/api/admin/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: 'admin@streamperf.com', password: 'password123' })
+      body: JSON.stringify({ email: 'admin@INES TV.com', password: 'password123' })
     });
     
     if (!res.ok) {

@@ -1,4 +1,4 @@
-import { Channel, MatchData } from "@/src/types";
+import { Channel } from "@/src/types";
 
 export function toChannel(match: any): Channel {
   return {

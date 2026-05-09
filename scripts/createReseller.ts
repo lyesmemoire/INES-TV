@@ -1,11 +1,11 @@
-import { prisma } from "../server/services/db.js";
+﻿import { prisma } from "../server/services/db.js";
 import bcrypt from "bcryptjs";
 import "dotenv/config";
 
 const RESELLERS = [
   {
     name: "Reseller Demo",
-    email: "reseller@streamperf.com",
+    email: "reseller@INES TV.com",
     password: "Reseller123!",
     credits: 50,
   },

@@ -6,4 +6,14 @@ export type Channel = {
   live?: boolean
   description?: string
   streamUrl?: string
+  thumbnail?: string
+  homeName?: string
+  awayName?: string
+  homeLogo?: string
+  awayLogo?: string
+  score?: string
+  league?: string
+  matchTime?: string
+  status?: 'LIVE' | 'UPCOMING' | 'FINISHED' | 'ENDED'
+  slug?: string
 }

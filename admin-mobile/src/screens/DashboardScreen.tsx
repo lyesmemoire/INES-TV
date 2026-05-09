@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { 
   View, 
   Text, 
@@ -201,7 +201,7 @@ export default function DashboardScreen({ navigation }: any) {
 
       <View style={styles.footer}>
           {(ShieldCheck as any)({ size: 14, color: "#4B5563" })}
-          <Text style={styles.footerText}>Infrastructure StreamPerf PRO v2.4</Text>
+          <Text style={styles.footerText}>Infrastructure INES TV v2.4</Text>
       </View>
     </ScrollView>
   );

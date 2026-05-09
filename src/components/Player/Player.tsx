@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
+﻿import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
 import UltraPlayer, { UltraPlayerRef } from "./UltraPlayer";
 import AdsManager from "./AdsManager";
 import PremiumOverlay from "./PremiumOverlay";
@@ -134,7 +134,7 @@ const Player = forwardRef<UltraPlayerRef, PlayerProps>(({
       {!isPremium && !adsFinished && (
         <div className="absolute inset-0 z-50 bg-black flex flex-col items-center justify-center">
             <div className="absolute top-8 left-8 text-white/40 text-[10px] font-bold tracking-[0.3em] uppercase">
-                StreamPerf Protocol
+                INES TVtocol
             </div>
             <AdsManager 
                 adTag={adTag}

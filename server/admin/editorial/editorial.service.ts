@@ -118,7 +118,7 @@ export class EditorialService {
    * 📡 ADD DISTRIBUTION CHANNEL
    */
   static async addStream(channelId: string, type: string, url: string) {
-    return prisma.matchStream.create({
+    return prisma.stream.create({
       data: { channelId, type, url }
     });
   }
@@ -127,7 +127,7 @@ export class EditorialService {
    * 📺 GET AVAILABLE STREAMS
    */
   static async getStreams(channelId: string) {
-    return prisma.matchStream.findMany({
+    return prisma.stream.findMany({
       where: { channelId, isActive: true },
       orderBy: { createdAt: "desc" }
     });

@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 
-const STRIKES_KEY = 'streamperf_ab_strikes';
-const LAST_STRIKE_KEY = 'streamperf_ab_last';
+const STRIKES_KEY = 'INES TV_ab_strikes';
+const LAST_STRIKE_KEY = 'INES TV_ab_last';
 const MAX_STRIKES = 3;
 const COOLDOWN_MS = 60 * 1000; // 1 minute
 

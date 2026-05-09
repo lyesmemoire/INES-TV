@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+﻿import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, StatusBar } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Video, { VideoRef, ResizeMode } from 'react-native-video';
@@ -17,7 +17,7 @@ import PlayerOverlay from '../../src/components/player/PlayerOverlay';
 import MiniEPG from '../../src/components/player/MiniEPG';
 import Watermark from '../../src/components/player/Watermark';
 
-const BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://api.streamperf.pro';
+const BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://api.INES TV.pro';
 const UI_HIDE_TIMEOUT = 4000;
 const AD_COOLDOWN_MS = 120000; // 2 minutes
 

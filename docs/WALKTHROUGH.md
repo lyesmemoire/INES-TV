@@ -1,6 +1,6 @@
-# StreamPerf Pro — Walkthrough Final
+# INES TV Pro — Walkthrough Final
 
-L'écosystème **StreamPerf Pro** est désormais une plateforme de streaming multi-plateforme complète et synchronisée.
+L'écosystème **INES TV Pro** est désormais une plateforme de streaming multi-plateforme complète et synchronisée.
 
 ## 🚀 Fonctionnalités Implémentées
 
@@ -41,7 +41,7 @@ Le site a été transformé pour offrir une navigation centrée sur les événem
 - [Écran Favoris](file:///c:/Users/elitebook/Downloads/zip/mobile/app/(tabs)/favorites.tsx)
 
 ### TV: ExoPlayer Optique
-- [ExoPlayer TV avec History](file:///c:/Users/elitebook/Downloads/zip/tv/app/src/main/java/com/streamperf/tv/player/ExoPlayerScreen.kt)
+- [ExoPlayer TV avec History](file:///c:/Users/elitebook/Downloads/zip/tv/app/src/main/java/com/INES TV/tv/player/ExoPlayerScreen.kt)
 
 ## 🌍 Support Multi-langue (Phase 6)
 L'écosystème est maintenant international avec un support bilingue complet (Français/Anglais).
@@ -62,4 +62,4 @@ L'écosystème est maintenant international avec un support bilingue complet (Fr
 - **Dockerfile Multi-Stage** : Build Next.js optimisé et client Prisma auto-généré pour le runtime Linux.
 
 ---
-**Verdict : Projet StreamPerf Pro finalisé. L'écosystème est robuste, performant et prêt pour le grand public.**
+**Verdict : Projet INES TV Pro finalisé. L'écosystème est robuste, performant et prêt pour le grand public.**

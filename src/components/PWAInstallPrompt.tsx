@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useEffect, useState } from "react"
 
@@ -90,7 +90,7 @@ export default function PWAInstallPrompt() {
       </div>
 
       <p className="text-sm text-gray-400 mb-4">
-        Install StreamPerf for faster access and offline support.
+        Install INES TV for faster access and offline support.
       </p>
 
       <div className="flex gap-2">

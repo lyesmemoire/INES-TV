@@ -117,7 +117,7 @@ export const AdsOverlay: React.FC<AdsOverlayProps> = ({
       if (failFastRef.current)  clearTimeout(failFastRef.current);
       if (countdownRef.current) clearInterval(countdownRef.current);
     };
-  }, []);   // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isPremium, fallbackAds, finish]);
 
   // ── Impression + Countdown (start when ad is ready) ───────────────────────
   useEffect(() => {

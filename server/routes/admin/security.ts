@@ -1,4 +1,4 @@
-import express, { Router, Response } from 'express';
+﻿import express, { Router, Response } from 'express';
 import { requireAuth, requireAdmin, AuthRequest } from '../../middleware/supabaseAuth.middleware';
 import { SecurityService } from '../../services/security.service';
 import { prisma } from '../../services/db';
@@ -64,7 +64,7 @@ router.get('/active-sessions', requireAuth, requireAdmin, async (req: AuthReques
  */
 router.post('/sessions/:id/kill', requireAuth, requireAdmin, async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     await prisma.session.update({
       where: { id },
       data: { revoked: true }
@@ -98,7 +98,7 @@ router.post('/2fa/setup', requireAuth, requireAdmin, async (req: AuthRequest, re
     });
 
     const secret = speakeasy.default.generateSecret({
-      name: `StreamPerf_PRO (${admin?.email || 'Admin'})`
+      name: `INES TV_PRO (${admin?.email || 'Admin'})`
     });
 
     // Save secret (temp) or return to client for immediate verification

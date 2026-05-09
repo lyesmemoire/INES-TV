@@ -1,6 +1,6 @@
-{
-  "name": "StreamPerf - Premium Sports Streaming",
-  "short_name": "StreamPerf",
+﻿{
+  "name": "INES TV - Premium Sports Streaming",
+  "short_name": "INES TV",
   "description": "Watch live sports in HD",
   "start_url": "/",
   "display": "standalone",

@@ -1,4 +1,4 @@
-import { prisma } from "../lib/prisma.js";
+﻿import { prisma } from "../lib/prisma.js";
 import { MatchStateEngine } from "./MatchStateEngine.js";
 import { MomentumStore } from "./MomentumStore.js";
 import { BlackoutService } from "../admin/system/blackout.service.js";
@@ -7,8 +7,8 @@ import { FeatureFlags } from "../admin/system/feature.flags.js";
 import { streamResolver } from "../services/StreamResolver.js";
 
 const DEFAULT_HOUSE_AD = {
-  id: "streamperf-default",
-  name: "StreamPerf Original",
+  id: "INES TV-default",
+  name: "INES TV Original",
   creativeUrl: "/ads/branding_pulse.mp4",
   priority: 999,
   isActive: true

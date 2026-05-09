@@ -1,0 +1,36 @@
+.link {
+  font-family: var(--font-family-primary);
+  font-size: inherit; /* Inherits from context by default */
+  color: var(--color-text-primary);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+  transition: color var(--motion-duration-instant) ease,
+              outline-color var(--motion-duration-instant) ease;
+}
+
+.link:hover {
+  color: var(--color-text-inverse);
+  text-decoration: underline; /* Always keep underline on hover */
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--color-text-primary);
+  outline-offset: 2px;
+}
+
+.link:active {
+  color: var(--color-text-inverse);
+}
+
+/* Optional visited state if needed */
+.link:visited {
+  color: var(--color-text-visited, var(--color-text-primary));
+}
+
+.link[aria-disabled="true"] {
+  opacity: 0.38;
+  cursor: not-allowed;
+  pointer-events: none;
+  text-decoration: none;
+}

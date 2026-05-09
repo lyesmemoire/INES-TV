@@ -1,0 +1,21 @@
+{
+  "extends": "next/core-web-vitals",
+  "rules": {
+    "react/no-unescaped-entities": "off"
+  },
+  "overrides": [
+    {
+      "files": [
+        "app/**/*.tsx",
+        "app/**/*.ts",
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "components/**/*.tsx",
+        "components/**/*.ts"
+      ],
+      "rules": {
+        "no-restricted-globals": "off"
+      }
+    }
+  ]
+}

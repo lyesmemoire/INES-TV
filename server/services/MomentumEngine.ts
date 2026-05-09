@@ -1,6 +1,6 @@
-/**
+﻿/**
  * 📁 /server/services/MomentumEngine.ts
- * 🔮 PREDICTIVE MOMENTUM ENGINE — StreamPerf v1.5.1
+ * 🔮 PREDICTIVE MOMENTUM ENGINE — INES TV v1.5.1
  *
  * Patches over v1.5.0:
  *   ✅ Noise filter (threshold 0.02) → élimination des spikes OLS parasites

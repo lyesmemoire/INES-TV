@@ -1,11 +1,11 @@
-import { PrismaClient } from '@prisma/client'
+﻿import { PrismaClient } from '@prisma/client'
 import dotenv from 'dotenv'
 dotenv.config()
 
 const prisma = new PrismaClient()
 
 /**
- * 🌱 PRISMA SEED — StreamPerf Production Baseline
+ * 🌱 PRISMA SEED — INES TVduction Baseline
  * Seeds the minimum data required for FeedOrchestrator to stop
  * serving mocked fallbacks and use real DB rows instead.
  * 
@@ -66,7 +66,7 @@ async function main() {
   if (!houseAd) {
     await prisma.houseAd.create({
       data: {
-        name: 'StreamPerf Brand',
+        name: 'INES TV Brand',
         creativeUrl: '/ads/branding_pulse.mp4',
         priority: 999,
         isActive: true,

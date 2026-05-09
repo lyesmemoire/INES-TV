@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getCDNStats } from "@/services/analyticsQueries";
+import { getCDNStats } from "@/src/services/analyticsQueries";
 import {
   BarChart,
   Bar,

@@ -1,3 +1,5 @@
+"use client"
+
 import type { Channel } from "@/types/channel"
 
 export default function TVStatusBar({ focusedChannel, totalChannels, currentIndex }: { focusedChannel: Channel, totalChannels: number, currentIndex: number }) {

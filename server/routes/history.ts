@@ -32,7 +32,7 @@ historyRouter.get('/', requireAuth, async (req: AuthRequest, res) => {
 historyRouter.get('/:channelId', requireAuth, async (req: AuthRequest, res) => {
   try {
     const userId = req.user!.id;
-    const { channelId } = req.params;
+    const channelId = req.params.channelId as string;
     
     const entry = await prisma.watchHistory.findFirst({
       where: { userId, channelId },

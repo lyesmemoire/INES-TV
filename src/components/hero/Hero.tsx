@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import type { Channel } from "@/lib/channels"
+import type { Channel } from "@/src/types"
 
 export default function Hero({ channel }: { channel?: Channel }) {
   if (!channel) return null

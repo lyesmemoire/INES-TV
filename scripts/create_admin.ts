@@ -1,10 +1,10 @@
-import { PrismaClient } from '@prisma/client';
+﻿import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const email = 'admin@streamperf.com';
+  const email = 'admin@INES TV.com';
   const password = 'password123';
   const hashedPassword = await bcrypt.hash(password, 10);
 

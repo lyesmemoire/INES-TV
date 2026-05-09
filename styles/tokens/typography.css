@@ -1,0 +1,16 @@
+:root {
+  --font-family-primary: "Oscine", "Helvetica Neue", helvetica, arial, sans-serif;
+  --font-family-stack:   "Oscine", "Helvetica Neue", helvetica, arial, sans-serif;
+
+  --font-size-xs:        12px;
+  --font-size-sm:        14px;
+  --font-size-md:        16px;
+  --font-size-lg:        18px;
+  --font-size-xl:        27px;
+  --font-size-2xl:       28px;
+  --font-size-3xl:       36px;
+  --font-size-4xl:       40px;
+
+  --font-weight-base:    700;
+  --font-line-height-base: 25.152px;
+}

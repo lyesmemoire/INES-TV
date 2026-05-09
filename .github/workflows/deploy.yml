@@ -1,4 +1,4 @@
-name: Deploy
+﻿name: Deploy
 
 on:
   push:
@@ -30,8 +30,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/streamperf:latest
-            ${{ secrets.DOCKER_USERNAME }}/streamperf:${{ github.sha }}
+            ${{ secrets.DOCKER_USERNAME }}/INES TV:latest
+            ${{ secrets.DOCKER_USERNAME }}/INES TV:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
@@ -46,7 +46,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /opt/streamperf
+            cd /opt/INES TV
             docker-compose -f docker-compose.prod.yml pull
             docker-compose -f docker-compose.prod.yml up -d
             docker system prune -af
@@ -54,7 +54,7 @@ jobs:
       - name: Verify deployment
         run: |
           sleep 30
-          curl -f https://streamperf.com/api/health || exit 1
+          curl -f https://inestv.dz/api/health || exit 1
 
       - name: Notify Slack
         if: always()

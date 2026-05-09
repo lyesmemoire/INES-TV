@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { getCurrentMetrics, getActiveSessions, getAllStreamHealth } from "@/lib/analytics"
 
-export const runtime = "edge"
+export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
 
 export async function GET() {

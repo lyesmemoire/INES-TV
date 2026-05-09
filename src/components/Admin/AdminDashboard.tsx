@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'motion/react';
+import Image from 'next/image';
 import { Save, RefreshCw, AlertCircle, Edit2, Check, X, Shield } from 'lucide-react';
 import { Channel } from '../../types';
 import { useAuth } from '../../context/AuthContext';
@@ -12,11 +13,7 @@ export default function AdminDashboard() {
   const [editForm, setEditForm] = useState<Partial<Channel>>({});
   const [statusMsg, setStatusMsg] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
-  useEffect(() => {
-    fetchChannels();
-  }, []);
-
-  const fetchChannels = async () => {
+  const fetchChannels = useCallback(async () => {
     setLoading(true);
     try {
       const res = await fetch('/api/admin/channels', {
@@ -30,7 +27,11 @@ export default function AdminDashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
+
+  useEffect(() => {
+    fetchChannels();
+  }, [fetchChannels]);
 
   const startEdit = (channel: Channel) => {
     setEditingId(channel.id);
@@ -160,7 +161,11 @@ export default function AdminDashboard() {
                   </td>
                   <td className="p-6">
                     <div className="flex items-center gap-4">
-                      {channel.thumbnail && <img src={channel.thumbnail} className="w-10 h-10 rounded-lg object-cover" />}
+                      {channel.thumbnail && (
+                        <div className="relative w-10 h-10 rounded-lg overflow-hidden shrink-0">
+                          <Image src={channel.thumbnail} fill className="object-cover" alt="" />
+                        </div>
+                      )}
                       {editingId === channel.id ? (
                         <input 
                           type="text" 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import Image from 'next/image';
 import { useLanguage } from '../../context/LanguageContext';
 import AdminAdsDashboard from './AdminAdsDashboard';
 import AdminRevenueDashboard from './AdminRevenueDashboard';
@@ -128,7 +129,7 @@ export default function AdminModal({ isOpen, onClose }: { isOpen: boolean; onClo
             </div>
             <div>
               <h2 className="text-xl font-black text-white tracking-tight uppercase">Admin Dashboard</h2>
-              <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-0.5">StreamPerf Ecosystem Control</p>
+              <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-0.5">INES TV Ecosystem Control</p>
             </div>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full transition-colors text-zinc-400 hover:text-white">
@@ -253,7 +254,11 @@ export default function AdminModal({ isOpen, onClose }: { isOpen: boolean; onClo
                       <tr key={ch.id} className="hover:bg-white/[0.02] transition-colors">
                         <td className="p-4">
                           <div className="flex items-center gap-3">
-                            {ch.thumbnail && <img src={ch.thumbnail} className="w-8 h-8 rounded-lg object-cover bg-zinc-800" alt="" />}
+                            {ch.thumbnail && (
+                              <div className="relative w-8 h-8 rounded-lg overflow-hidden bg-zinc-800">
+                                <Image src={ch.thumbnail} fill className="object-cover" alt="" />
+                              </div>
+                            )}
                             <div className="min-w-0">
                               {editingId === ch.id ? (
                                 <input 
@@ -339,7 +344,7 @@ export default function AdminModal({ isOpen, onClose }: { isOpen: boolean; onClo
 
         {/* Footer */}
         <div className="p-6 border-t border-white/5 bg-zinc-900/30 flex justify-between items-center text-[10px] font-bold text-zinc-600 uppercase tracking-widest">
-           <div>StreamPerf Admin v3.0</div>
+           <div>INES TV Admin v3.0</div>
            <div className="flex gap-4">
               <span className="text-emerald-500 flex items-center gap-1.5"><span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" /> Real-time Sync Active</span>
            </div>

@@ -30,12 +30,12 @@ router.get("/", (_req: Request, res: Response) => {
 });
 
 router.delete("/:id", (req: Request, res: Response) => {
-  CampaignCache.delete(req.params.id);
+  CampaignCache.delete(req.params.id as string);
   res.json({ success: true });
 });
 
 router.patch("/:id/toggle", (req: Request, res: Response) => {
-  const updated = CampaignCache.toggleStatus(req.params.id);
+  const updated = CampaignCache.toggleStatus(req.params.id as string);
   res.json({ success: true, campaign: updated });
 });
 

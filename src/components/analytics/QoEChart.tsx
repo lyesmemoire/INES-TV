@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getQoEStats } from "@/services/analyticsQueries";
+import { getQoEStats } from "@/src/services/analyticsQueries";
 import {
   LineChart,
   Line,

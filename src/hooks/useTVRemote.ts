@@ -1,38 +1,37 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
-interface TVRemoteProps {
-  onLeft?: () => void;
-  onRight?: () => void;
-  onUp?: () => void;
-  onDown?: () => void;
-  onSelect?: () => void;
+type TVKey =
+  | 'ArrowUp' | 'ArrowDown'
+  | 'ArrowLeft' | 'ArrowRight'
+  | 'Enter' | 'Backspace';
+
+interface UseTVRemoteOptions {
+  onKey: (key: TVKey) => void;
+  enabled?: boolean;
 }
 
-export const useTVRemote = ({ onLeft, onRight, onUp, onDown, onSelect }: TVRemoteProps) => {
+export function useTVRemote({
+  onKey,
+  enabled = true,
+}: UseTVRemoteOptions) {
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      switch (e.key) {
-        case "ArrowLeft":
-          if (onLeft) onLeft();
-          break;
-        case "ArrowRight":
-          if (onRight) onRight();
-          break;
-        case "ArrowUp":
-          if (onUp) onUp();
-          break;
-        case "ArrowDown":
-          if (onDown) onDown();
-          break;
-        case "Enter":
-          if (onSelect) onSelect();
-          break;
-        default:
-          break;
-      }
-    };
+    if (typeof window === 'undefined') return;
+    if (!enabled) return;
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onLeft, onRight, onUp, onDown, onSelect]);
-};
+    function handleKeyDown(e: KeyboardEvent) {
+      const validKeys: TVKey[] = [
+        'ArrowUp', 'ArrowDown',
+        'ArrowLeft', 'ArrowRight',
+        'Enter', 'Backspace',
+      ];
+
+      if (validKeys.includes(e.key as TVKey)) {
+        e.preventDefault();
+        onKey(e.key as TVKey);
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onKey, enabled]);
+}

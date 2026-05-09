@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, RefreshControl, Image, Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -78,7 +78,7 @@ export default function HomeScreen() {
         <View style={styles.logoBox}>
           <Text style={styles.logoText}>SP</Text>
         </View>
-        <Text style={styles.headerTitle}>StreamPerf PRO</Text>
+        <Text style={styles.headerTitle}>INES TV</Text>
       </View>
 
       <ScrollView 

@@ -1,4 +1,4 @@
-import { StreamSource } from "@/types";
+import { StreamSource } from "@/src/types";
 
 type ScoredSource = StreamSource & {
   latency: number;

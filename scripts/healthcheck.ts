@@ -1,9 +1,9 @@
-import { PrismaClient } from "@prisma/client"
+﻿import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
 
 async function run() {
-  console.log("🚀 Starting StreamPerf Production HealthCheck...\n")
+  console.log("🚀 Starting INES TVduction HealthCheck...\n")
 
   try {
     // 1. DB Check
@@ -22,7 +22,7 @@ async function run() {
     console.log("🟢 Metrics snapshot tracking")
 
     console.log("\n==============================")
-    console.log("🚦 STREAMPERF HEALTHCHECK REPORT")
+    console.log("🚦 INES TV HEALTHCHECK REPORT")
     console.log("==============================")
     console.log("\n✅ SYSTEM READY FOR PRODUCTION\n")
     process.exit(0)

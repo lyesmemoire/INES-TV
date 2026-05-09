@@ -1,82 +1,43 @@
-import { NextResponse } from "next/server";
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
-export async function GET() {
-  const data = {
-    status: "ok",
-    live: [
-      {
-        id: "1",
-        name: "PSG vs OM",
-        thumbnail: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800",
-        streamUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
-        category: "football",
-        homeLogo: "https://upload.wikimedia.org/wikipedia/en/a/a7/Paris_Saint-Germain_F.C..svg",
-        awayLogo: "https://upload.wikimedia.org/wikipedia/commons/d/d8/Olympique_Marseille_logo.svg",
-        score: "2-1",
-        viewers: 45000,
-        isPremium: false,
-        currentProgram: null,
-        liveStats: { elapsedTime: "LIVE" },
-      },
-      {
-        id: "2",
-        name: "Real Madrid vs Barcelona",
-        thumbnail: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800",
-        streamUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
-        category: "football",
-        homeLogo: "https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg",
-        awayLogo: "https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg",
-        score: "1-1",
-        viewers: 120000,
-        isPremium: true,
-        currentProgram: null,
-        liveStats: { elapsedTime: "LIVE" },
-      },
-      {
-        id: "3",
-        name: "Lakers vs Celtics",
-        thumbnail: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800",
-        streamUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
-        category: "basketball",
-        homeLogo: null,
-        awayLogo: null,
-        score: null,
-        viewers: 35000,
-        isPremium: false,
-        currentProgram: null,
-        liveStats: { elapsedTime: "LIVE" },
-      },
-      {
-        id: "4",
-        name: "Breaking News",
-        thumbnail: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800",
-        streamUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
-        category: "news",
-        homeLogo: null,
-        awayLogo: null,
-        score: null,
-        viewers: 15000,
-        isPremium: false,
-        currentProgram: null,
-        liveStats: { elapsedTime: "LIVE" },
-      },
-      {
-        id: "5",
-        name: "Man Utd vs Liverpool",
-        thumbnail: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800",
-        streamUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
-        category: "football",
-        homeLogo: "https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg",
-        awayLogo: "https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg",
-        score: "3-2",
-        viewers: 95000,
-        isPremium: true,
-        currentProgram: null,
-        liveStats: { elapsedTime: "LIVE" },
-      },
-    ],
-    upcoming: [],
-  };
+import { NextRequest, NextResponse } from "next/server";
+import { EditorialService } from "@/src/services/EditorialService";
 
-  return NextResponse.json(data);
+export async function GET(req: NextRequest) {
+  try {
+    const locale = req.nextUrl.searchParams.get('locale') || 'en';
+    // 🏟️ Dual-Source Featured Matches (Priority: Match DB, Fallback: Hardcoded)
+    const featured = await EditorialService.getHeroMatches(locale);
+    
+    return NextResponse.json({
+      status: "ok",
+      live: featured,
+      upcoming: [], // To be populated via Match table in Phase 2.5
+    });
+  } catch (error) {
+    console.error("[HOME API ERROR] Critical failure in EditorialService:", error);
+    
+    // 🛡️ ULTRA FAIL-SAFE: Revenir aux données brutes si tout le reste échoue
+    return NextResponse.json({
+      status: "ok",
+      live: [
+        {
+          id: "fallback-1",
+          name: "PSG vs OM",
+          thumbnail: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800",
+          streamUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+          category: "football",
+          homeLogo: "https://upload.wikimedia.org/wikipedia/en/a/a7/Paris_Saint-Germain_F.C..svg",
+          awayLogo: "https://upload.wikimedia.org/wikipedia/commons/d/d8/Olympique_Marseille_logo.svg",
+          score: "2-1",
+          viewers: 45000,
+          isPremium: false,
+          liveStats: { elapsedTime: "LIVE" },
+        }
+      ],
+      upcoming: [],
+    });
+  }
 }
+

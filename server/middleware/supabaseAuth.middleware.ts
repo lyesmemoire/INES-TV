@@ -32,7 +32,11 @@ export async function requireAuth(
   res: Response,
   next: NextFunction
 ) {
-  const ip = req.ip || req.headers["x-forwarded-for"] || req.connection.remoteAddress || "unknown";
+  let ip = req.ip || req.connection.remoteAddress || "unknown";
+  const forwarded = req.headers["x-forwarded-for"];
+  if (forwarded) {
+    ip = Array.isArray(forwarded) ? forwarded[0] : forwarded.split(',')[0];
+  }
   
   // 📍 EDGE ROUTING
   const region = EdgeRouter.resolveRegion(req);

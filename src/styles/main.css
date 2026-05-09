@@ -8,14 +8,15 @@
   --ines-secondary: #bbbbbb;
 }
 
-body {
+/* Scoped under .ines-legacy to avoid conflict with Tailwind globals */
+.ines-legacy {
   background: var(--ines-black);
   color: var(--ines-white);
   font-family: 'Roboto', "Segoe UI", Arial, sans-serif;
   margin: 0;
 }
 
-a {
+.ines-legacy a {
   color: var(--ines-white);
   text-decoration: none;
   font-weight: 500;

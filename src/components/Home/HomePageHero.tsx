@@ -15,7 +15,7 @@ export default function HomePageHero({ channel }: HomePageHeroProps) {
       {/* Background with thumbnail */}
       <div className="absolute inset-0 bg-black overflow-hidden">
         <Image
-          src={channel.logo || channel.thumbnail || 'https://via.placeholder.com/1920x1080/1f2937/ffffff?text=StreamPerf'}
+          src={channel.logo || channel.thumbnail || 'https://via.placeholder.com/1920x1080/1f2937/ffffff?text=INES TV'}
           alt={channel.name}
           fill
           className="object-cover opacity-60"
@@ -57,9 +57,13 @@ export default function HomePageHero({ channel }: HomePageHeroProps) {
         {/* Score if available */}
         {(channel as any).score && (channel as any).homeLogo && (channel as any).awayLogo && (
           <div className="flex items-center gap-4 mb-5 p-3 bg-black/60 backdrop-blur-md border border-white/10 rounded-2xl w-fit">
-            <img src={(channel as any).homeLogo} alt="Home" className="w-10 h-10 object-contain" />
+            <div className="relative w-10 h-10">
+              <Image src={(channel as any).homeLogo} alt="Home" fill className="object-contain" />
+            </div>
             <span className="text-3xl font-black text-white tracking-widest tabular-nums">{(channel as any).score}</span>
-            <img src={(channel as any).awayLogo} alt="Away" className="w-10 h-10 object-contain" />
+            <div className="relative w-10 h-10">
+              <Image src={(channel as any).awayLogo} alt="Away" fill className="object-contain" />
+            </div>
           </div>
         )}
 

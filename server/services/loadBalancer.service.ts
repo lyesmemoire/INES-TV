@@ -1,4 +1,4 @@
-// server/services/loadBalancer.service.ts
+﻿// server/services/loadBalancer.service.ts
 
 import crypto from "crypto"
 import { redis } from "./redis.service"
@@ -112,7 +112,7 @@ async function ping(url: string) {
     const res = await fetch(url, {
       method: "HEAD",
       signal: controller.signal,
-      headers: { "User-Agent": "StreamPerf-Engine/3.0 (Distributed)" }
+      headers: { "User-Agent": "INES TV-Engine/3.0 (Distributed)" }
     })
 
     clearTimeout(timeout)

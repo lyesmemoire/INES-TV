@@ -26,7 +26,7 @@ async function memGet(key: string): Promise<string | null> {
   const entry = store.get(key);
   if (!entry) {
     // Attempt state reconstruction from Event Log
-    const events = await EventLogService.replayRecent(1); // 1 minute window
+    const events = await EventLogService.replayRegionSegment('eu-west-1');
     const lastEvent = events.filter(e => e.type === 'SET' && e.data.key === key).pop();
     if (lastEvent) {
       memSet(key, lastEvent.data.value, 60);
@@ -43,20 +43,20 @@ async function memGet(key: string): Promise<string | null> {
 }
 
 async function memSet(key: string, value: string, ttlSeconds: number): Promise<void> {
-  EventLogService.append('SET', { key, value });
+  EventLogService.append('eu-west-1', 'SET', { key, value });
   store.set(key, { value, expiresAt: Date.now() + ttlSeconds * 1000 });
 }
 
 async function memDel(key: string): Promise<void> {
-  EventLogService.append('DEL', { key });
+  EventLogService.append('eu-west-1', 'DEL', { key });
   store.delete(key);
 }
 
 async function memIncr(key: string, ttlSeconds = 60): Promise<number> {
-  EventLogService.append('INCR', { key });
+  EventLogService.append('eu-west-1', 'INCR', { key });
   
   // Reconstruct current count from Event Log (Eventual Consistency)
-  const events = await EventLogService.replayRecent(ttlSeconds / 60);
+  const events = await EventLogService.replayRegionSegment('eu-west-1');
   const count = events.filter(e => e.type === 'INCR' && e.data.key === key).length;
   
   // Update local store for performance
@@ -68,6 +68,9 @@ async function memIncr(key: string, ttlSeconds = 60): Promise<number> {
 
 // ... the rest of mem functions (scard, sadd) can stay local or be added later if critical
 // For Enterprise rate-limiting, INCR/GET are the most important.
+function memScard(key: string): number { return 0; }
+function memSadd(key: string, member: string, ttlSeconds: number = 300): void {}
+function memSrem(key: string, member: string): void {}
 
 function memKeys(pattern: string): string[] {
   const regex = new RegExp("^" + pattern.replace("*", ".*") + "$");

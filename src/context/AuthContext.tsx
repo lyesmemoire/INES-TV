@@ -1,5 +1,5 @@
 'use client';
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { User as SupabaseUser } from '@supabase/supabase-js';
 
@@ -110,7 +110,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [token]);
 
 
-  const fetchFavorites = async () => {
+  const fetchFavorites = useCallback(async () => {
     if (!token || !user) return;
     try {
       // In a real app, this would be a Supabase query or an API call
@@ -126,7 +126,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (e) {
       console.error('Failed to fetch favorites', e);
     }
-  };
+  }, [token, user]);
 
   useEffect(() => {
     if (!token || !user?.id) {
@@ -157,7 +157,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => {
       favSub.unsubscribe();
     };
-  }, [token, user?.id]);
+  }, [token, user?.id, fetchFavorites]);
 
   const toggleFavorite = async (channelId: string, _channelData: any) => {
     if (!token || !user) return setAuthModalOpen(true);

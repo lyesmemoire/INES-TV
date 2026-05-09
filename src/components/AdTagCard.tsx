@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 
@@ -11,10 +11,10 @@ export default function AdTagCard({ pid }: { pid: string }) {
   const [copied, setCopied] = useState(false);
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
-  const tag = `<!-- StreamPerf AdX Tag (Anti-CLS Ready) -->
+  const tag = `<!-- INES TV AdX Tag (Anti-CLS Ready) -->
 <div class="sp-ad-slot" data-sp-format="300x250"></div>
 <script>
-  window.__STREAMPERF_PID__ = "${pid}";
+  window.__INES TV_PID__ = "${pid}";
 </script>
 <script src="${baseUrl}/tag.js" async></script>`;
 

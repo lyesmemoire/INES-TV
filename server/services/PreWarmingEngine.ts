@@ -1,6 +1,6 @@
-/**
+﻿/**
  * 📁 /server/services/PreWarmingEngine.ts
- * 🔥 HYBRID SMART PRE-WARMING ENGINE — StreamPerf v1.5.1
+ * 🔥 HYBRID SMART PRE-WARMING ENGINE — INES TV v1.5.1
  *
  * Patches over v1.5.0:
  *   ✅ Confidence thresholds: DUAL > 0.7, FULL > 0.6 → évite les faux triggers

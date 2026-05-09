@@ -1,5 +1,6 @@
-import React, { useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion } from 'motion/react';
+import Image from 'next/image';
 import { Play, Trophy, Activity, Calendar } from 'lucide-react';
 import { Channel } from '../../types';
 import { useLanguage } from '../../context/LanguageContext';
@@ -52,7 +53,9 @@ export default function SportsDashboard({ channels, onSelect }: SportsDashboardP
           <div className="flex items-center justify-center gap-6 md:gap-16 w-full">
             {/* Home Team */}
             <div className="flex flex-col items-center gap-4 w-1/3">
-              <img src={featuredMatch.homeLogo || featuredMatch.thumbnail} alt={featuredMatch.homeName} className="w-24 h-24 md:w-32 md:h-32 object-contain drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]" />
+              <div className="relative w-24 h-24 md:w-32 md:h-32">
+                <Image src={featuredMatch.homeLogo || featuredMatch.thumbnail || ""} alt={featuredMatch.homeName || "Home"} fill className="object-contain drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]" />
+              </div>
               <h3 className="text-xl md:text-3xl font-black text-white tracking-tight">{featuredMatch.homeName || 'Home'}</h3>
             </div>
 
@@ -68,7 +71,9 @@ export default function SportsDashboard({ channels, onSelect }: SportsDashboardP
 
             {/* Away Team */}
             <div className="flex flex-col items-center gap-4 w-1/3">
-              <img src={featuredMatch.awayLogo || featuredMatch.thumbnail} alt={featuredMatch.awayName} className="w-24 h-24 md:w-32 md:h-32 object-contain drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]" />
+              <div className="relative w-24 h-24 md:w-32 md:h-32">
+                <Image src={featuredMatch.awayLogo || featuredMatch.thumbnail || ""} alt={featuredMatch.awayName || "Away"} fill className="object-contain drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]" />
+              </div>
               <h3 className="text-xl md:text-3xl font-black text-white tracking-tight">{featuredMatch.awayName || 'Away'}</h3>
             </div>
           </div>
@@ -136,11 +141,15 @@ function MatchCard({ match, onSelect, i }: { match: Channel; onSelect: (c: Chann
         <span className="text-[10px] font-black text-zinc-500 uppercase tracking-wider">{match.league}</span>
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-3">
-            <img src={match.homeLogo} alt={match.homeName} className="w-6 h-6 object-contain" />
+            <div className="relative w-6 h-6">
+              <Image src={match.homeLogo ?? ""} alt={match.homeName || ""} fill className="object-contain" />
+            </div>
             <span className="text-base font-bold text-white leading-none">{match.homeName}</span>
           </div>
           <div className="flex items-center gap-3">
-            <img src={match.awayLogo} alt={match.awayName} className="w-6 h-6 object-contain" />
+            <div className="relative w-6 h-6">
+              <Image src={match.awayLogo ?? ""} alt={match.awayName || ""} fill className="object-contain" />
+            </div>
             <span className="text-base font-bold text-white leading-none">{match.awayName}</span>
           </div>
         </div>

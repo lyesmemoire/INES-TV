@@ -1,6 +1,5 @@
 import React from 'react';
 import { Metadata } from 'next';
-import { prisma } from '@/server/services/db';
 import { Megaphone, Zap, ShieldCheck, Play, Tv, Clock, Share2, Globe } from 'lucide-react';
 
 const TRANSLATIONS: any = {
@@ -170,7 +169,7 @@ export default async function GlobalWatchPage({ params }: { params: Promise<{ la
         <div className="mt-20 border-t border-white/5 pt-12 text-gray-500 text-sm leading-8">
             <h4 className="font-bold text-white mb-4 uppercase tracking-widest text-xs tracking-widest">{t.about} {channelName} {t.technology}</h4>
             <p>
-                This {channelName} page in {lang} is part of the StreamPerf global OTT infrastructure. We provide 100% legal access to public streams and official API integrations. 
+                This {channelName} page in {lang} is part of the INES TV global OTT infrastructure. We provide 100% legal access to public streams and official API integrations. 
                 Experience {t.liveStreamingFree} for {channelName} in your language today.
             </p>
         </div>

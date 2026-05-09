@@ -32,13 +32,25 @@ export interface Channel {
   awayLogo?: string | null;
   homeName?: string;
   awayName?: string;
+  homeTeam?: string;
+  awayTeam?: string;
   league?: string;
   matchTime?: string;
   scheduledAt?: Date | string;
-  status?: 'LIVE' | 'UPCOMING' | 'FINISHED' | 'ENDED';
+  status?: 'LIVE' | 'IN_PLAY' | 'PAUSED' | 'UPCOMING' | 'FINISHED' | 'ENDED';
   
   isActive?: boolean;
   isPremium?: boolean;
+  live?: boolean;
+  description?: string;
+  slug?: string;
+
+  // Health Monitoring
+  healthStatus?: 'ACTIVE' | 'DISABLED' | 'BLOCKED';
+  failCount?: number;
+  lastChecked?: Date | string;
+  lastSuccess?: Date | string;
+  lastFailure?: Date | string;
 
   currentProgram?: { title: string; description?: string } | null;
   liveStats?: {

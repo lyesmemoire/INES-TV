@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
+import Image from 'next/image';
 
 /**
  * 💰 ADS SYSTEM: PRO YIELD (Phase 47)
@@ -122,9 +123,9 @@ const AdsManager: React.FC<AdsManagerProps> = ({ onFinish }) => {
         onClick={handleAdClick}
     >
         <div className="flex gap-5">
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-zinc-800 to-zinc-950 overflow-hidden flex-shrink-0 border border-white/10 relative group">
+            <div className="relative w-20 h-20 rounded-2xl bg-gradient-to-br from-zinc-800 to-zinc-950 overflow-hidden flex-shrink-0 border border-white/10 group">
                 {ad.imageUrl ? (
-                    <img src={ad.imageUrl} className="w-full h-full object-cover" alt="Ad" />
+                    <Image src={ad.imageUrl} fill className="object-cover" alt="Ad" />
                 ) : (
                     <div className="w-full h-full flex items-center justify-center text-[10px] text-white/20 font-black uppercase tracking-tighter">AdPRO</div>
                 )}
@@ -135,7 +136,7 @@ const AdsManager: React.FC<AdsManagerProps> = ({ onFinish }) => {
                 <div className="flex items-center gap-2 mb-1.5">
                     <span className="text-[10px] bg-white/10 text-white px-2 py-0.5 rounded-full font-bold uppercase tracking-widest border border-white/5">Sponsorisé</span>
                 </div>
-                <h4 className="text-white font-extrabold text-base truncate tracking-tight">{ad.title || "Explorer StreamPerf"}</h4>
+                <h4 className="text-white font-extrabold text-base truncate tracking-tight">{ad.title || "Explorer INES TV"}</h4>
                 <p className="text-white/40 text-[12px] leading-snug line-clamp-2 mt-1">{ad.description || "Inscrivez-vous dès maintenant pour profiter d'une expérience streaming augmentée."}</p>
                 
                 <div className="mt-4 flex items-center justify-between">

@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client"
+﻿import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
 
@@ -13,7 +13,7 @@ export async function sendWebhookAlert(alert: any) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-StreamPerf-Signature": "secure-v1",
+      "X-INES TV-Signature": "secure-v1",
     },
     body: JSON.stringify(alert),
   }).catch(e => console.error("Webhook alert failed:", e.message))

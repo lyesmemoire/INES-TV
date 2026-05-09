@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client"
+﻿import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
 
@@ -24,7 +24,7 @@ export const billingService = {
     return true
   },
   async createCheckoutSession(userId: string, plan: string) {
-    return { url: "https://billing.streamperf.com/session_placeholder" }
+    return { url: "https://billing.INES TV.com/session_placeholder" }
   },
   async handleWebhook(rawBody: string, sig: string) {
     return { success: true }

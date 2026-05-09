@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer"
+﻿import nodemailer from "nodemailer"
 
 // Ignore strict configuration parsing if env missing for now
 let transporter: any = null;
@@ -17,8 +17,8 @@ export async function sendEmailAlert(alert: any) {
   if (!transporter || !process.env.ALERT_EMAIL_USER) return;
 
   await transporter.sendMail({
-    from: "StreamPerf Alerts <alerts@streamperf.io>",
-    to: process.env.OPS_EMAIL || "ops@streamperf.io",
+    from: "INES TV Alerts <alerts@INES TV.io>",
+    to: process.env.OPS_EMAIL || "ops@INES TV.io",
     subject: `🚨 CRITICAL ALERT: ${alert.title}`,
     text: `
 Tenant: ${alert.tenantId}

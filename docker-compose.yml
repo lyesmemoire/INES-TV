@@ -1,4 +1,4 @@
-version: '3.9'
+﻿version: '3.9'
 
 services:
   # =====================
@@ -9,7 +9,7 @@ services:
       context: .
       dockerfile: Dockerfile
       target: builder
-    container_name: streamperf-app
+    container_name: INES TV-app
     ports:
       - "3000:3000"
     environment:
@@ -27,7 +27,7 @@ services:
       redis:
         condition: service_healthy
     networks:
-      - streamperf-network
+      - INES TV-network
     restart: unless-stopped
     command: npm run dev
 
@@ -36,7 +36,7 @@ services:
   # =====================
   redis:
     image: redis:7-alpine
-    container_name: streamperf-redis
+    container_name: INES TV-redis
     ports:
       - "6379:6379"
     volumes:
@@ -48,7 +48,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - streamperf-network
+      - INES TV-network
     restart: unless-stopped
 
   # =====================
@@ -56,7 +56,7 @@ services:
   # =====================
   redis-commander:
     image: rediscommander/redis-commander:latest
-    container_name: streamperf-redis-commander
+    container_name: INES TV-redis-commander
     environment:
       - REDIS_HOSTS=local:redis:6379
     ports:
@@ -64,7 +64,7 @@ services:
     depends_on:
       - redis
     networks:
-      - streamperf-network
+      - INES TV-network
     restart: unless-stopped
 
 volumes:
@@ -72,5 +72,5 @@ volumes:
     driver: local
 
 networks:
-  streamperf-network:
+  INES TV-network:
     driver: bridge

@@ -1,4 +1,4 @@
-# 🎬 StreamPerf Enterprise
+﻿# 🎬 INES TV Enterprise
 
 > Production-grade multi-device sports streaming platform with Netflix-level UX and SRE-grade backend
 
@@ -55,8 +55,8 @@ Docker (optional)
 ### Installation
 ```bash
 # Clone repository
-git clone https://github.com/your-org/streamperf.git
-cd streamperf
+git clone https://github.com/your-org/INES TV.git
+cd INES TV
 
 # Install dependencies
 npm install

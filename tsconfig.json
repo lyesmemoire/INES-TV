@@ -15,26 +15,9 @@
     "moduleDetection": "force",
     "allowJs": true,
     "jsx": "preserve",
+    "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@/lib/*": [
-        "./lib/*"
-      ],
-      "@/components/*": [
-        "./components/*",
-        "./src/components/*"
-      ],
-      "@/server/*": [
-        "./server/*"
-      ],
-      "@/src/*": [
-        "./src/*"
-      ],
-      "@/app/*": [
-        "./app/*"
-      ]
+      "@/*": ["./*"]
     },
     "allowImportingTsExtensions": true,
     "noEmit": true,
@@ -73,6 +56,11 @@
     "worker-v3.js",
     "cluster.ts",
     "server.ts",
-    "supabase/**/*"
+    "supabase/**/*",
+    "tests/**/*",
+    "scripts/**/*",
+    "scratch_test_resolution.ts",
+    "server/routes/**/*",
+    "vitest.config.ts"
   ]
 }

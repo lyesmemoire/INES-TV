@@ -1,6 +1,6 @@
-import React from 'react';
 import { Channel } from '../../types';
 import { ArrowLeft } from 'lucide-react';
+import Image from 'next/image';
 
 interface NetflyChannelListProps {
   channels: Channel[];
@@ -50,10 +50,18 @@ export default function NetflyChannelList({ channels, onClose }: NetflyChannelLi
       <main className="max-w-[1200px] mx-auto px-4 py-12">
         {/* Premium Network Row (e.g. CBS, Fox, beIN) */}
         <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 mb-16 px-4">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/CBS_logo.svg/200px-CBS_logo.svg.png" className="h-8 md:h-12 object-contain grayscale hover:grayscale-0 transition-all opacity-80" alt="CBS" />
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Fox_Sports_logo.svg/200px-Fox_Sports_logo.svg.png" className="h-8 md:h-12 object-contain grayscale hover:grayscale-0 transition-all opacity-80" alt="FOX" />
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/BeIN_SPORTS_logo.svg/200px-BeIN_SPORTS_logo.svg.png" className="h-6 md:h-10 object-contain grayscale hover:grayscale-0 transition-all opacity-80" alt="beIN" />
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/HBO_logo.svg/200px-HBO_logo.svg.png" className="h-8 md:h-12 object-contain grayscale hover:grayscale-0 transition-all opacity-80" alt="HBO" />
+          <div className="relative h-8 w-20 md:h-12 md:w-32">
+            <Image src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/CBS_logo.svg/200px-CBS_logo.svg.png" fill className="object-contain grayscale hover:grayscale-0 transition-all opacity-80" alt="CBS" />
+          </div>
+          <div className="relative h-8 w-20 md:h-12 md:w-32">
+            <Image src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Fox_Sports_logo.svg/200px-Fox_Sports_logo.svg.png" fill className="object-contain grayscale hover:grayscale-0 transition-all opacity-80" alt="FOX" />
+          </div>
+          <div className="relative h-6 w-24 md:h-10 md:w-40">
+            <Image src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/BeIN_SPORTS_logo.svg/200px-BeIN_SPORTS_logo.svg.png" fill className="object-contain grayscale hover:grayscale-0 transition-all opacity-80" alt="beIN" />
+          </div>
+          <div className="relative h-8 w-16 md:h-12 md:w-24">
+            <Image src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/HBO_logo.svg/200px-HBO_logo.svg.png" fill className="object-contain grayscale hover:grayscale-0 transition-all opacity-80" alt="HBO" />
+          </div>
         </div>
 
         {/* 10-Column Dense Icon Grid */}
@@ -61,13 +69,13 @@ export default function NetflyChannelList({ channels, onClose }: NetflyChannelLi
           {channels.map((channel, i) => (
             <div 
               key={channel.id + i} 
-              className="w-full aspect-square bg-[#1E1E1E] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer flex items-center justify-center border border-gray-100 p-2"
+              className="relative w-full aspect-square bg-[#1E1E1E] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer flex items-center justify-center border border-gray-100 p-2"
             >
-              <img 
-                src={channel.thumbnail} 
+              <Image 
+                src={channel.thumbnail || "/placeholder.png"} 
                 alt={channel.name}
-                className="w-full h-full object-contain"
-                loading="lazy"
+                fill
+                className="object-contain p-2"
               />
             </div>
           ))}
@@ -75,17 +83,17 @@ export default function NetflyChannelList({ channels, onClose }: NetflyChannelLi
           {channels.map((channel, i) => (
             <div 
               key={channel.id + 'dup' + i} 
-              className="w-full aspect-square bg-[#1E1E1E] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer flex items-center justify-center border border-gray-100 p-2"
+              className="relative w-full aspect-square bg-[#1E1E1E] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer flex items-center justify-center border border-gray-100 p-2"
             >
-              <img src={channel.thumbnail} alt={channel.name} className="w-full h-full object-contain" loading="lazy" />
+              <Image src={channel.thumbnail || "/placeholder.png"} alt={channel.name} fill className="object-contain p-2" />
             </div>
           ))}
           {channels.map((channel, i) => (
             <div 
               key={channel.id + 'dup2' + i} 
-              className="w-full aspect-square bg-[#1E1E1E] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer flex items-center justify-center border border-gray-100 p-2"
+              className="relative w-full aspect-square bg-[#1E1E1E] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer flex items-center justify-center border border-gray-100 p-2"
             >
-              <img src={channel.thumbnail} alt={channel.name} className="w-full h-full object-contain" loading="lazy" />
+              <Image src={channel.thumbnail || "/placeholder.png"} alt={channel.name} fill className="object-contain p-2" />
             </div>
           ))}
         </div>

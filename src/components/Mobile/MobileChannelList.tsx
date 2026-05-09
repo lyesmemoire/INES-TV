@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { RefreshCw, Activity } from 'lucide-react';
+import Image from 'next/image';
 import { Channel } from '../../types';
 import SportsDashboard from '../Dashboard/SportsDashboard';
 
@@ -21,17 +22,21 @@ function MobileChannelRow({ channel, isActive, onClick }: MobileChannelRowProps)
       }`}
     >
       {/* Logo / thumbnail */}
-      <div className={`w-14 h-14 rounded-xl overflow-hidden bg-zinc-900 shrink-0 flex items-center justify-center border ${
+      <div className={`relative w-14 h-14 rounded-xl overflow-hidden bg-zinc-900 shrink-0 flex items-center justify-center border ${
         isActive ? 'border-emerald-500/40' : 'border-white/5'
       }`}>
         {channel.homeLogo && channel.awayLogo ? (
-          <div className="flex items-center justify-center gap-1 p-1 w-full">
-            <img src={channel.homeLogo} alt="" className="w-5 h-5 object-contain" />
+          <div className="flex items-center justify-center gap-1 p-1 w-full h-full">
+            <div className="relative w-5 h-5">
+              <Image src={channel.homeLogo || "/placeholder.png"} alt="" fill className="object-contain" />
+            </div>
             <span className="text-[8px] font-black text-zinc-600">vs</span>
-            <img src={channel.awayLogo} alt="" className="w-5 h-5 object-contain" />
+            <div className="relative w-5 h-5">
+              <Image src={channel.awayLogo || "/placeholder.png"} alt="" fill className="object-contain" />
+            </div>
           </div>
         ) : (
-          <img src={channel.thumbnail} alt={channel.name} className="w-full h-full object-cover" />
+          <Image src={channel.thumbnail || "/placeholder.png"} alt={channel.name} fill className="object-cover" />
         )}
       </div>
 

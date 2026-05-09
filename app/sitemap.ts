@@ -1,69 +1,105 @@
-import { MetadataRoute } from 'next';
-import { prisma } from '@/server/services/db';
-
-// 🛡️ Force dynamic rendering — sitemap needs live DB data, cannot be statically generated at build time
-export const dynamic = 'force-dynamic';
+import { prisma } from '@/lib/prisma'
+import { MetadataRoute } from 'next'
 
 /**
- * 🌍 GLOBAL MULTI-LANGUAGE SITEMAP (Phase 26)
- * Automatically indexes all channels and events across 4 languages: EN, FR, ES, DE.
- * Multiplies organic reach by 4x for international "Live" keywords.
+ * 🌍 DYNAMIC SITEMAP GENERATOR (High Scale)
+ * Automatically indexes matches, clusters, teams, and competitions.
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://streamperf-pro.com';
-  const languages = ['en', 'fr', 'es', 'de'];
-
-  // 1. Fetch all active channels
-  const channels = await prisma.channel.findMany({
-    where: { isActive: true },
-    select: { id: true, name: true, updatedAt: true }
-  });
-
-  // 2. Fetch live or upcoming sport events
-  const today = new Date();
-  const twoDaysAgo = new Date(today.getTime() - (2 * 24 * 60 * 60 * 1000));
+  const baseUrl = 'https://goala.tv'
+  const locales = ['fr', 'en']
   
-  const events = await prisma.program.findMany({
-    where: { startTime: { gte: twoDaysAgo } },
-    select: { id: true, title: true, startTime: true }
-  });
+  // 1. Fetch Data (Optimized)
+  let matches: any[] = []
+  let ftaChannels: any[] = []
 
-  const entries: MetadataRoute.Sitemap = [];
+  try {
+    matches = await prisma.match.findMany({
+      select: { slug: true, updatedAt: true, homeTeam: true, awayTeam: true, competition: true },
+      take: 2000, // Safe limit for standard sitemap
+      orderBy: { startTime: 'desc' }
+    })
+    
+    ftaChannels = await prisma.freeChannel.findMany({
+      select: { id: true }
+    })
+  } catch (e) {
+    console.error("Sitemap DB fetch failed:", e)
+  }
 
-  // 3. Generate Entries for each language
-  languages.forEach((lang) => {
-    // Channel Entries
-    channels.forEach((channel) => {
-      const slug = channel.name.toLowerCase().replace(/\s+/g, '-');
-      entries.push({
-        url: `${baseUrl}/${lang}/watch/${slug}`,
-        lastModified: channel.updatedAt,
-        changeFrequency: 'daily',
-        priority: 0.8,
-      });
-    });
+  // Extract unique entities
+  const teams = Array.from(new Set(matches.flatMap(m => [m.homeTeam, m.awayTeam])))
+  const competitions = Array.from(new Set(matches.map(m => m.competition)))
 
-    // Event Entries
-    events.forEach((event) => {
-      const slug = event.title.toLowerCase().replace(/\s+/g, '-');
-      entries.push({
-        url: `${baseUrl}/${lang}/watch/${slug}-live`,
-        lastModified: event.startTime,
-        changeFrequency: 'hourly',
-        priority: 1.0,
-      });
-    });
-  });
+  const allUrls: MetadataRoute.Sitemap = []
 
-  // 4. Static Pages
-  const staticPages: MetadataRoute.Sitemap = [
-    {
-      url: baseUrl,
+  locales.forEach(lang => {
+    const isFr = lang === 'fr'
+
+    // 🏠 Home
+    allUrls.push({
+      url: `${baseUrl}/${lang}`,
       lastModified: new Date(),
-      changeFrequency: 'yearly',
+      changeFrequency: 'always',
       priority: 1,
-    }
-  ];
+    })
 
-  return [...staticPages, ...entries];
+    // 🚀 Clusters (Today & Live)
+    const langClusters = isFr 
+      ? ['football-aujourdhui', 'matchs-en-direct']
+      : ['football-today', 'live-matches']
+      
+    langClusters.forEach(cluster => {
+      allUrls.push({
+        url: `${baseUrl}/${lang}/${cluster}`,
+        lastModified: new Date(),
+        changeFrequency: 'always',
+        priority: 0.9,
+      })
+    })
+
+    // ⚽ Matches
+    matches.forEach(match => {
+      allUrls.push({
+        url: `${baseUrl}/${lang}/match/${match.slug}`,
+        lastModified: match.updatedAt,
+        changeFrequency: 'hourly',
+        priority: 0.8,
+      })
+    })
+
+    // 🛡️ Entities (Teams)
+    teams.forEach(team => {
+      const slug = team.toLowerCase().replace(/\s+/g, '-')
+      allUrls.push({
+        url: `${baseUrl}/${lang}/team/${slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'daily',
+        priority: 0.7,
+      })
+    })
+
+    // 🏆 Entities (Competitions)
+    competitions.forEach(comp => {
+      const slug = comp.toLowerCase().replace(/\s+/g, '-')
+      allUrls.push({
+        url: `${baseUrl}/${lang}/competition/${slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'daily',
+        priority: 0.7,
+      })
+    })
+
+    // 📺 FTA Channels
+    ftaChannels.forEach(channel => {
+      allUrls.push({
+        url: `${baseUrl}/${lang}/tv/${channel.id}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.5,
+      })
+    })
+  })
+
+  return allUrls
 }

@@ -1,4 +1,4 @@
-let lastAlertSent = 0;
+﻿let lastAlertSent = 0;
 let lastCriticalAlertSent = 0;
 const ALERT_THROTTLE_MS = 60000;
 const CRITICAL_THROTTLE_MS = 5 * 60000; // 5 mins
@@ -43,7 +43,7 @@ export async function sendAlert(type: string, payload: any, severity: string = "
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           text: `🚨 *[${severity}] ${type}*\n${JSON.stringify(payload, null, 2)}`,
-          username: "StreamPerf Alerts",
+          username: "INES TV Alerts",
           icon_emoji: severity === "CRITICAL" ? ":rotating_light:" : ":warning:"
         })
       });

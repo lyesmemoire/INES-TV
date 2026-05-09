@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Play, Pause, ChevronRight, ChevronLeft, Activity, Clock } from 'lucide-react';
+import Image from 'next/image';
 import Hls from 'hls.js';
 import { Channel, DeviceTier, NetworkQuality, NetworkType } from '../../types';
 import { getPrimaryStream } from '../../utils/streams/getPrimaryStream';
@@ -122,10 +123,10 @@ function TvChannelRow({ channel, isFocused, isActive, index, onSelect, onFocus }
       }`}
     >
       {/* Logo */}
-      <div className={`w-16 h-16 rounded-xl flex items-center justify-center shrink-0 overflow-hidden ${
+      <div className={`relative w-16 h-16 rounded-xl flex items-center justify-center shrink-0 overflow-hidden ${
         isFocused ? 'bg-black/10' : 'bg-zinc-800'
       }`}>
-        <img src={channel.logo || channel.thumbnail} alt={channel.name} className="w-full h-full object-cover" />
+        <Image src={channel.logo || channel.thumbnail || "/placeholder.png"} alt={channel.name} fill className="object-cover" />
       </div>
 
       {/* Info */}
@@ -266,7 +267,7 @@ export default function TvLayout({ channels, activeChannel, onSelect, isLoading,
             <div className="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
               <span className="text-black font-black text-sm">SP</span>
             </div>
-            <span className="text-white text-xl font-black tracking-tight">StreamPerf</span>
+            <span className="text-white text-xl font-black tracking-tight">INES TV</span>
           </div>
           <div className="flex items-center gap-2 bg-black/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
             <Activity size={14} className="text-emerald-400 animate-pulse" />
@@ -302,9 +303,13 @@ export default function TvLayout({ channels, activeChannel, onSelect, isLoading,
               {/* Score if match */}
               {activeChannel.score && activeChannel.homeLogo && activeChannel.awayLogo && (
                 <div className="flex items-center gap-6 mb-4 p-4 bg-black/60 backdrop-blur-md rounded-2xl w-fit border border-white/10">
-                  <img src={activeChannel.homeLogo} alt="" className="w-14 h-14 object-contain drop-shadow-xl" />
+                  <div className="relative w-14 h-14">
+                    <Image src={activeChannel.homeLogo} alt="" fill className="object-contain drop-shadow-xl" />
+                  </div>
                   <span className="text-5xl font-black text-white tabular-nums tracking-widest">{activeChannel.score}</span>
-                  <img src={activeChannel.awayLogo} alt="" className="w-14 h-14 object-contain drop-shadow-xl" />
+                  <div className="relative w-14 h-14">
+                    <Image src={activeChannel.awayLogo} alt="" fill className="object-contain drop-shadow-xl" />
+                  </div>
                 </div>
               )}
 

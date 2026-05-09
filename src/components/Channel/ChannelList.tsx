@@ -1,5 +1,5 @@
-import React from 'react';
 import { motion } from 'motion/react';
+import Image from 'next/image';
 import { Activity, ChevronDown, ChevronUp, Calendar, Clock, Star, RefreshCw, AlertTriangle } from 'lucide-react';
 import { Channel, DeviceTier } from '../../types';
 
@@ -108,20 +108,24 @@ export default function ChannelList({
                   <div className="relative w-28 h-16 rounded-lg overflow-hidden bg-zinc-950 shrink-0 flex items-center justify-center border border-white/5 shadow-inner">
                     {channel.homeLogo && channel.awayLogo ? (
                       <div className="flex items-center justify-between w-full px-2">
-                        <img src={channel.homeLogo} alt="Home" className="w-9 h-9 object-contain drop-shadow-lg" />
+                        <div className="relative w-9 h-9">
+                          <Image src={channel.homeLogo || "/placeholder.png"} alt="Home" fill className="object-contain drop-shadow-lg" />
+                        </div>
                         <span className="text-[10px] font-black text-zinc-500">VS</span>
-                        <img src={channel.awayLogo} alt="Away" className="w-9 h-9 object-contain drop-shadow-lg" />
+                        <div className="relative w-9 h-9">
+                          <Image src={channel.awayLogo || "/placeholder.png"} alt="Away" fill className="object-contain drop-shadow-lg" />
+                        </div>
                       </div>
                     ) : (
-                      <img 
-                        src={channel.thumbnail} 
+                      <Image 
+                        src={channel.thumbnail || "/placeholder.png"} 
                         alt={channel.name}
-                        className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 ${tier === 'LOW' ? 'opacity-80' : ''}`}
-                        loading="lazy"
+                        fill
+                        className={`object-cover transition-transform duration-500 group-hover:scale-110 ${tier === 'LOW' ? 'opacity-80' : ''}`}
                       />
                     )}
                     {isActive && (
-                      <div className="absolute inset-0 border-2 border-emerald-500 rounded-lg shadow-[inset_0_0_15px_rgba(16,185,129,0.5)]"></div>
+                      <div className="absolute inset-0 border-2 border-emerald-500 rounded-lg shadow-[inset_0_0_15px_rgba(16,185,129,0.5)] z-10"></div>
                     )}
                   </div>
                   
@@ -182,9 +186,17 @@ export default function ChannelList({
                                 {(channel.score || channel.homeLogo || channel.awayLogo) && (
                                   <div className="flex items-center justify-between mb-4 bg-black/60 border border-white/5 p-3 rounded-xl shadow-inner">
                                     <div className="flex items-center gap-4">
-                                      {channel.homeLogo && <img src={channel.homeLogo} alt="Home" className="w-10 h-10 object-contain drop-shadow-xl p-1 bg-white/5 rounded-lg" />}
+                                      {channel.homeLogo && (
+                                        <div className="relative w-10 h-10 p-1 bg-white/5 rounded-lg">
+                                          <Image src={channel.homeLogo} alt="Home" fill className="object-contain drop-shadow-xl" />
+                                        </div>
+                                      )}
                                       <span className="text-2xl font-black text-white tracking-widest">{channel.score || '0 - 0'}</span>
-                                      {channel.awayLogo && <img src={channel.awayLogo} alt="Away" className="w-10 h-10 object-contain drop-shadow-xl p-1 bg-white/5 rounded-lg" />}
+                                      {channel.awayLogo && (
+                                        <div className="relative w-10 h-10 p-1 bg-white/5 rounded-lg">
+                                          <Image src={channel.awayLogo} alt="Away" fill className="object-contain drop-shadow-xl" />
+                                        </div>
+                                      )}
                                     </div>
                                     <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.1)]">
                                       <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -195,13 +207,13 @@ export default function ChannelList({
                                 <div className="grid grid-cols-2 gap-3">
                                   <div className="bg-black/40 rounded-xl p-3 border border-white/5">
                                     <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest block mb-1.5">Joueurs clés</span>
-                                    <span className="text-xs text-zinc-200 font-semibold">{channel.liveStats.keyPlayers.join(', ')}</span>
+                                    <span className="text-xs text-zinc-200 font-semibold">{channel.liveStats.keyPlayers?.join(', ')}</span>
                                   </div>
                                   <div className="bg-black/40 rounded-xl p-3 border border-white/5">
                                     <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest block mb-1.5">Prochain événement</span>
                                     <div className="flex items-center gap-2">
-                                      <span className="text-[11px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-black">{channel.liveStats.upcomingEvents[0]?.time}</span>
-                                      <span className="text-xs text-zinc-200 font-semibold truncate">{channel.liveStats.upcomingEvents[0]?.description}</span>
+                                      <span className="text-[11px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-black">{channel.liveStats.upcomingEvents?.[0]?.time}</span>
+                                      <span className="text-xs text-zinc-200 font-semibold truncate">{channel.liveStats.upcomingEvents?.[0]?.description}</span>
                                     </div>
                                   </div>
                                 </div>
@@ -245,7 +257,9 @@ export default function ChannelList({
                         <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar">
                           {channel.highlights.map((highlight, i) => (
                             <div key={i} className="relative w-40 shrink-0 rounded-xl overflow-hidden group cursor-pointer border border-white/5 hover:border-white/20 transition-all shadow-lg hover:shadow-2xl hover:shadow-white/5">
-                              <img src={highlight.thumbnail} alt={highlight.title} className="w-full h-24 object-cover transition-transform duration-500 group-hover:scale-110" />
+                              <div className="relative w-full h-24">
+                                <Image src={highlight.thumbnail} alt={highlight.title} fill className="object-cover transition-transform duration-500 group-hover:scale-110" />
+                              </div>
                               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-2.5">
                                 <span className="text-[11px] font-bold text-white line-clamp-2 leading-tight drop-shadow-md">{highlight.title}</span>
                               </div>

@@ -1,12 +1,16 @@
-import { supabase } from "./client";
+import { getSupabaseBrowserClient } from "./client";
+import { subscribeOnce } from "@/src/lib/realtime/engine";
 
 export function subscribeTrending(callback: Function) {
-  return supabase
-    .channel("trending")
-    .on(
-      "postgres_changes",
-      { event: "*", schema: "public", table: "trending_channels" },
-      (payload) => callback(payload.new)
-    )
-    .subscribe();
+  const supabase = getSupabaseBrowserClient();
+  return subscribeOnce("trending", () =>
+    supabase
+      .channel("trending")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "trending_channels" },
+        (payload: any) => callback(payload.new)
+      )
+      .subscribe()
+  );
 }

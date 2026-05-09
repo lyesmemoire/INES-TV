@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 🔐 DRM WIDEVINE HANDLER (Phase 50)
  * Centralized configuration for content protection across Android devices.
  * Integrates with VideoPlayer to securely fetch decryption keys.
@@ -10,7 +10,7 @@ export default {
    */
   getConfig: async (url: string) => ({
     type: "widevine", // Native DRM for Android
-    licenseServer: process.env.EXPO_PUBLIC_DRM_LICENSE_URL || "https://license.streamperf.pro/widevine",
+    licenseServer: process.env.EXPO_PUBLIC_DRM_LICENSE_URL || "https://license.INES TV.pro/widevine",
     headers: {
       "Authorization": `Bearer ${process.env.EXPO_PUBLIC_DRM_TOKEN || "DEFAULT_TOKEN"}`
     },

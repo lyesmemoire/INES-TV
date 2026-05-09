@@ -8,6 +8,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { usePlayer } from '../../hooks/usePlayer';
 import { useTVRemote } from '../../hooks/useTVRemote';
+import Image from 'next/image';
 import MiniEPG from './MiniEPG';
 import { UltraPlayerRef } from './UltraPlayer';
 import SettingsPanel from './UI/SettingsPanel';
@@ -109,35 +110,51 @@ export default function PlayerModal({ isOpen, onClose, channel, channels, tier, 
   }, [showUI]);
 
   useTVRemote({
-    onLeft: () => {
-      if (showUI && playerRef.current) {
-        playerRef.current.handleSeek(-10);
-      } else {
-        zapPrev();
+    onKey: (key) => {
+      switch (key) {
+        case 'ArrowLeft':
+          if (showUI && playerRef.current) {
+            playerRef.current.handleSeek(-10);
+          } else {
+            zapPrev();
+          }
+          break;
+        case 'ArrowRight':
+          if (showUI && playerRef.current) {
+            playerRef.current.handleSeek(10);
+          } else {
+            zapNext();
+          }
+          break;
+        case 'ArrowUp':
+          setShowMiniEPG(true);
+          break;
+        case 'ArrowDown':
+          if (showUI && playerRef.current) {
+            playerRef.current.zapToLive();
+          } else {
+            setShowMiniEPG(false);
+          }
+          break;
+        case 'Enter':
+          // Handled by manual keyup/keydown for long-press
+          break;
       }
-    },
-    onRight: () => {
-      if (showUI && playerRef.current) {
-        playerRef.current.handleSeek(10);
-      } else {
-        zapNext();
-      }
-    },
-    onUp: () => setShowMiniEPG(true),
-    onDown: () => {
-      if (showUI && playerRef.current) {
-        playerRef.current.zapToLive();
-      } else {
-        setShowMiniEPG(false);
-      }
-    },
-    onSelect: () => {}, // Handled by manual keyup/keydown for long-press
+    }
   });
 
-  if (!isOpen || !currentChannel) return null;
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [isOpen]);
 
   return (
     <AnimatePresence>
+      {isOpen && currentChannel && (
       <div 
         className="fixed inset-0 z-[100] flex items-center justify-center p-0 md:p-10"
         onMouseMove={triggerUI}
@@ -171,8 +188,8 @@ export default function PlayerModal({ isOpen, onClose, channel, channels, tier, 
                 >
                   <div className="flex items-center gap-3">
                     {currentChannel.thumbnail && (
-                      <div className="w-10 h-10 md:w-14 md:h-14 rounded-xl bg-white/10 border border-white/20 p-2 backdrop-blur-md hidden md:block">
-                        <img src={currentChannel.thumbnail} alt="logo" className="w-full h-full object-contain" />
+                      <div className="relative w-10 h-10 md:w-14 md:h-14 rounded-xl bg-white/10 border border-white/20 p-2 backdrop-blur-md hidden md:block overflow-hidden">
+                        <Image src={currentChannel.thumbnail} alt="logo" fill className="object-contain p-2" />
                       </div>
                     )}
                     <div>
@@ -264,9 +281,13 @@ export default function PlayerModal({ isOpen, onClose, channel, channels, tier, 
                   <div className="space-y-3 pointer-events-auto">
                     {currentChannel.score && currentChannel.homeLogo && currentChannel.awayLogo && (
                       <div className="flex items-center gap-2 md:gap-4 p-2 bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 w-fit shadow-2xl">
-                        <img src={currentChannel.homeLogo} alt="Home" className="w-6 h-6 md:w-8 md:h-8 object-contain" />
+                        <div className="relative w-6 h-6 md:w-8 md:h-8">
+                          <Image src={currentChannel.homeLogo} alt="Home" fill className="object-contain" />
+                        </div>
                         <span className="text-xl md:text-2xl font-black text-white tracking-widest">{currentChannel.score}</span>
-                        <img src={currentChannel.awayLogo} alt="Away" className="w-6 h-6 md:w-8 md:h-8 object-contain" />
+                        <div className="relative w-6 h-6 md:w-8 md:h-8">
+                          <Image src={currentChannel.awayLogo} alt="Away" fill className="object-contain" />
+                        </div>
                       </div>
                     )}
                   </div>
@@ -298,6 +319,7 @@ export default function PlayerModal({ isOpen, onClose, channel, channels, tier, 
           </div>
         </motion.div>
       </div>
+      )}
     </AnimatePresence>
   );
 }

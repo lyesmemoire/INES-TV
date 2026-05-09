@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { Redis } from "@upstash/redis"
 import { createClient } from "@supabase/supabase-js"
-
-const redis = Redis.fromEnv()
+import { rateLimit } from "@/lib/ratelimit"
+import { isLegitCrawler } from "@/lib/security"
 
 // =====================
 // CONFIGURATION
@@ -21,29 +20,9 @@ const WINDOW = 60 // seconds
 const PROTECTED_ROUTES = [
   "/api/stream",
   "/api/admin",
-  "/api/metrics"
 ]
 
-const PUBLIC_ROUTES = [
-  "/api/health",
-  "/api/channels" // Liste publique
-]
 
-// =====================
-// LUA SCRIPT (ATOMIC RATE LIMIT)
-// =====================
-const RATE_LIMIT_SCRIPT = `
-  local key = KEYS[1]
-  local limit = tonumber(ARGV[1])
-  local window = tonumber(ARGV[2])
-  
-  local current = redis.call('INCR', key)
-  if current == 1 then
-    redis.call('EXPIRE', key, window)
-  end
-  
-  return current
-`
 
 // =====================
 // HELPERS
@@ -56,9 +35,6 @@ function getClientIP(req: NextRequest): string {
   )
 }
 
-function matchRoute(pathname: string, routes: string[]): boolean {
-  return routes.some(route => pathname.startsWith(route))
-}
 
 function getRateLimitForPath(pathname: string): number {
   const matched = Object.keys(RATE_LIMITS).find(route =>
@@ -72,140 +48,131 @@ function getRateLimitForPath(pathname: string): number {
 // =====================
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
+  const ua = req.headers.get("user-agent") || ""
 
-  // Skip static files
+  // 🥇 1️⃣ EXCLURE LES ROUTES CRITIQUES AVANT TOUT
   if (
     pathname.startsWith("/_next") ||
-    pathname.startsWith("/favicon") ||
-    pathname.match(/\.(ico|png|jpg|jpeg|svg|css|js)$/)
+    pathname.startsWith("/api/health") ||
+    pathname.startsWith("/favicon.ico") ||
+    pathname.startsWith("/public") ||
+    pathname.match(/\.(ico|png|jpg|jpeg|svg|css|js|webp)$/)
   ) {
     return NextResponse.next()
   }
 
-  // Skip public routes
-  if (matchRoute(pathname, PUBLIC_ROUTES)) {
-    return NextResponse.next()
-  }
-
-  const ip = getClientIP(req)
-  const limit = getRateLimitForPath(pathname)
-
-  // =====================
-  // RATE LIMITING (ATOMIC)
-  // =====================
-  try {
-    const rateLimitKey = `rate:${ip}:${pathname.split("/")[2] || "general"}`
-    
-    const requests = await redis.eval(
-      RATE_LIMIT_SCRIPT,
-      [rateLimitKey],
-      [limit, WINDOW]
-    ) as number
-
-    if (requests > limit) {
-      return new NextResponse(
-        JSON.stringify({ 
-          error: "Rate limit exceeded",
-          retryAfter: WINDOW 
-        }),
-        { 
-          status: 429,
-          headers: {
-            "Retry-After": String(WINDOW),
-            "X-RateLimit-Limit": String(limit),
-            "X-RateLimit-Remaining": "0"
-          }
-        }
-      )
+  // 🥈 2️⃣ BOT DETECTION (SOFT)
+  const isGooglebot = ua.toLowerCase().includes("googlebot")
+  const isBingbot = ua.toLowerCase().includes("bingbot")
+  const isOtherLegitBot = ua.toLowerCase().includes("applebot") || ua.toLowerCase().includes("duckduckbot") || ua.toLowerCase().includes("yandexbot")
+  const isSocialBot = ua.includes("Twitterbot") || ua.includes("facebookexternalhit") || ua.includes("LinkedInBot")
+  
+  if (!isGooglebot && !isBingbot && !isOtherLegitBot && !isSocialBot) {
+    if (
+      ua.toLowerCase().includes("curl") ||
+      ua.toLowerCase().includes("python") ||
+      ua.toLowerCase().includes("wget") ||
+      ua.toLowerCase().includes("headlesschrome") ||
+      ua.toLowerCase().includes("puppeteer")
+    ) {
+      console.warn(`[Security] Bot blocked: ${ua}`)
+      return new NextResponse("Forbidden: Access Denied", { status: 403 })
     }
-  } catch (error) {
-    console.error("Rate limit error:", error)
-    // Fail open (allow request if Redis down)
   }
 
-  // =====================
-  // AUTHENTICATION
-  // =====================
-  const isProtected = matchRoute(pathname, PROTECTED_ROUTES)
+  // 🥉 3️⃣ RATE LIMIT (PAS SUR /login, /api/login, /api/health, /api/stream)
+  const isLogin = pathname.includes("/login")
+  const isHealth = pathname.includes("/health")
+  const isStream = pathname.includes("/api/stream")
+  const isBot = isLegitCrawler(ua)
 
-  if (isProtected) {
-    const authHeader = req.headers.get("authorization")
-    const token = authHeader?.replace("Bearer ", "")
+  if (!isBot && !isLogin && !isHealth && !isStream && (pathname.startsWith("/api") || pathname.includes("/admin"))) {
+    const ip = getClientIP(req)
+    if (!rateLimit(ip)) {
+      console.warn(`[Security] Rate limit exceeded for IP: ${ip}`)
+      return new NextResponse("Too Many Requests", { 
+        status: 429,
+        headers: { "Retry-After": "10" }
+      })
+    }
+  }
 
-    if (!token) {
-      return new NextResponse(
-        JSON.stringify({ error: "Authentication required" }),
-        { status: 401 }
-      )
+  // 🟢 4️⃣ MULTILINGUAL REDIRECTION
+  const locales = ["fr", "en"]
+  const defaultLocale = "fr"
+  
+  // Explicitly handle /admin and /tv-os before generic locale check
+  if (pathname === "/admin") {
+    return NextResponse.redirect(new URL(`/${defaultLocale}/admin`, req.url))
+  }
+  if (pathname === "/tv-os") {
+    return NextResponse.redirect(new URL(`/${defaultLocale}/tv-os`, req.url))
+  }
+
+  const hasLocale = locales.some(
+    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+  )
+
+  if (!hasLocale && !pathname.startsWith("/api")) {
+    return NextResponse.redirect(
+      new URL(`/${defaultLocale}${pathname.startsWith("/") ? "" : "/"}${pathname}`, req.url)
+    )
+  }
+
+  // 🔵 5️⃣ ADMIN PROTECTION
+  // Note: isAdmin matches /fr/admin, /en/admin, /fr/tv-os, etc.
+  const isAdmin = pathname.includes("/admin") || pathname.includes("/tv-os")
+
+  if (isAdmin && !isLogin) {
+    // Read Supabase auth token from cookie
+    const supabaseCookie = req.cookies.get("sb-access-token")?.value
+      || req.cookies.getAll().find(c => c.name.includes("auth-token"))?.value
+
+    if (!supabaseCookie) {
+      return NextResponse.redirect(new URL(`/${pathname.split("/")[1] || defaultLocale}/login`, req.url))
     }
 
     try {
+      // 1. Client for verifying the JWT token
       const supabase = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
       )
 
-      const { data, error } = await supabase.auth.getUser(token)
+      const { data: authData, error: authError } = await supabase.auth.getUser(supabaseCookie)
 
-      if (error || !data?.user) {
-        return new NextResponse(
-          JSON.stringify({ error: "Invalid token" }),
-          { status: 401 }
-        )
+      if (authError || !authData?.user) {
+        return NextResponse.redirect(new URL(`/${pathname.split("/")[1] || defaultLocale}/login`, req.url))
       }
 
-      // =====================
-      // SESSION LOCK
-      // =====================
-      const deviceId = req.headers.get("x-device-id")
-      
-      if (deviceId) {
-        const userId = data.user.id
-        const sessionKey = `session:${userId}`
-        const activeDevice = await redis.get(sessionKey)
-
-        if (activeDevice && activeDevice !== deviceId) {
-          return new NextResponse(
-            JSON.stringify({ 
-              error: "Session active on another device",
-              currentDevice: activeDevice 
-            }),
-            { status: 403 }
-          )
-        }
-
-        // Update session
-        await redis.set(sessionKey, deviceId, { ex: 3600 }) // 1 hour
-      }
-
-      // Inject user info for downstream routes
-      const requestHeaders = new Headers(req.headers)
-      requestHeaders.set("x-user-id", data.user.id)
-      requestHeaders.set("x-user-email", data.user.email || "")
-
-      const response = NextResponse.next({
-        request: {
-          headers: requestHeaders,
-        },
-      })
-
-      // Security headers
-      setSecurityHeaders(response)
-
-      return response
-
-    } catch (error) {
-      console.error("Auth error:", error)
-      return new NextResponse(
-        JSON.stringify({ error: "Authentication failed" }),
-        { status: 500 }
+      // 2. Admin Client to bypass RLS for role checking
+      const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      const adminSupabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        serviceRoleKey
       )
+
+      const { data: profile, error: profileError } = await adminSupabase
+        .from("User")
+        .select("role")
+        .eq("id", authData.user.id)
+        .single()
+
+      if (profileError) {
+        console.error(`[Security] Error fetching profile for ${authData.user.id}:`, profileError)
+      }
+
+      if (!profile || profile.role !== "admin") {
+        console.warn(`[Security] Unauthorized admin access attempt by ${authData.user.email} (Role: ${profile?.role})`)
+        return NextResponse.redirect(new URL(`/${pathname.split("/")[1] || defaultLocale}`, req.url))
+      }
+    } catch (err) {
+      console.error("[Security] Admin check error:", err)
+      return NextResponse.redirect(new URL(`/${pathname.split("/")[1] || defaultLocale}/login`, req.url))
     }
   }
 
-  // =====================
-  // SECURITY HEADERS (NON-PROTECTED)
-  // =====================
+  // 🟣 6️⃣ SECURITY HEADERS
   const response = NextResponse.next()
   setSecurityHeaders(response)
   
@@ -234,12 +201,13 @@ function setSecurityHeaders(response: NextResponse) {
     "Content-Security-Policy",
     `
       default-src 'self';
-      script-src 'self' 'unsafe-inline' 'unsafe-eval';
-      style-src 'self' 'unsafe-inline';
+      script-src 'self' 'unsafe-inline' https://secure-ad-network.com;
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
       img-src 'self' data: https:;
-      media-src ${trustedDomains};
-      connect-src 'self' https://*.supabase.co wss://*.supabase.co;
-      font-src 'self' data:;
+      media-src 'self' blob: https:;
+      connect-src 'self' blob: https: wss://*.supabase.co https://secure-ad-network.com;
+      font-src 'self' data: https://fonts.gstatic.com;
+      frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://secure-ad-network.com;
       frame-ancestors 'none';
       base-uri 'self';
       form-action 'self';
@@ -260,7 +228,6 @@ function setSecurityHeaders(response: NextResponse) {
 // =====================
 export const config = {
   matcher: [
-    "/api/:path*",
-    "/((?!_next/static|_next/image|favicon.ico).*)",
+    "/((?!_next/static|_next/image|favicon.ico|public).*)",
   ],
 }

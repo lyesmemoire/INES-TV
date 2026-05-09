@@ -1,5 +1,5 @@
 import Hls from "hls.js";
-import { StreamSource } from "@/types";
+import { StreamSource } from "@/src/types";
 
 let preloadHls: Hls | null = null;
 let preloadedUrl: string | null = null;

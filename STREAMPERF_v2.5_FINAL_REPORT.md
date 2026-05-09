@@ -1,4 +1,4 @@
-# 📘 RAPPORT D'AVANCEMENT — STREAMPERF PRO Build v2.5
+﻿# 📘 RAPPORT D'AVANCEMENT — INES TV Build v2.5
 
 Ce document résume l'état final du projet après la phase de durcissement "SaaS PRO". Tous les fichiers sources ont été mis à jour dans ce répertoire.
 

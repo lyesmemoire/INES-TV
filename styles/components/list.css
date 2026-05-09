@@ -1,0 +1,80 @@
+/* List Container */
+.list-container {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* List Item */
+.list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-5) 0;
+  border-bottom: 1px solid var(--color-surface-raised);
+  min-height: 44px;
+  background-color: transparent;
+  transition: background-color var(--motion-duration-instant) ease;
+}
+
+.list-item:last-child {
+  border-bottom: none;
+}
+
+/* Hover & Focus (if interactive) */
+.list-item[role="button"]:hover,
+a.list-item:hover {
+  background-color: var(--color-surface-raised);
+  cursor: pointer;
+}
+
+.list-item[role="button"]:focus-visible,
+a.list-item:focus-visible {
+  outline: 2px solid var(--color-text-primary);
+  outline-offset: -2px;
+}
+
+.list-item[role="button"]:active,
+a.list-item:active {
+  background-color: var(--color-surface-strong);
+}
+
+/* Text */
+.list-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.list-item-title {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-base);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.list-item-description {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-inverse);
+}
+
+/* Disabled */
+.list-item[aria-disabled="true"] {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+/* Empty State */
+.list-empty-state {
+  padding: var(--space-5);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-inverse);
+  text-align: center;
+}

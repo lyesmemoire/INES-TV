@@ -1,9 +1,9 @@
-import { prisma } from './server/services/db';
+﻿import { prisma } from './server/services/db';
 import bcrypt from 'bcryptjs';
 
 async function test() {
   console.time('findUnique');
-  const user = await prisma.user.findUnique({ where: { email: "test@streamperf.com" } });
+  const user = await prisma.user.findUnique({ where: { email: "test@INES TV.com" } });
   console.timeEnd('findUnique');
   
   if (!user) return console.log('user not found');

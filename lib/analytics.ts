@@ -1,6 +1,9 @@
-import { Redis } from "@upstash/redis"
-
-const redis = Redis.fromEnv()
+// =====================================================
+// Analytics Module — In-Memory Fallback
+// Provides all metrics, sessions, stream health, and
+// alerts storage. Works without Redis for local dev.
+// Drop-in replacement: all exports are unchanged.
+// =====================================================
 
 export type MetricSnapshot = {
   timestamp: number
@@ -40,48 +43,96 @@ export type Alert = {
 }
 
 // =====================
+// IN-MEMORY STORE
+// =====================
+
+const store = {
+  metrics: new Map<string, any>(),
+  lists: new Map<string, any[]>(),
+  sets: new Map<string, Set<string>>(),
+}
+
+function memGet(key: string) {
+  return store.metrics.get(key) ?? null
+}
+
+function memSet(key: string, value: any) {
+  store.metrics.set(key, value)
+}
+
+function memDel(key: string) {
+  store.metrics.delete(key)
+}
+
+function memLpush(key: string, value: any) {
+  const list = store.lists.get(key) ?? []
+  list.unshift(value)
+  store.lists.set(key, list)
+}
+
+function memLrange(key: string, start: number, stop: number) {
+  const list = store.lists.get(key) ?? []
+  return list.slice(start, stop + 1)
+}
+
+function memLtrim(key: string, start: number, stop: number) {
+  const list = store.lists.get(key) ?? []
+  store.lists.set(key, list.slice(start, stop + 1))
+}
+
+function memSadd(key: string, value: string) {
+  const set = store.sets.get(key) ?? new Set()
+  set.add(value)
+  store.sets.set(key, set)
+}
+
+function memSrem(key: string, value: string) {
+  const set = store.sets.get(key)
+  if (set) set.delete(value)
+}
+
+function memScard(key: string) {
+  return store.sets.get(key)?.size ?? 0
+}
+
+function memSmembers(key: string) {
+  return Array.from(store.sets.get(key) ?? [])
+}
+
+function memKeys(pattern: string) {
+  const prefix = pattern.replace("*", "")
+  return Array.from(store.metrics.keys()).filter((k) => k.startsWith(prefix))
+}
+
+// =====================
 // METRICS COLLECTION
 // =====================
 
 export async function recordMetric(key: string, value: number) {
   const timestamp = Date.now()
   const metricKey = `metric:${key}:${Math.floor(timestamp / 1000)}`
-  
-  await redis.set(metricKey, value, { ex: 3600 }) // Keep for 1 hour
-  await redis.lpush(`metrics:${key}:history`, JSON.stringify({ timestamp, value }))
-  await redis.ltrim(`metrics:${key}:history`, 0, 99) // Keep last 100
+
+  memSet(metricKey, value)
+  memLpush(`metrics:${key}:history`, JSON.stringify({ timestamp, value }))
+  memLtrim(`metrics:${key}:history`, 0, 99)
 }
 
 export async function getMetricHistory(key: string, limit = 50): Promise<{ timestamp: number; value: number }[]> {
-  const history = await redis.lrange(`metrics:${key}:history`, 0, limit - 1)
-  return history.map((item: string) => JSON.parse(item))
+  const history = memLrange(`metrics:${key}:history`, 0, limit - 1)
+  return history.map((item: string) => {
+    try { return JSON.parse(item) } catch { return { timestamp: 0, value: 0 } }
+  })
 }
 
 export async function getCurrentMetrics(): Promise<MetricSnapshot> {
-  const [
-    activeUsers,
-    activeStreams,
-    cacheHitRate,
-    avgLatency,
-    errorRate,
-    bandwidthUsage,
-  ] = await Promise.all([
-    redis.get("metrics:activeUsers") || 0,
-    redis.get("metrics:activeStreams") || 0,
-    redis.get("metrics:cacheHitRate") || 0,
-    redis.get("metrics:avgLatency") || 0,
-    redis.get("metrics:errorRate") || 0,
-    redis.get("metrics:bandwidthUsage") || 0,
-  ])
-
   return {
     timestamp: Date.now(),
-    activeUsers: Number(activeUsers),
-    activeStreams: Number(activeStreams),
-    cacheHitRate: Number(cacheHitRate),
-    avgLatency: Number(avgLatency),
-    errorRate: Number(errorRate),
-    bandwidthUsage: Number(bandwidthUsage),
+    activeUsers: Number(memGet("metrics:activeUsers") || 0),
+    activeStreams: Number(memGet("metrics:activeStreams") || 0),
+    cacheHitRate: Number(memGet("metrics:cacheHitRate") || 0),
+    avgLatency: Number(memGet("metrics:avgLatency") || 0),
+    errorRate: Number(memGet("metrics:errorRate") || 0),
+    bandwidthUsage: Number(memGet("metrics:bandwidthUsage") || 0),
   }
 }
 
@@ -91,36 +142,31 @@ export async function getCurrentMetrics(): Promise<MetricSnapshot> {
 
 export async function trackUserSession(session: UserSession) {
   const sessionKey = `session:user:${session.userId}:${session.deviceId}`
-  await redis.set(sessionKey, JSON.stringify(session), { ex: 3600 })
-  
-  // Add to active sessions set
-  await redis.sadd("sessions:active", sessionKey)
-  
-  // Update active users count
-  const activeSessions = await redis.scard("sessions:active")
-  await redis.set("metrics:activeUsers", activeSessions)
+  memSet(sessionKey, JSON.stringify(session))
+
+  memSadd("sessions:active", sessionKey)
+
+  const activeSessions = memScard("sessions:active")
+  memSet("metrics:activeUsers", activeSessions)
 }
 
 export async function getActiveSessions(): Promise<UserSession[]> {
-  const sessionKeys = await redis.smembers("sessions:active")
-  const sessions = await Promise.all(
-    sessionKeys.map(async (key) => {
-      const data = await redis.get(key)
-      return data ? JSON.parse(data as string) : null
-    })
-  )
-  
+  const sessionKeys = memSmembers("sessions:active")
+  const sessions = sessionKeys.map((key) => {
+    const data = memGet(key)
+    try { return data ? JSON.parse(data as string) : null } catch { return null }
+  })
+
   return sessions.filter(Boolean)
 }
 
 export async function endUserSession(userId: string, deviceId: string) {
   const sessionKey = `session:user:${userId}:${deviceId}`
-  await redis.del(sessionKey)
-  await redis.srem("sessions:active", sessionKey)
-  
-  // Update active users count
-  const activeSessions = await redis.scard("sessions:active")
-  await redis.set("metrics:activeUsers", activeSessions)
+  memDel(sessionKey)
+  memSrem("sessions:active", sessionKey)
+
+  const activeSessions = memScard("sessions:active")
+  memSet("metrics:activeUsers", activeSessions)
 }
 
 // =====================
@@ -129,32 +175,30 @@ export async function endUserSession(userId: string, deviceId: string) {
 
 export async function updateStreamHealth(channelId: string, health: Partial<StreamHealth>) {
   const key = `stream:health:${channelId}`
-  const current = await redis.get(key)
-  
+  const current = memGet(key)
+
   const updated = {
     ...(current ? JSON.parse(current as string) : {}),
     ...health,
     channelId,
     lastUpdate: Date.now(),
   }
-  
-  await redis.set(key, JSON.stringify(updated), { ex: 300 }) // 5 min TTL
+
+  memSet(key, JSON.stringify(updated))
 }
 
 export async function getStreamHealth(channelId: string): Promise<StreamHealth | null> {
-  const data = await redis.get(`stream:health:${channelId}`)
-  return data ? JSON.parse(data as string) : null
+  const data = memGet(`stream:health:${channelId}`)
+  try { return data ? JSON.parse(data as string) : null } catch { return null }
 }
 
 export async function getAllStreamHealth(): Promise<StreamHealth[]> {
-  const keys = await redis.keys("stream:health:*")
-  const health = await Promise.all(
-    keys.map(async (key) => {
-      const data = await redis.get(key)
-      return data ? JSON.parse(data as string) : null
-    })
-  )
-  
+  const keys = memKeys("stream:health:")
+  const health = keys.map((key) => {
+    const data = memGet(key)
+    try { return data ? JSON.parse(data as string) : null } catch { return null }
+  })
+
   return health.filter(Boolean)
 }
 
@@ -169,33 +213,33 @@ export async function createAlert(alert: Omit<Alert, "id" | "timestamp">) {
     id,
     timestamp: Date.now(),
   }
-  
-  await redis.set(id, JSON.stringify(fullAlert), { ex: 86400 }) // 24h TTL
-  await redis.lpush("alerts:list", id)
-  await redis.ltrim("alerts:list", 0, 99) // Keep last 100
-  
+
+  memSet(id, JSON.stringify(fullAlert))
+  memLpush("alerts:list", id)
+  memLtrim("alerts:list", 0, 99)
+
   return fullAlert
 }
 
 export async function getAlerts(limit = 20): Promise<Alert[]> {
-  const alertIds = await redis.lrange("alerts:list", 0, limit - 1)
-  const alerts = await Promise.all(
-    alertIds.map(async (id) => {
-      const data = await redis.get(id)
-      return data ? JSON.parse(data as string) : null
-    })
-  )
-  
+  const alertIds = memLrange("alerts:list", 0, limit - 1)
+  const alerts = alertIds.map((id) => {
+    const data = memGet(id)
+    try { return data ? JSON.parse(data as string) : null } catch { return null }
+  })
+
   return alerts.filter(Boolean)
 }
 
 export async function resolveAlert(alertId: string) {
-  const data = await redis.get(alertId)
+  const data = memGet(alertId)
   if (data) {
-    const alert = JSON.parse(data as string)
-    alert.resolved = true
-    alert.resolvedAt = Date.now()
-    await redis.set(alertId, JSON.stringify(alert), { ex: 86400 })
+    try {
+      const alert = JSON.parse(data as string)
+      alert.resolved = true
+      alert.resolvedAt = Date.now()
+      memSet(alertId, JSON.stringify(alert))
+    } catch { /* ignore */ }
   }
 }
 
@@ -205,27 +249,25 @@ export async function resolveAlert(alertId: string) {
 
 export async function aggregateHourlyMetrics() {
   const now = Date.now()
-  const hourAgo = now - 3600000
-  
   const metrics = await getCurrentMetrics()
   const hourKey = `metrics:hourly:${Math.floor(now / 3600000)}`
-  
-  await redis.set(hourKey, JSON.stringify(metrics), { ex: 604800 }) // Keep for 7 days
+
+  memSet(hourKey, JSON.stringify(metrics))
 }
 
 export async function getDailyStats(days = 7) {
-  const stats = []
+  const stats: any[] = []
   const now = Date.now()
-  
+
   for (let i = 0; i < days; i++) {
     const timestamp = now - i * 86400000
     const dayKey = `metrics:daily:${Math.floor(timestamp / 86400000)}`
-    const data = await redis.get(dayKey)
-    
+    const data = memGet(dayKey)
+
     if (data) {
-      stats.push(JSON.parse(data as string))
+      try { stats.push(JSON.parse(data as string)) } catch { /* ignore */ }
     }
   }
-  
+
   return stats.reverse()
 }

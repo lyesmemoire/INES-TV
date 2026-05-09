@@ -3,10 +3,15 @@
 import { useEffect, useRef, useState, useCallback } from "react"
 import Hls from "hls.js"
 
+// Some builds of hls.js export the class as .default
+const HLS = (Hls as any).default || Hls
+
 interface HLSPlayerConfig {
   autoPlay?: boolean
   startAt?: number
 }
+
+export type HLSPlayerState = ReturnType<typeof useHLSPlayer>
 
 export function useHLSPlayer(streamUrl: string, config: HLSPlayerConfig = {}) {
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -20,51 +25,65 @@ export function useHLSPlayer(streamUrl: string, config: HLSPlayerConfig = {}) {
   const [currentTime, setCurrentTime] = useState(0)
   const [volume, setVolume] = useState(1)
   const [isMuted, setIsMuted] = useState(false)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const [isPiP, setIsPiP] = useState(false)
+  const isLive = duration === Infinity || duration === 0
 
   const initPlayer = useCallback(() => {
-    if (!videoRef.current || !streamUrl) return
+    if (!videoRef.current || !streamUrl) {
+      console.warn("HLS Player: Missing video element or stream URL", { streamUrl })
+      return
+    }
 
+    console.log("HLS Player: [INIT] URL:", streamUrl)
     const video = videoRef.current
 
-    if (Hls.isSupported()) {
+    // Reset error state
+    setError(null)
+    setIsBuffering(true)
+
+    if (HLS.isSupported()) {
+      console.log("HLS Player: Using hls.js")
       if (hlsRef.current) {
         hlsRef.current.destroy()
       }
 
-      const hls = new Hls({
+      const hls = new HLS({
         enableWorker: true,
         lowLatencyMode: true,
         backBufferLength: 60,
+        manifestLoadingTimeOut: 10000,
+        manifestLoadingMaxRetry: 3,
       })
 
       hls.loadSource(streamUrl)
       hls.attachMedia(video)
 
-      hls.on(Hls.Events.MANIFEST_PARSED, (_, data) => {
+      hls.on(HLS.Events.MANIFEST_PARSED, (_, data) => {
+        console.log("HLS Player: Manifest parsed", { levels: data.levels.length })
         setQualityLevels(data.levels.map((l, i) => ({ id: i, height: l.height })))
         if (config.autoPlay) {
-          video.play().catch(e => console.warn("Autoplay blocked:", e))
+          video.play().catch(e => {
+            console.warn("HLS Player: Autoplay blocked, waiting for user interaction", e)
+          })
         }
       })
 
-      hls.on(Hls.Events.LEVEL_SWITCHED, (_, data) => {
-        setCurrentQuality(hls.autoLevelEnabled ? -1 : data.level)
-      })
-
-      hls.on(Hls.Events.ERROR, (_, data) => {
+      hls.on(HLS.Events.ERROR, (_, data) => {
         if (data.fatal) {
+          console.error("HLS Player: Fatal error", data.type, data.details)
           switch (data.type) {
-            case Hls.ErrorTypes.NETWORK_ERROR:
-              console.error("Fatal network error, trying to recover...")
+            case HLS.ErrorTypes.NETWORK_ERROR:
+              console.log("HLS Player: Network error, trying to recover...")
               hls.startLoad()
               break
-            case Hls.ErrorTypes.MEDIA_ERROR:
-              console.error("Fatal media error, trying to recover...")
+            case HLS.ErrorTypes.MEDIA_ERROR:
+              console.log("HLS Player: Media error, trying to recover...")
               hls.recoverMediaError()
               break
             default:
-              console.error("Unrecoverable error:", data)
-              setError("Unrecoverable error: " + data.details)
+              console.error("HLS Player: Unrecoverable error")
+              setError(`Erreur de flux: ${data.details}`)
               hls.destroy()
               break
           }
@@ -73,13 +92,14 @@ export function useHLSPlayer(streamUrl: string, config: HLSPlayerConfig = {}) {
 
       hlsRef.current = hls
     } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-      // Native HLS support (Safari)
+      console.log("HLS Player: Using native HLS (Safari)")
       video.src = streamUrl
       video.addEventListener("loadedmetadata", () => {
-        if (config.autoPlay) video.play()
+        if (config.autoPlay) video.play().catch(console.warn)
       })
     } else {
-      setError("HLS is not supported in this browser.")
+      console.error("HLS Player: Not supported in this browser")
+      setError("Votre navigateur ne supporte pas la lecture HLS.")
     }
   }, [streamUrl, config.autoPlay])
 
@@ -128,9 +148,15 @@ export function useHLSPlayer(streamUrl: string, config: HLSPlayerConfig = {}) {
   }, [])
 
   const togglePlay = () => {
+    console.log("HLS Player: togglePlay called. Current state:", { isPlaying, hasVideoRef: !!videoRef.current })
     if (videoRef.current) {
-      if (isPlaying) videoRef.current.pause()
-      else videoRef.current.play()
+      if (isPlaying) {
+        console.log("HLS Player: Pausing")
+        videoRef.current.pause()
+      } else {
+        console.log("HLS Player: Playing")
+        videoRef.current.play().catch(e => console.error("HLS Player: Play failed", e))
+      }
     }
   }
 
@@ -161,6 +187,26 @@ export function useHLSPlayer(streamUrl: string, config: HLSPlayerConfig = {}) {
     }
   }
 
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      videoRef.current?.requestFullscreen().catch(console.error)
+      setIsFullscreen(true)
+    } else {
+      document.exitFullscreen().catch(console.error)
+      setIsFullscreen(false)
+    }
+  }
+
+  const togglePiP = () => {
+    if (document.pictureInPictureElement) {
+      document.exitPictureInPicture().catch(console.error)
+      setIsPiP(false)
+    } else if (videoRef.current) {
+      videoRef.current.requestPictureInPicture().catch(console.error)
+      setIsPiP(true)
+    }
+  }
+
   return {
     videoRef,
     isPlaying,
@@ -172,10 +218,15 @@ export function useHLSPlayer(streamUrl: string, config: HLSPlayerConfig = {}) {
     currentTime,
     volume,
     isMuted,
+    isFullscreen,
+    isPiP,
+    isLive,
     togglePlay,
     setQuality,
     seek,
     changeVolume,
-    toggleMute
+    toggleMute,
+    toggleFullscreen,
+    togglePiP
   }
 }

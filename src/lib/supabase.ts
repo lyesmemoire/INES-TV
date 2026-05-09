@@ -14,9 +14,4 @@ export const supabase =
     ? createClient(supabaseUrl, supabaseAnonKey)
     : ({} as any);
 
-// Service role only available on server
-const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-export const adminSupabase = 
-  supabaseUrl && serviceRoleKey
-    ? createClient(supabaseUrl, serviceRoleKey)
-    : ({} as any);
+

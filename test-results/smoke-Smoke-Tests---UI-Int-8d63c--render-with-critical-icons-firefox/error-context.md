@@ -1,0 +1,210 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: smoke.spec.ts >> Smoke Tests - UI Integrity >> home page should render with critical icons
+- Location: tests\e2e\smoke.spec.ts:4:3
+
+# Error details
+
+```
+Error: expect(locator).toContainText(expected) failed
+
+Locator: locator('h1')
+Expected substring: "INES TV"
+Received string:    "Matchs en Direct"
+Timeout: 5000ms
+
+Call log:
+  - Expect "toContainText" with timeout 5000ms
+  - waiting for locator('h1')
+    7 × locator resolved to <h1 class="font-black italic tracking-tighter uppercase">Matchs en Direct</h1>
+      - unexpected value "Matchs en Direct"
+
+```
+
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - button "Menu principal" [ref=e5] [cursor=pointer]:
+          - img [ref=e6]
+        - generic [ref=e10]: INES TV
+        - navigation [ref=e11]:
+          - link "Home" [ref=e12] [cursor=pointer]:
+            - /url: /
+          - button "Sports" [ref=e13] [cursor=pointer]:
+            - text: Sports
+            - img [ref=e14]
+          - link "Live TV" [ref=e16] [cursor=pointer]:
+            - /url: /live
+          - link "Schedule" [ref=e17] [cursor=pointer]:
+            - /url: /schedule
+      - textbox "Rechercher une chaîne..." [ref=e20]
+      - generic [ref=e21]:
+        - button "Login" [ref=e22] [cursor=pointer]
+        - button "Sign up" [ref=e23] [cursor=pointer]
+    - generic [ref=e24]:
+      - generic [ref=e25]:
+        - heading "Matchs en Direct" [level=1] [ref=e30]
+        - paragraph [ref=e31]: Real-time analytics engine • Powered by INES TV
+      - region "5 matchs en direct" [ref=e32]:
+        - paragraph [ref=e34]: 5 matchs en direct
+        - generic [ref=e36]:
+          - link "Live 67' Ligue 1 P O 2 1 Paris Saint-Germain vs Olympique de Marseille Ligue 1 • Matchday" [ref=e37] [cursor=pointer]:
+            - /url: /watch/1
+            - generic [ref=e38]:
+              - generic [ref=e39]: Live
+              - generic [ref=e40]: 67'
+            - generic [ref=e41]: Ligue 1
+            - generic [ref=e42]:
+              - generic [ref=e44]: P
+              - generic [ref=e46]: O
+              - img [ref=e49]
+              - generic [ref=e51]:
+                - generic [ref=e52]: "2"
+                - generic [ref=e54]: "1"
+            - generic [ref=e55]:
+              - heading "Paris Saint-Germain vs Olympique de Marseille" [level=3] [ref=e56]
+              - paragraph [ref=e57]: Ligue 1 • Matchday
+          - link "Live 23' La Liga R F 0 0 Real Madrid vs FC Barcelona La Liga • Matchday" [ref=e58] [cursor=pointer]:
+            - /url: /watch/2
+            - generic [ref=e59]:
+              - generic [ref=e60]: Live
+              - generic [ref=e61]: 23'
+            - generic [ref=e62]: La Liga
+            - generic [ref=e63]:
+              - generic [ref=e65]: R
+              - generic [ref=e67]: F
+              - img [ref=e70]
+              - generic [ref=e72]:
+                - generic [ref=e73]: "0"
+                - generic [ref=e75]: "0"
+            - generic [ref=e76]:
+              - heading "Real Madrid vs FC Barcelona" [level=3] [ref=e77]
+              - paragraph [ref=e78]: La Liga • Matchday
+          - link "Live 89' Premier League M A 1 2 Manchester City vs Arsenal Premier League • Matchday" [ref=e79] [cursor=pointer]:
+            - /url: /watch/3
+            - generic [ref=e80]:
+              - generic [ref=e81]: Live
+              - generic [ref=e82]: 89'
+            - generic [ref=e83]: Premier League
+            - generic [ref=e84]:
+              - generic [ref=e86]: M
+              - generic [ref=e88]: A
+              - img [ref=e91]
+              - generic [ref=e93]:
+                - generic [ref=e94]: "1"
+                - generic [ref=e96]: "2"
+            - generic [ref=e97]:
+              - heading "Manchester City vs Arsenal" [level=3] [ref=e98]
+              - paragraph [ref=e99]: Premier League • Matchday
+          - link "PAUSED Bundesliga B B 3 1 Bayern Munich vs Borussia Dortmund Bundesliga • Matchday" [ref=e100] [cursor=pointer]:
+            - /url: /watch/4
+            - generic [ref=e102]: PAUSED
+            - generic [ref=e103]: Bundesliga
+            - generic [ref=e104]:
+              - generic [ref=e106]: B
+              - generic [ref=e108]: B
+              - img [ref=e111]
+              - generic [ref=e113]:
+                - generic [ref=e114]: "3"
+                - generic [ref=e116]: "1"
+            - generic [ref=e117]:
+              - heading "Bayern Munich vs Borussia Dortmund" [level=3] [ref=e118]
+              - paragraph [ref=e119]: Bundesliga • Matchday
+          - link "Live 12' Serie A J I 0 1 Juventus vs Inter Milan Serie A • Matchday" [ref=e120] [cursor=pointer]:
+            - /url: /watch/5
+            - generic [ref=e121]:
+              - generic [ref=e122]: Live
+              - generic [ref=e123]: 12'
+            - generic [ref=e124]: Serie A
+            - generic [ref=e125]:
+              - generic [ref=e127]: J
+              - generic [ref=e129]: I
+              - img [ref=e132]
+              - generic [ref=e134]:
+                - generic [ref=e135]: "0"
+                - generic [ref=e137]: "1"
+            - generic [ref=e138]:
+              - heading "Juventus vs Inter Milan" [level=3] [ref=e139]
+              - paragraph [ref=e140]: Serie A • Matchday
+    - generic [ref=e142]:
+      - generic [ref=e143]:
+        - generic [ref=e144]:
+          - heading "INES TV" [level=3] [ref=e145]
+          - paragraph [ref=e146]: Plateforme de streaming sports & TV en temps réel
+        - generic [ref=e147]:
+          - heading "Navigation" [level=4] [ref=e148]
+          - list [ref=e149]:
+            - listitem [ref=e150]:
+              - link "Live" [ref=e151] [cursor=pointer]:
+                - /url: /live
+            - listitem [ref=e152]:
+              - link "Programme" [ref=e153] [cursor=pointer]:
+                - /url: /schedule
+            - listitem [ref=e154]:
+              - link "Catégories" [ref=e155] [cursor=pointer]:
+                - /url: /categories
+        - generic [ref=e156]:
+          - heading "Sports" [level=4] [ref=e157]
+          - list [ref=e158]:
+            - listitem [ref=e159]: Football
+            - listitem [ref=e160]: Basketball
+            - listitem [ref=e161]: Tennis
+        - generic [ref=e162]:
+          - heading "Legal" [level=4] [ref=e163]
+          - list [ref=e164]:
+            - listitem [ref=e165]:
+              - link "Privacy" [ref=e166] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=e167]:
+              - link "Terms" [ref=e168] [cursor=pointer]:
+                - /url: /terms
+      - paragraph [ref=e170]: © 2026 INES TV
+  - alert [ref=e171]
+```
+
+# Test source
+
+```ts
+  1  | import { test, expect } from '@playwright/test';
+  2  | 
+  3  | test.describe('Smoke Tests - UI Integrity', () => {
+  4  |   test('home page should render with critical icons', async ({ page }) => {
+  5  |     await page.goto('/');
+  6  |     
+  7  |     // Check for logo/title
+> 8  |     await expect(page.locator('h1')).toContainText('INES TV');
+     |                                      ^ Error: expect(locator).toContainText(expected) failed
+  9  |     
+  10 |     // Check if Lucide icons are rendered (usually as <svg class="lucide ...">)
+  11 |     const icons = page.locator('svg.lucide');
+  12 |     const count = await icons.count();
+  13 |     expect(count).toBeGreaterThan(0);
+  14 |     
+  15 |     // Check for search bar
+  16 |     await expect(page.locator('input[placeholder*="Search"]')).toBeVisible();
+  17 |   });
+  18 | 
+  19 |   test('admin route should redirect to login', async ({ page }) => {
+  20 |     // Middleware should catch this
+  21 |     await page.goto('/admin');
+  22 |     await expect(page).toHaveURL(/\/login/);
+  23 |   });
+  24 | 
+  25 |   test('tv-os route should redirect to login', async ({ page }) => {
+  26 |     // Middleware should catch this
+  27 |     await page.goto('/tv-os');
+  28 |     await expect(page).toHaveURL(/\/login/);
+  29 |   });
+  30 | });
+  31 | 
+```

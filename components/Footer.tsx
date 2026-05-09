@@ -1,22 +1,58 @@
-export default function Footer() {
-  return (
-    <footer className="px-6 py-10 text-white/60 text-sm">
-      <div className="grid md:grid-cols-4 gap-6">
-        <div>
-          <p className="text-white font-bold text-xl">DAZN</p>
-        </div>
-        <div className="hover:text-white cursor-pointer transition">About</div>
-        <div className="hover:text-white cursor-pointer transition">Legal</div>
-        <div className="hover:text-white cursor-pointer transition">Help</div>
-      </div>
+"use client";
 
-      <p className="text-center mt-10 text-white/40">
-        "Where sport lives in real time."
-      </p>
-      
-      <p className="text-center mt-4 text-white/30 text-xs">
-        © 2026 DAZN Premium Clone
-      </p>
+import Link from "next/link";
+import { useEffect, useState } from "react";
+
+export function Footer({ lang }: { lang?: string }) {
+  const [year, setYear] = useState<number | null>(null);
+
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
+
+  return (
+    <footer className="footer">
+      <div className="container mx-auto px-4">
+        
+        <div className="footer__grid">
+          
+          <div>
+            <h3 className="footer__title">GOALA TV</h3>
+            <p className="footer__description">
+              Plateforme de streaming sports & TV en temps réel
+            </p>
+          </div>
+
+          <div>
+            <h4 className="footer__heading">Navigation</h4>
+            <ul className="footer__list">
+              <li><Link href={`/${lang}/live`} className="footer__link">Live TV</Link></li>
+              <li><Link href={`/${lang}/live-matches`} className="footer__link">Matches</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="footer__heading">Sports</h4>
+            <ul className="footer__list" style={{ color: 'var(--color-text-inverse)' }}>
+              <li>Football</li>
+              <li>Basketball</li>
+              <li>Tennis</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="footer__heading">Legal</h4>
+            <ul className="footer__list">
+              <li><Link href={`/${lang}/login`} className="footer__link">Login</Link></li>
+            </ul>
+          </div>
+
+        </div>
+
+        <div className="footer__bottom">
+          <p>© {year ?? ""} GOALA TV</p>
+        </div>
+      </div>
     </footer>
   );
 }

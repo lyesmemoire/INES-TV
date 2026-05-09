@@ -1,3 +1,15 @@
+export const log = (...args: any[]) => {
+  if (process.env.NODE_ENV === "development") {
+    console.log(...args)
+  }
+}
+
+export const warn = (...args: any[]) => {
+  if (process.env.NODE_ENV === "development") {
+    console.warn(...args)
+  }
+}
+
 export function logError(context: string, error: unknown, metadata?: Record<string, any>) {
   console.error({
     context,

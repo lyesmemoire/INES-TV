@@ -41,7 +41,7 @@ m3uRouter.post('/', requireAuth, requireAdmin, async (req: AuthRequest, res) => 
 // Update an M3U source
 m3uRouter.put('/:id', requireAuth, requireAdmin, async (req: AuthRequest, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { name, url, isActive } = req.body;
 
     const updated = await prisma.playlist.update({
@@ -58,7 +58,7 @@ m3uRouter.put('/:id', requireAuth, requireAdmin, async (req: AuthRequest, res) =
 // Delete an M3U source
 m3uRouter.delete('/:id', requireAuth, requireAdmin, async (req: AuthRequest, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     await prisma.playlist.delete({ where: { id } });
     res.json({ message: 'M3U source deleted' });
   } catch (error) {

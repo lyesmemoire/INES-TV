@@ -31,4 +31,4 @@
 - [x] Successful Production Build (`npm run build`)
 - [x] Deployment Documentation (`WALKTHROUGH.md`)
 
-# 🚢 BON LANCEÙENT SUR STREAMPERF PRO ! 🚢
+# 🚢 BON LANCEÙENT SUR INES TV PRO ! 🚢

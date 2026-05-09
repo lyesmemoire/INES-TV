@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getChannelStats } from "@/services/analyticsQueries";
+import { getChannelStats } from "@/src/services/analyticsQueries";
 import {
   BarChart,
   Bar,
